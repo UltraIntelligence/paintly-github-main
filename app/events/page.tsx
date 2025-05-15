@@ -83,19 +83,6 @@ export default function EventsPage() {
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col">
             <div className="flex flex-col p-4 md:p-6">
-              {/* Header with Create Button */}
-              <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold">Events</h1>
-                <Button
-                  onClick={() => router.push("/events/new")}
-                  className="bg-black hover:bg-black/90 text-white"
-                  effect="gooeyLeft"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create New Event
-                </Button>
-              </div>
-
               {/* Stats Cards Section */}
               <EventStatsCards />
 

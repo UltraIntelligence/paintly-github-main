@@ -19,7 +19,7 @@ export const eventData: Event[] = [
   {
     id: "1",
     title: "Sunset Beach Painting",
-    image: "/placeholder-tcgvz.png",
+    image: "gradient-1", // Changed to gradient identifier
     category: "Regular",
     isTemplate: false,
     duration: "2 hours",
@@ -32,7 +32,7 @@ export const eventData: Event[] = [
   {
     id: "2",
     title: "Kids Watercolor Adventure",
-    image: "/placeholder-cepbz.png",
+    image: "gradient-2", // Changed to gradient identifier
     category: "Family Friendly",
     isTemplate: true,
     duration: "1.5 hours",
@@ -45,7 +45,7 @@ export const eventData: Event[] = [
   {
     id: "3",
     title: "Team Building Art Session",
-    image: "/placeholder-6m31m.png",
+    image: "gradient-3", // Changed to gradient identifier
     category: "Corporate",
     isTemplate: false,
     duration: "3 hours",
@@ -58,7 +58,7 @@ export const eventData: Event[] = [
   {
     id: "4",
     title: "Cherry Blossom Special",
-    image: "/placeholder-c8bu9.png",
+    image: "gradient-4", // Changed to gradient identifier
     category: "Seasonal",
     isTemplate: false,
     duration: "2.5 hours",
@@ -72,7 +72,7 @@ export const eventData: Event[] = [
   {
     id: "5",
     title: "Abstract Acrylic Workshop",
-    image: "/abstract-acrylic.png",
+    image: "gradient-5", // Changed to gradient identifier
     category: "Regular",
     isTemplate: true,
     duration: "2 hours",
@@ -85,7 +85,7 @@ export const eventData: Event[] = [
   {
     id: "6",
     title: "Corporate Team Mural",
-    image: "/placeholder-mg04y.png",
+    image: "gradient-6", // Changed to gradient identifier
     category: "Corporate",
     isTemplate: true,
     duration: "4 hours",
@@ -98,7 +98,7 @@ export const eventData: Event[] = [
   {
     id: "7",
     title: "Family Portrait Session",
-    image: "/placeholder.svg?height=180&width=320&query=family%20portrait%20painting",
+    image: "gradient-7", // Changed to gradient identifier
     category: "Family Friendly",
     isTemplate: false,
     duration: "2 hours",
@@ -111,7 +111,7 @@ export const eventData: Event[] = [
   {
     id: "8",
     title: "Winter Landscape",
-    image: "/placeholder.svg?height=180&width=320&query=winter%20landscape%20painting",
+    image: "gradient-8", // Changed to gradient identifier
     category: "Seasonal",
     isTemplate: false,
     duration: "2 hours",

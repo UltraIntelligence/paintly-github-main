@@ -1,7 +1,6 @@
-import Image from "next/image"
-import Link from "next/link"
 import { ArrowUpIcon, CalendarIcon, BarChart2Icon, AlertTriangleIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export function EventStatsCards() {
   return (
@@ -10,8 +9,9 @@ export function EventStatsCards() {
       <div className="bg-white border border-gray-100 rounded-lg p-4 hover:border-gray-200 transition-colors">
         <div className="flex items-start justify-between">
           <div className="flex gap-3">
-            <div className="relative h-10 w-10 flex-shrink-0">
-              <Image src="/placeholder-tcgvz.png" alt="Top event" className="rounded-md object-cover" fill />
+            <div className="relative h-10 w-10 flex-shrink-0 bg-gray-100 rounded-md">
+              {/* Replaced image with a colored div to avoid loading issues */}
+              <div className="absolute inset-0 bg-blue-100 rounded-md"></div>
             </div>
             <div>
               <h3 className="font-medium text-gray-900">Sunset Beach Painting</h3>

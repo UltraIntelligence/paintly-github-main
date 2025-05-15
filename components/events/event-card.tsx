@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { MoreHorizontal, Bookmark, Copy, Archive } from "lucide-react"
 
@@ -44,7 +43,27 @@ export function EventCard({ event }: EventCardProps) {
     >
       <CardHeader className="p-0 relative">
         <div className="relative aspect-video">
-          <Image src={event.image || "/placeholder.svg"} alt={event.title} fill className="object-cover rounded-t-lg" />
+          {/* Replace Image component with a colored div */}
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg"
+            style={{
+              backgroundImage: `linear-gradient(to bottom right, ${
+                event.category === "Regular"
+                  ? "#f3f4f6, #e5e7eb"
+                  : event.category === "Family Friendly"
+                    ? "#d1fae5, #a7f3d0"
+                    : event.category === "Corporate"
+                      ? "#ede9fe, #ddd6fe"
+                      : event.category === "Seasonal"
+                        ? "#ffedd5, #fed7aa"
+                        : "#f3f4f6, #e5e7eb"
+              })`,
+            }}
+          >
+            <div className="absolute inset-0 flex items-center justify-center text-gray-500 font-medium">
+              {event.title}
+            </div>
+          </div>
           <Badge className={`absolute top-2 right-2 ${getCategoryColor(event.category)}`}>{event.category}</Badge>
           {event.isTemplate && (
             <div className="absolute top-2 left-2 flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-xs">

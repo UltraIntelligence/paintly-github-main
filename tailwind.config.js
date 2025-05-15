@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-geist-sans)", ...fontFamily.sans],
-        mono: ["var(--font-geist-mono)", ...fontFamily.mono],
+        sans: ["var(--font-geistsans)", ...fontFamily.sans],
+        mono: ["var(--font-geistmono)", ...fontFamily.mono],
       },
       colors: {
         border: "hsl(var(--border))",
