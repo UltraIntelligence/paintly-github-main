@@ -1,53 +1,29 @@
 "use client"
 
 import { useState } from "react"
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
-// Sample data for the chart
-const generateSalesData = () => {
-  const currentMonth = []
-  const lastMonth = []
-
-  for (let i = 1; i <= 30; i++) {
-    // Generate some realistic looking data with weekly patterns
-    const dayOfWeek = i % 7
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
-
-    // Base values with some randomness
-    const baseCurrentSales = isWeekend ? 1200 + Math.random() * 800 : 800 + Math.random() * 400
-    const baseLastSales = isWeekend ? 1000 + Math.random() * 700 : 700 + Math.random() * 350
-
-    // Add some peaks and valleys
-    const currentSales = Math.round(baseCurrentSales * (1 + Math.sin(i / 5) * 0.2))
-    const lastSales = Math.round(baseLastSales * (1 + Math.sin(i / 5) * 0.2))
-
-    currentMonth.push({
-      day: i,
-      date: `Jun ${i}`,
-      sales: currentSales,
-    })
-
-    lastMonth.push({
-      day: i,
-      date: `May ${i}`,
-      sales: lastSales,
-    })
-  }
-
-  // Combine the data for the chart
-  const combinedData = currentMonth.map((current, index) => ({
-    date: current.date,
-    currentMonth: current.sales,
-    lastMonth: lastMonth[index].sales,
-  }))
-
-  return combinedData
-}
-
-const salesData = generateSalesData()
+// Sample data for the chart - using the same structure as the example
+const salesData = [
+  { date: "2024-06-01", currentMonth: 1200, lastMonth: 950 },
+  { date: "2024-06-03", currentMonth: 1050, lastMonth: 880 },
+  { date: "2024-06-05", currentMonth: 1350, lastMonth: 1100 },
+  { date: "2024-06-07", currentMonth: 1500, lastMonth: 1250 },
+  { date: "2024-06-09", currentMonth: 1100, lastMonth: 950 },
+  { date: "2024-06-11", currentMonth: 1300, lastMonth: 1050 },
+  { date: "2024-06-13", currentMonth: 1600, lastMonth: 1300 },
+  { date: "2024-06-15", currentMonth: 1400, lastMonth: 1150 },
+  { date: "2024-06-17", currentMonth: 1200, lastMonth: 1000 },
+  { date: "2024-06-19", currentMonth: 1500, lastMonth: 1200 },
+  { date: "2024-06-21", currentMonth: 1700, lastMonth: 1400 },
+  { date: "2024-06-23", currentMonth: 1600, lastMonth: 1300 },
+  { date: "2024-06-25", currentMonth: 1400, lastMonth: 1150 },
+  { date: "2024-06-27", currentMonth: 1300, lastMonth: 1100 },
+  { date: "2024-06-30", currentMonth: 1500, lastMonth: 1250 },
+]
 
 // Chart configuration
 const chartConfig = {
@@ -68,9 +44,9 @@ export function SalesComparisonChart() {
   const getFilteredData = () => {
     switch (timeRange) {
       case "7d":
-        return salesData.slice(-7)
+        return salesData.slice(-5) // Last 5 data points for 7 days view
       case "30d":
-        return salesData
+        return salesData // All data for 30 days view
       case "3m":
       default:
         return salesData
@@ -80,7 +56,7 @@ export function SalesComparisonChart() {
   const filteredData = getFilteredData()
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden mb-4">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
           <CardTitle className="text-lg font-medium">Sales Comparison</CardTitle>
@@ -98,61 +74,61 @@ export function SalesComparisonChart() {
           </ToggleGroupItem>
         </ToggleGroup>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="h-[300px] w-full px-4 pb-6 pt-2">
-          <ChartContainer config={chartConfig}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={filteredData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
-                <defs>
-                  <linearGradient id="colorCurrentMonth" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(346, 84%, 81%)" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="hsl(346, 84%, 81%)" stopOpacity={0.1} />
-                  </linearGradient>
-                  <linearGradient id="colorLastMonth" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.1} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fontSize: 12 }}
-                  tickFormatter={(value) => value.split(" ")[1]} // Only show the day number
-                  interval={2} // Show every 3rd day
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+        <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
+          <AreaChart data={filteredData}>
+            <defs>
+              <linearGradient id="fillCurrentMonth" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="hsl(346, 84%, 81%)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="hsl(346, 84%, 81%)" stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id="fillLastMonth" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.1} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              minTickGap={32}
+              tickFormatter={(value) => {
+                const date = new Date(value)
+                return `Jun ${date.getDate()}`
+              }}
+            />
+            <YAxis tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} width={60} />
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(value) => {
+                    const date = new Date(value)
+                    return `Jun ${date.getDate()}`
+                  }}
+                  formatter={(value) => [`$${value}`, ""]}
+                  indicator="dot"
                 />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fontSize: 12 }}
-                  tickFormatter={(value) => `$${value}`}
-                  domain={[0, "dataMax + 200"]} // Add some padding at the top
-                  width={60} // Give more space for the dollar amounts
-                />
-                <ChartTooltip content={<ChartTooltipContent />} formatter={(value) => [`$${value}`, ""]} />
-                <Area
-                  type="monotone"
-                  dataKey="currentMonth"
-                  stroke="hsl(346, 84%, 81%)"
-                  strokeWidth={2}
-                  fillOpacity={0.6}
-                  fill="url(#colorCurrentMonth)"
-                  activeDot={{ r: 6 }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="lastMonth"
-                  stroke="hsl(172, 67%, 73%)"
-                  strokeWidth={2}
-                  fillOpacity={0.6}
-                  fill="url(#colorLastMonth)"
-                  activeDot={{ r: 6 }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </div>
+              }
+            />
+            <Area
+              dataKey="lastMonth"
+              type="natural"
+              fill="url(#fillLastMonth)"
+              stroke="var(--color-lastMonth)"
+              stackId="a"
+            />
+            <Area
+              dataKey="currentMonth"
+              type="natural"
+              fill="url(#fillCurrentMonth)"
+              stroke="var(--color-currentMonth)"
+              stackId="a"
+            />
+          </AreaChart>
+        </ChartContainer>
       </CardContent>
     </Card>
   )

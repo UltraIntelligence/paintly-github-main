@@ -11,6 +11,7 @@ import {
   SearchIcon,
   UsersIcon,
 } from "lucide-react"
+import Link from "next/link"
 
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
@@ -26,44 +27,44 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: LayoutDashboardIcon,
     },
     {
       title: "Scheduling",
-      url: "#",
+      url: "/scheduling",
       icon: Calendar,
     },
     {
       title: "Instructors",
-      url: "#",
+      url: "/instructors",
       icon: UsersIcon,
     },
     {
       title: "Events",
-      url: "#",
+      url: "/events",
       icon: Palette,
     },
     {
       title: "Locations",
-      url: "#",
+      url: "/locations",
       icon: MapPin,
     },
   ],
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
+      url: "/settings",
       icon: SettingsIcon,
     },
     {
       title: "Get Help",
-      url: "#",
+      url: "/help",
       icon: HelpCircleIcon,
     },
     {
       title: "Search",
-      url: "#",
+      url: "/search",
       icon: SearchIcon,
     },
   ],
@@ -73,7 +74,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex items-center justify-center p-4">
-        <a href="#" className="flex w-full justify-center">
+        <Link href="/dashboard" className="flex w-full justify-center">
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-black%20%285%29-7VlW8Vv28HicXieXSskv296fVjqw8S.png"
             alt="Paintly Logo"
@@ -83,7 +84,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               minHeight: "60px",
             }}
           />
-        </a>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
