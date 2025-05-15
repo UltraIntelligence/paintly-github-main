@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { EventCard } from "@/components/events/event-card"
 import { EventsTabs } from "@/components/events/events-tabs"
 import { EventsFilters } from "@/components/events/events-filters"
+import { EventStatsCards } from "@/components/events/event-stats-cards"
 import { eventData, type Event, type EventCategory } from "@/components/events/event-data"
 
 export default function EventsPage() {
@@ -82,19 +83,21 @@ export default function EventsPage() {
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col">
             <div className="flex flex-col p-4 md:p-6">
-              {/* Header with Create Button - Hidden for now
+              {/* Header with Create Button */}
               <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold">Events</h1>
                 <Button
                   onClick={() => router.push("/events/new")}
-                  className="bg-[#1414f5] hover:bg-[#1414f5]/90"
+                  className="bg-black hover:bg-black/90 text-white"
                   effect="gooeyLeft"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Create New Event
                 </Button>
               </div>
-              */}
+
+              {/* Stats Cards Section */}
+              <EventStatsCards />
 
               {/* Tabs */}
               <EventsTabs activeTab={activeTab} onTabChange={setActiveTab} />
@@ -126,7 +129,7 @@ export default function EventsPage() {
                   <p className="text-sm text-gray-500 mb-6">Try adjusting your filters or create a new event</p>
                   <Button
                     onClick={() => router.push("/events/new")}
-                    className="bg-[#1414f5] hover:bg-[#1414f5]/90"
+                    className="bg-black hover:bg-black/90 text-white"
                     effect="gooeyLeft"
                   >
                     <Plus className="mr-2 h-4 w-4" />
