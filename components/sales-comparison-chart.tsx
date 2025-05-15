@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
@@ -56,25 +56,37 @@ export function SalesComparisonChart() {
   const filteredData = getFilteredData()
 
   return (
-    <Card className="overflow-hidden mb-4">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
+    <Card className="px-4 lg:px-6">
+      <div className="flex flex-row items-center justify-between py-2">
         <div>
-          <CardTitle className="text-lg font-medium">Sales Comparison</CardTitle>
-          <CardDescription>This month vs last month</CardDescription>
+          <h3 className="text-lg font-semibold text-gray-900">Sales Comparison</h3>
+          <p className="text-sm text-gray-600">This month vs last month</p>
         </div>
         <ToggleGroup type="single" value={timeRange} onValueChange={(value) => value && setTimeRange(value)}>
-          <ToggleGroupItem value="3m" aria-label="Last 3 months" className="text-xs">
+          <ToggleGroupItem
+            value="3m"
+            aria-label="Last 3 months"
+            className="text-xs border-gray-200 data-[state=on]:bg-gray-100 data-[state=on]:text-gray-900"
+          >
             Last 3 months
           </ToggleGroupItem>
-          <ToggleGroupItem value="30d" aria-label="Last 30 days" className="text-xs">
+          <ToggleGroupItem
+            value="30d"
+            aria-label="Last 30 days"
+            className="text-xs border-gray-200 data-[state=on]:bg-gray-100 data-[state=on]:text-gray-900"
+          >
             Last 30 days
           </ToggleGroupItem>
-          <ToggleGroupItem value="7d" aria-label="Last 7 days" className="text-xs">
+          <ToggleGroupItem
+            value="7d"
+            aria-label="Last 7 days"
+            className="text-xs border-gray-200 data-[state=on]:bg-gray-100 data-[state=on]:text-gray-900"
+          >
             Last 7 days
           </ToggleGroupItem>
         </ToggleGroup>
-      </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+      </div>
+      <CardContent className="px-0 pt-4">
         <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
           <AreaChart data={filteredData}>
             <defs>
@@ -87,19 +99,26 @@ export function SalesComparisonChart() {
                 <stop offset="95%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.1} />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} stroke="#f1f1f1" />
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
+              stroke="#9ca3af"
               tickFormatter={(value) => {
                 const date = new Date(value)
                 return `Jun ${date.getDate()}`
               }}
             />
-            <YAxis tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} width={60} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => `$${value}`}
+              width={60}
+              stroke="#9ca3af"
+            />
             <ChartTooltip
               cursor={false}
               content={
@@ -118,6 +137,7 @@ export function SalesComparisonChart() {
               type="natural"
               fill="url(#fillLastMonth)"
               stroke="var(--color-lastMonth)"
+              strokeWidth={2}
               stackId="a"
             />
             <Area
@@ -125,6 +145,7 @@ export function SalesComparisonChart() {
               type="natural"
               fill="url(#fillCurrentMonth)"
               stroke="var(--color-currentMonth)"
+              strokeWidth={2}
               stackId="a"
             />
           </AreaChart>

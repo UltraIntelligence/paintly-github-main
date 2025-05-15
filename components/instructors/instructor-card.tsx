@@ -1,8 +1,10 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-import { CalendarIcon, EditIcon, MoreHorizontalIcon, TrashIcon, UserIcon } from "lucide-react"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { EditIcon, MoreHorizontalIcon, TrashIcon, UserIcon } from "lucide-react"
 import type { Instructor } from "./instructor-data"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -27,32 +29,33 @@ import { Separator } from "@/components/ui/separator"
 
 export function InstructorCard({ instructor }: { instructor: Instructor }) {
   const [showArchiveDialog, setShowArchiveDialog] = useState(false)
+  const router = useRouter()
 
   // Helper function to get status color
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Submitted":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+        return "bg-green-100 text-green-700"
       case "Pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+        return "bg-yellow-100 text-yellow-700"
       case "Missing":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+        return "bg-red-100 text-red-700"
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
+        return "bg-gray-100 text-gray-700"
     }
   }
 
   return (
     <>
-      <Card className="overflow-hidden">
-        <CardContent className="p-6">
+      <Card>
+        <CardContent className="p-0">
           <div className="flex flex-col gap-6 sm:flex-row">
             {/* Larger Profile Picture */}
             <div className="flex-shrink-0">
-              <Avatar className="h-24 w-24 rounded-md border">
+              <Avatar className="h-24 w-24 rounded-md border border-gray-100">
                 <AvatarImage src={instructor.photo || "/placeholder.svg"} alt={instructor.name} />
-                <AvatarFallback className="rounded-md">
-                  <UserIcon className="h-10 w-10" />
+                <AvatarFallback className="rounded-md bg-gray-100">
+                  <UserIcon className="h-10 w-10 text-gray-700" />
                 </AvatarFallback>
               </Avatar>
             </div>
@@ -61,10 +64,10 @@ export function InstructorCard({ instructor }: { instructor: Instructor }) {
             <div className="flex flex-1 flex-col">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-xl font-medium">{instructor.name}</h3>
+                  <h3 className="text-xl font-semibold text-gray-900">{instructor.name}</h3>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {instructor.role.map((role) => (
-                      <Badge key={role} variant="outline" className="text-xs">
+                      <Badge key={role} variant="outline" className="text-xs bg-gray-100 text-gray-700 border-gray-100">
                         {role}
                       </Badge>
                     ))}
@@ -72,7 +75,7 @@ export function InstructorCard({ instructor }: { instructor: Instructor }) {
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500">
                       <MoreHorizontalIcon className="h-4 w-4" />
                       <span className="sr-only">More options</span>
                     </Button>
@@ -91,10 +94,7 @@ export function InstructorCard({ instructor }: { instructor: Instructor }) {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      className="text-red-600 dark:text-red-400"
-                      onClick={() => setShowArchiveDialog(true)}
-                    >
+                    <DropdownMenuItem className="text-red-600" onClick={() => setShowArchiveDialog(true)}>
                       <TrashIcon className="mr-2 h-4 w-4" />
                       Archive Instructor
                     </DropdownMenuItem>
@@ -104,7 +104,11 @@ export function InstructorCard({ instructor }: { instructor: Instructor }) {
 
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {instructor.languages.map((lang) => (
-                  <Badge key={lang.code} variant="secondary" className="text-xs">
+                  <Badge
+                    key={lang.code}
+                    variant="secondary"
+                    className="text-xs bg-gray-100 text-gray-700 border-gray-100"
+                  >
                     {lang.code}
                   </Badge>
                 ))}
@@ -112,17 +116,20 @@ export function InstructorCard({ instructor }: { instructor: Instructor }) {
 
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {instructor.specialties.map((specialty) => (
-                  <Badge key={specialty} className="bg-primary/10 text-xs text-primary hover:bg-primary/20">
+                  <Badge
+                    key={specialty}
+                    className="bg-gray-100 text-xs text-gray-700 hover:bg-gray-100 border-gray-100"
+                  >
                     {specialty}
                   </Badge>
                 ))}
               </div>
 
-              <Separator className="my-4" />
+              <Separator className="my-4 bg-gray-100" />
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div>
-                  <div className="text-sm text-muted-foreground">This month:</div>
+                  <div className="text-xs text-gray-500">This month:</div>
                   <div
                     className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${getStatusColor(
                       instructor.availability.thisMonth,
@@ -132,7 +139,7 @@ export function InstructorCard({ instructor }: { instructor: Instructor }) {
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Next month:</div>
+                  <div className="text-xs text-gray-500">Next month:</div>
                   <div
                     className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${getStatusColor(
                       instructor.availability.nextMonth,
@@ -142,37 +149,39 @@ export function InstructorCard({ instructor }: { instructor: Instructor }) {
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Classes this month:</div>
-                  <div className="mt-1 text-sm font-medium">{instructor.stats.classesThisMonth}</div>
+                  <div className="text-xs text-gray-500">Classes this month:</div>
+                  <div className="mt-1 text-sm font-medium text-gray-900">{instructor.stats.classesThisMonth}</div>
                 </div>
               </div>
 
-              <div className="mt-2 text-xs text-muted-foreground">
-                Last updated: {instructor.availability.lastUpdated}
-              </div>
+              <div className="mt-2 text-xs text-gray-500">Last updated: {instructor.availability.lastUpdated}</div>
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end gap-3 bg-muted/10 p-4">
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/instructors/${instructor.id}`}>
-              <UserIcon className="mr-2 h-4 w-4" />
-              View Profile
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/instructors/${instructor.id}/calendar`}>
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              View Calendar
-            </Link>
+        <CardFooter className="flex justify-end gap-3 bg-gray-50 mt-4 -mx-4 -mb-4 px-4 py-3 rounded-b-lg">
+          <Button
+            effect="gooeyLeft"
+            size="sm"
+            className="bg-black text-white hover:bg-black/80"
+            onClick={() => router.push(`/instructors/${instructor.id}`)}
+          >
+            View Profile
           </Button>
           <Button
-            variant="ghost"
+            effect="gooeyLeft"
             size="sm"
-            className="text-red-600 hover:bg-red-50 hover:text-red-700"
+            className="bg-black text-white hover:bg-black/80"
+            onClick={() => router.push(`/instructors/${instructor.id}/calendar`)}
+          >
+            View Calendar
+          </Button>
+          <Button
+            effect="gooeyLeft"
+            variant="destructive"
+            size="sm"
+            className="text-white hover:bg-red-700"
             onClick={() => setShowArchiveDialog(true)}
           >
-            <TrashIcon className="mr-2 h-4 w-4" />
             Archive
           </Button>
         </CardFooter>
@@ -189,10 +198,11 @@ export function InstructorCard({ instructor }: { instructor: Instructor }) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowArchiveDialog(false)}>
+            <Button effect="gooeyLeft" variant="outline" onClick={() => setShowArchiveDialog(false)}>
               Cancel
             </Button>
             <Button
+              effect="gooeyLeft"
               variant="destructive"
               onClick={() => {
                 // Handle archive logic here
