@@ -1,25 +1,139 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { Plus } from "lucide-react"
+import { useRouter } from "next/navigation"
+
 import { AppSidebar } from "../../components/app-sidebar"
 import { SiteHeader } from "../../components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { EventCard } from "@/components/events/event-card"
+import { EventsTabs } from "@/components/events/events-tabs"
+import { EventsFilters } from "@/components/events/events-filters"
+import { eventData, type Event, type EventCategory } from "@/components/events/event-data"
 
 export default function EventsPage() {
+  const router = useRouter()
+  const [activeTab, setActiveTab] = useState<EventCategory | "All" | "Templates">("All")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showTemplatesOnly, setShowTemplatesOnly] = useState(false)
+  const [sortBy, setSortBy] = useState("Last Modified")
+  const [view, setView] = useState<"grid" | "list">("grid")
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>(eventData)
+
+  useEffect(() => {
+    let filtered = [...eventData]
+
+    // Filter by tab
+    if (activeTab !== "All") {
+      if (activeTab === "Templates") {
+        filtered = filtered.filter((event) => event.isTemplate)
+      } else {
+        filtered = filtered.filter((event) => event.category === activeTab)
+      }
+    }
+
+    // Filter by search
+    if (searchQuery) {
+      filtered = filtered.filter((event) => event.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    }
+
+    // Filter templates only
+    if (showTemplatesOnly) {
+      filtered = filtered.filter((event) => event.isTemplate)
+    }
+
+    // Sort
+    switch (sortBy) {
+      case "Name":
+        filtered.sort((a, b) => a.title.localeCompare(b.title))
+        break
+      case "Price":
+        filtered.sort((a, b) => {
+          const aPrice = Number.parseInt(a.price.replace(/[^\d]/g, ""))
+          const bPrice = Number.parseInt(b.price.replace(/[^\d]/g, ""))
+          return bPrice - aPrice
+        })
+        break
+      case "Duration":
+        filtered.sort((a, b) => {
+          const aHours = Number.parseFloat(a.duration.split(" ")[0])
+          const bHours = Number.parseFloat(b.duration.split(" ")[0])
+          return bHours - aHours
+        })
+        break
+      case "Last Modified":
+        filtered.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime())
+        break
+      case "Most Scheduled":
+        filtered.sort((a, b) => b.scheduledCount - a.scheduledCount)
+        break
+    }
+
+    setFilteredEvents(filtered)
+  }, [activeTab, searchQuery, showTemplatesOnly, sortBy])
+
   return (
     <SidebarProvider>
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-6 p-4 md:p-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Events</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>This is the events page where you can manage your painting events and classes.</p>
-                </CardContent>
-              </Card>
+          <div className="@container/main flex flex-1 flex-col">
+            <div className="flex flex-col p-4 md:p-6">
+              {/* Header with Create Button - Hidden for now
+              <div className="flex items-center justify-between mb-6">
+                <h1 className="text-2xl font-bold">Events</h1>
+                <Button
+                  onClick={() => router.push("/events/new")}
+                  className="bg-[#1414f5] hover:bg-[#1414f5]/90"
+                  effect="gooeyLeft"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create New Event
+                </Button>
+              </div>
+              */}
+
+              {/* Tabs */}
+              <EventsTabs activeTab={activeTab} onTabChange={setActiveTab} />
+
+              {/* Filters */}
+              <EventsFilters
+                onSearchChange={setSearchQuery}
+                onTemplateFilterChange={setShowTemplatesOnly}
+                onSortChange={setSortBy}
+                onViewChange={setView}
+                view={view}
+              />
+
+              {/* Events Grid */}
+              <div
+                className={`grid gap-6 mt-6 ${
+                  view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
+                }`}
+              >
+                {filteredEvents.map((event) => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+
+              {/* Empty State */}
+              {filteredEvents.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <h3 className="text-lg font-medium mb-2">No events found</h3>
+                  <p className="text-sm text-gray-500 mb-6">Try adjusting your filters or create a new event</p>
+                  <Button
+                    onClick={() => router.push("/events/new")}
+                    className="bg-[#1414f5] hover:bg-[#1414f5]/90"
+                    effect="gooeyLeft"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create New Event
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
