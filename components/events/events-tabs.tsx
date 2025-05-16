@@ -1,37 +1,31 @@
 "use client"
-import type { EventCategory } from "./event-data"
+
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import type { EventCategory } from "@/components/events/event-data"
 
 interface EventsTabsProps {
-  activeTab: EventCategory | "All" | "Templates"
-  onTabChange: (tab: EventCategory | "All" | "Templates") => void
+  activeTab: EventCategory | "All"
+  onTabChange: (tab: EventCategory | "All") => void
 }
 
 export function EventsTabs({ activeTab, onTabChange }: EventsTabsProps) {
-  const tabs: (EventCategory | "All" | "Templates")[] = [
-    "All",
-    "Regular",
-    "Family Friendly",
-    "Corporate",
-    "Seasonal",
-    "Archived",
-    "Templates",
-  ]
+  const categories: Array<EventCategory | "All"> = ["All", "Regular", "Family Friendly", "Corporate", "Seasonal"]
 
   return (
-    <div className="border-b border-gray-200">
-      <div className="flex overflow-x-auto hide-scrollbar">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => onTabChange(tab)}
-            className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all relative
-              ${activeTab === tab ? "text-blue-600" : "text-gray-600 hover:text-gray-900"}`}
-          >
-            {tab}
-            {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>}
-          </button>
-        ))}
-      </div>
+    <div className="border-b">
+      <Tabs defaultValue={activeTab} onValueChange={(value) => onTabChange(value as EventCategory | "All")}>
+        <TabsList className="w-full justify-start">
+          {categories.map((category) => (
+            <TabsTrigger
+              key={category}
+              value={category}
+              className="data-[state=active]:bg-background data-[state=active]:shadow-none"
+            >
+              {category}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
     </div>
   )
 }

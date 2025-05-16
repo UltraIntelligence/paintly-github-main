@@ -2,7 +2,6 @@ import { notFound } from "next/navigation"
 import { instructors } from "../../../components/instructors/instructor-data"
 import { AppSidebar } from "../../../components/app-sidebar"
 import { SiteHeader } from "../../../components/site-header"
-import { InstructorAvailability } from "../../../components/instructors/instructor-availability"
 import { InstructorPerformance } from "../../../components/instructors/instructor-performance"
 import { InstructorProfile } from "../../../components/instructors/instructor-profile"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
@@ -31,15 +30,12 @@ export default function InstructorDetailPage({ params }: { params: { id: string 
               <p className="text-muted-foreground">Instructor Profile and Management</p>
             </div>
 
-            {/* Three Main Sections */}
+            {/* Two Main Sections */}
             <div className="grid grid-cols-1 gap-6">
               {/* 1. Profile Information */}
               <InstructorProfile instructor={instructor} />
 
-              {/* 2. Availability Management */}
-              <InstructorAvailability instructor={instructor} />
-
-              {/* 3. Performance Overview */}
+              {/* 2. Performance Overview */}
               <InstructorPerformance instructor={instructor} />
             </div>
           </div>

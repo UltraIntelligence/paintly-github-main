@@ -21,8 +21,8 @@ export default function InstructorsPage() {
               {/* Quick Stats */}
               <InstructorStats />
 
-              {/* Instructor Cards - Single Column */}
-              <div className="flex flex-col gap-4">
+              {/* Instructor Cards - Grid Layout */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {instructors.map((instructor) => (
                   <InstructorCard key={instructor.id} instructor={instructor} />
                 ))}

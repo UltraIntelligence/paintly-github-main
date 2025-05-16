@@ -16,9 +16,8 @@ import { eventData, type Event, type EventCategory } from "@/components/events/e
 
 export default function EventsPage() {
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState<EventCategory | "All" | "Templates">("All")
+  const [activeTab, setActiveTab] = useState<EventCategory | "All">("All")
   const [searchQuery, setSearchQuery] = useState("")
-  const [showTemplatesOnly, setShowTemplatesOnly] = useState(false)
   const [sortBy, setSortBy] = useState("Last Modified")
   const [view, setView] = useState<"grid" | "list">("grid")
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(eventData)
@@ -28,21 +27,12 @@ export default function EventsPage() {
 
     // Filter by tab
     if (activeTab !== "All") {
-      if (activeTab === "Templates") {
-        filtered = filtered.filter((event) => event.isTemplate)
-      } else {
-        filtered = filtered.filter((event) => event.category === activeTab)
-      }
+      filtered = filtered.filter((event) => event.category === activeTab)
     }
 
     // Filter by search
     if (searchQuery) {
       filtered = filtered.filter((event) => event.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    }
-
-    // Filter templates only
-    if (showTemplatesOnly) {
-      filtered = filtered.filter((event) => event.isTemplate)
     }
 
     // Sort
@@ -73,7 +63,7 @@ export default function EventsPage() {
     }
 
     setFilteredEvents(filtered)
-  }, [activeTab, searchQuery, showTemplatesOnly, sortBy])
+  }, [activeTab, searchQuery, sortBy])
 
   return (
     <SidebarProvider>
@@ -92,13 +82,12 @@ export default function EventsPage() {
               {/* Filters */}
               <EventsFilters
                 onSearchChange={setSearchQuery}
-                onTemplateFilterChange={setShowTemplatesOnly}
                 onSortChange={setSortBy}
                 onViewChange={setView}
                 view={view}
               />
 
-              {/* Events Grid */}
+              {/* Templates Grid */}
               <div
                 className={`grid gap-6 mt-6 ${
                   view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
@@ -112,15 +101,15 @@ export default function EventsPage() {
               {/* Empty State */}
               {filteredEvents.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <h3 className="text-lg font-medium mb-2">No events found</h3>
-                  <p className="text-sm text-gray-500 mb-6">Try adjusting your filters or create a new event</p>
+                  <h3 className="text-lg font-medium mb-2">No templates found</h3>
+                  <p className="text-sm text-gray-500 mb-6">Try adjusting your filters or create a new template</p>
                   <Button
                     onClick={() => router.push("/events/new")}
                     className="bg-black hover:bg-black/90 text-white"
                     effect="gooeyLeft"
                   >
                     <Plus className="mr-2 h-4 w-4" />
-                    Create New Event
+                    Create New Template
                   </Button>
                 </div>
               )}

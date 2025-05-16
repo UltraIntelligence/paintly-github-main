@@ -28,6 +28,14 @@ export function NavMain({
     icon?: LucideIcon
   }[]
 }) {
+  // Modify items to rename "Events" to "Templates"
+  const modifiedItems = items.map((item) => {
+    if (item.title === "Events") {
+      return { ...item, title: "Templates" }
+    }
+    return item
+  })
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -35,13 +43,10 @@ export function NavMain({
           <SidebarMenuItem className="flex items-center">
             <Dialog>
               <DialogTrigger asChild>
-                <SidebarMenuButton
-                  tooltip="Quick Create"
-                  className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
-                >
-                  <PlusCircleIcon />
-                  <span>Quick Create</span>
-                </SidebarMenuButton>
+                <Button effect="gradientSlideShow" className="flex items-center gap-2 w-full justify-start pl-3">
+                  <PlusCircleIcon className="h-4 w-4" />
+                  <span>New</span>
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -52,7 +57,7 @@ export function NavMain({
                   <Button asChild variant="outline" className="justify-start">
                     <Link href="/events/new">
                       <Palette className="mr-2 h-4 w-4" />
-                      New Event
+                      New Template
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="justify-start">
@@ -73,7 +78,7 @@ export function NavMain({
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {items.map((item) => (
+          {modifiedItems.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title} asChild>
                 <Link href={item.url}>
