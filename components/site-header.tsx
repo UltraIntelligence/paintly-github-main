@@ -14,7 +14,7 @@ export function SiteHeader() {
     if (pathname.includes("/dashboard")) return "Home"
     if (pathname.includes("/scheduling")) return "Calendar"
     if (pathname.includes("/instructors")) return "Instructors"
-    if (pathname.includes("/events")) return "Templates"
+    if (pathname.includes("/events")) return "Events"
     if (pathname.includes("/locations")) return "Locations"
     if (pathname.includes("/settings")) return "Settings"
     if (pathname.includes("/help")) return "Help Center"
