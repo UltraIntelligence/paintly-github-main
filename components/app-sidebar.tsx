@@ -20,9 +20,9 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } fr
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: "Cathy",
+    email: "tokyo@artbar.co.jp",
+    avatar: "/abstract-geometric-shapes.png",
   },
   navMain: [
     {

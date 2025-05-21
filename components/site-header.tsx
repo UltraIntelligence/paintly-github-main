@@ -10,6 +10,7 @@ export function SiteHeader() {
 
   // Get the page title based on the current path
   const getPageTitle = () => {
+    if (pathname === "/dashboard") return "Welcome back, Cathy."
     if (pathname.includes("/dashboard")) return "Home"
     if (pathname.includes("/scheduling")) return "Scheduling"
     if (pathname.includes("/instructors")) return "Instructors"
@@ -39,7 +40,7 @@ export function SiteHeader() {
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
-        <Link href={getPageUrl()} className="hover:underline">
+        <Link href={getPageUrl()} className={`${pathname === "/dashboard" ? "" : "hover:underline"}`}>
           <h1 className="text-base font-medium">{getPageTitle()}</h1>
         </Link>
       </div>
