@@ -51,7 +51,7 @@ const activities = [
 
 export function ActivityFeed() {
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-medium">Latest Activity</CardTitle>
         <Button variant="ghost" size="sm" className="text-xs text-primary h-8 px-2">
@@ -60,7 +60,7 @@ export function ActivityFeed() {
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="space-y-0 overflow-auto max-h-[320px] pr-2">
+        <div className="space-y-0 overflow-auto h-[400px] pr-2">
           {activities.map((activity, index) => (
             <ActivityItem
               key={index}

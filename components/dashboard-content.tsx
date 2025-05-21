@@ -12,8 +12,13 @@ export function DashboardContent() {
     <div className="flex flex-col gap-4 p-4 md:p-6">
       <AlertsSection />
       <DailyStatistics />
-      <WeeklyEvents />
-      <ActivityFeed />
+
+      {/* Weekly Events and Activity Feed side by side on desktop */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <WeeklyEvents />
+        <ActivityFeed />
+      </div>
+
       <TodaysEvents />
       <SalesComparisonChart />
 

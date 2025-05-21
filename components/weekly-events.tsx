@@ -85,7 +85,7 @@ export function WeeklyEvents() {
   const totalEvents = weeklyEventsData.reduce((sum, day) => sum + day.events.length, 0)
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-medium">{totalEvents} events this week</CardTitle>
         <a href="#" className="text-sm text-primary hover:underline">
@@ -93,7 +93,7 @@ export function WeeklyEvents() {
         </a>
       </CardHeader>
       <CardContent>
-        <div className="max-h-[400px] overflow-auto pr-1">
+        <div className="h-[400px] overflow-auto pr-1">
           {weeklyEventsData.map((day) => (
             <div key={day.day} className="mb-4">
               <h3 className="mb-2 font-medium">
@@ -126,7 +126,7 @@ export function WeeklyEvents() {
                           />
                         </div>
                         <div>
-                          <h4 className="font-medium">{event.title}</h4>
+                          <h4 className="font-medium truncate">{event.title}</h4>
                           <div className="flex flex-col text-sm text-muted-foreground sm:flex-row sm:gap-2">
                             <span>{event.time}</span>
                             <span className="hidden sm:inline">•</span>
@@ -136,7 +136,7 @@ export function WeeklyEvents() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex h-10 w-10 items-center justify-center">
+                      <div className="flex h-10 w-10 items-center justify-center flex-shrink-0 ml-2">
                         {isFullyBooked ? (
                           <Check className="h-6 w-6 text-green-500" />
                         ) : (
