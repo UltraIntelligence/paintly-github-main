@@ -10,6 +10,7 @@ const todaysEvents = [
     location: "Studio C",
     booked: 8,
     capacity: 12,
+    image: "gradient-1",
   },
   {
     time: "10:00 AM",
@@ -18,6 +19,7 @@ const todaysEvents = [
     location: "Studio A",
     booked: 12,
     capacity: 15,
+    image: "gradient-2",
   },
   {
     time: "11:30 AM",
@@ -26,6 +28,7 @@ const todaysEvents = [
     location: "Studio B",
     booked: 10,
     capacity: 15,
+    image: "gradient-3",
   },
   {
     time: "1:00 PM",
@@ -34,6 +37,7 @@ const todaysEvents = [
     location: "Lecture Hall",
     booked: 25,
     capacity: 30,
+    image: "gradient-4",
   },
   {
     time: "2:00 PM",
@@ -42,6 +46,7 @@ const todaysEvents = [
     location: "Studio B",
     booked: 18,
     capacity: 20,
+    image: "gradient-5",
   },
   {
     time: "3:30 PM",
@@ -50,6 +55,7 @@ const todaysEvents = [
     location: "Children's Studio",
     booked: 15,
     capacity: 15,
+    image: "gradient-6",
   },
   {
     time: "4:45 PM",
@@ -58,6 +64,7 @@ const todaysEvents = [
     location: "Tech Lab",
     booked: 12,
     capacity: 16,
+    image: "gradient-7",
   },
   {
     time: "5:30 PM",
@@ -66,6 +73,7 @@ const todaysEvents = [
     location: "Sculpture Garden",
     booked: 8,
     capacity: 10,
+    image: "gradient-8",
   },
   {
     time: "6:30 PM",
@@ -74,8 +82,25 @@ const todaysEvents = [
     location: "Main Gallery",
     booked: 24,
     capacity: 24,
+    image: "gradient-1",
   },
 ]
+
+// Function to generate gradient background for event images
+const getGradientStyle = (gradientType: string) => {
+  const gradients = {
+    "gradient-1": "bg-gradient-to-br from-blue-400 to-indigo-600",
+    "gradient-2": "bg-gradient-to-br from-pink-400 to-rose-600",
+    "gradient-3": "bg-gradient-to-br from-amber-400 to-orange-600",
+    "gradient-4": "bg-gradient-to-br from-emerald-400 to-green-600",
+    "gradient-5": "bg-gradient-to-br from-purple-400 to-violet-600",
+    "gradient-6": "bg-gradient-to-br from-red-400 to-rose-600",
+    "gradient-7": "bg-gradient-to-br from-cyan-400 to-blue-600",
+    "gradient-8": "bg-gradient-to-br from-yellow-400 to-amber-600",
+  }
+
+  return gradients[gradientType as keyof typeof gradients] || "bg-gray-200"
+}
 
 export function TodaysEvents() {
   return (
@@ -85,8 +110,8 @@ export function TodaysEvents() {
           <Table>
             <TableHeader className="sticky top-0 bg-gray-50 z-10">
               <TableRow className="border-b border-gray-200">
-                <TableHead className="w-[100px] text-xs text-gray-500">Time</TableHead>
-                <TableHead className="text-xs text-gray-500">Event</TableHead>
+                <TableHead className="w-[80px] text-xs text-gray-500">Event</TableHead>
+                <TableHead className="text-xs text-gray-500">Details</TableHead>
                 <TableHead className="hidden md:table-cell text-xs text-gray-500">Instructor</TableHead>
                 <TableHead className="hidden md:table-cell text-xs text-gray-500">Location</TableHead>
                 <TableHead className="text-right text-xs text-gray-500">Capacity</TableHead>
@@ -95,7 +120,12 @@ export function TodaysEvents() {
             <TableBody>
               {todaysEvents.map((event) => (
                 <TableRow key={`${event.time}-${event.name}`} className="border-b border-gray-200">
-                  <TableCell className="text-sm text-gray-600">{event.time}</TableCell>
+                  <TableCell className="align-top py-3">
+                    <div className="flex flex-col items-center space-y-1">
+                      <div className={`w-12 h-12 rounded-md ${getGradientStyle(event.image)}`}></div>
+                      <span className="text-xs text-gray-500 whitespace-nowrap">{event.time}</span>
+                    </div>
+                  </TableCell>
                   <TableCell className="text-sm font-medium text-gray-900">{event.name}</TableCell>
                   <TableCell className="hidden md:table-cell text-sm text-gray-600">{event.instructor}</TableCell>
                   <TableCell className="hidden md:table-cell text-sm text-gray-600">{event.location}</TableCell>
