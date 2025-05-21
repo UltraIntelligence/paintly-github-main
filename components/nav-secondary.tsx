@@ -1,15 +1,47 @@
-import Link from "next/link"
-import type { SidebarMenuButtonProps } from "@/types"
+"use client"
 
-const SidebarMenuButton = ({ item }: SidebarMenuButtonProps) => {
+import type * as React from "react"
+import type { LucideIcon } from "lucide-react"
+import Link from "next/link"
+
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
+
+export function NavSecondary({
+  items,
+  ...props
+}: {
+  items: {
+    title: string
+    url: string
+    icon: LucideIcon
+  }[]
+} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
-    <li>
-      <Link href={item.url} className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
-        {item.icon && <item.icon className="h-4 w-4 flex-shrink-0" />}
-        <span className="truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
-      </Link>
-    </li>
+    <SidebarGroup {...props}>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                tooltip={item.title}
+                asChild
+                className="h-9 text-sm font-medium text-muted-foreground hover:text-foreground group-data-[collapsible=icon]:justify-center"
+              >
+                <Link href={item.url}>
+                  <item.icon className="h-4 w-4 flex-shrink-0" />
+                  <span className="group-data-[collapsible=icon]:sr-only">{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
   )
 }
-
-export default SidebarMenuButton
