@@ -42,7 +42,7 @@ export function EventTemplateSettings({ isTemplate, variations, seasonal }: Even
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Template Settings</CardTitle>
+        <CardTitle>Event Settings</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center justify-between">

@@ -22,7 +22,7 @@ export function EventQuickActions({ isTemplate }: EventQuickActionsProps) {
 
         <Button variant="outline" className="w-full justify-start" effect="gooeyLeft">
           <Copy className="mr-2 h-4 w-4" />
-          Duplicate as Template
+          Duplicate Event
         </Button>
 
         {isTemplate && (

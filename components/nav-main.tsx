@@ -28,11 +28,8 @@ export function NavMain({
     icon?: LucideIcon
   }[]
 }) {
-  // Modify items to rename "Events" to "Templates" and "Scheduling" to "Calendar"
+  // Only modify items to rename "Scheduling" to "Calendar"
   const modifiedItems = items.map((item) => {
-    if (item.title === "Events") {
-      return { ...item, title: "Templates" }
-    }
     if (item.title === "Scheduling") {
       return { ...item, title: "Calendar" }
     }
@@ -60,7 +57,7 @@ export function NavMain({
                   <Button asChild variant="outline" className="justify-start">
                     <Link href="/events/new">
                       <Palette className="mr-2 h-4 w-4" />
-                      New Template
+                      New Event
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="justify-start">

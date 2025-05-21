@@ -87,7 +87,7 @@ export default function EventsPage() {
                 view={view}
               />
 
-              {/* Templates Grid */}
+              {/* Events Grid */}
               <div
                 className={`grid gap-6 mt-6 ${
                   view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
@@ -101,15 +101,15 @@ export default function EventsPage() {
               {/* Empty State */}
               {filteredEvents.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <h3 className="text-lg font-medium mb-2">No templates found</h3>
-                  <p className="text-sm text-gray-500 mb-6">Try adjusting your filters or create a new template</p>
+                  <h3 className="text-lg font-medium mb-2">No events found</h3>
+                  <p className="text-sm text-gray-500 mb-6">Try adjusting your filters or create a new event</p>
                   <Button
                     onClick={() => router.push("/events/new")}
                     className="bg-black hover:bg-black/90 text-white"
                     effect="gooeyLeft"
                   >
                     <Plus className="mr-2 h-4 w-4" />
-                    Create New Template
+                    Create New Event
                   </Button>
                 </div>
               )}
