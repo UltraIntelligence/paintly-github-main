@@ -2,23 +2,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { AlertsSection } from "./alerts-section"
 import { SalesComparisonChart } from "./sales-comparison-chart"
-import { TodaysEvents } from "./todays-events"
-import { DailyStatistics } from "./daily-statistics"
-import { ActivityFeed } from "./activity-feed"
 import { WeeklyEvents } from "./weekly-events"
+import { TodaysOverview } from "./todays-overview"
 
 export function DashboardContent() {
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
       <AlertsSection />
-      <DailyStatistics />
-      <TodaysEvents />
+      <TodaysOverview />
 
-      {/* Weekly Events and Activity Feed side by side on desktop */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <WeeklyEvents />
-        <ActivityFeed />
-      </div>
+      {/* Weekly Events */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-medium">Weekly Events</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <WeeklyEvents />
+        </CardContent>
+      </Card>
 
       <SalesComparisonChart />
 

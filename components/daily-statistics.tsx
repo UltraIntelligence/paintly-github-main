@@ -38,10 +38,7 @@ const dailyStats = [
 export function DailyStatistics() {
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">Daily Statistics</h2>
-        <span className="text-sm text-gray-500">Today</span>
-      </div>
+      <h3 className="text-lg font-semibold text-gray-900">Daily Statistics</h3>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {dailyStats.map((stat, index) => (
           <Card key={index} className="overflow-hidden">

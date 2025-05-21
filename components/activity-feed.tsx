@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ActivityItem } from "./activity-item"
 import { Button } from "@/components/ui/button"
 import { ChevronRightIcon } from "lucide-react"
@@ -51,27 +50,25 @@ const activities = [
 
 export function ActivityFeed() {
   return (
-    <Card className="h-full">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-lg font-medium">Latest Activity</CardTitle>
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Latest Activity</h3>
         <Button variant="ghost" size="sm" className="text-xs text-primary h-8 px-2">
           View all
           <ChevronRightIcon className="ml-1 h-4 w-4" />
         </Button>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-0 overflow-auto h-[400px] pr-2">
-          {activities.map((activity, index) => (
-            <ActivityItem
-              key={index}
-              type={activity.type}
-              title={activity.title}
-              time={activity.time}
-              event={activity.event}
-            />
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+      <div className="space-y-0 overflow-auto h-[300px] pr-2 border rounded-lg p-4">
+        {activities.map((activity, index) => (
+          <ActivityItem
+            key={index}
+            type={activity.type}
+            title={activity.title}
+            time={activity.time}
+            event={activity.event}
+          />
+        ))}
+      </div>
+    </div>
   )
 }

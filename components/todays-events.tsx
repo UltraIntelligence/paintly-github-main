@@ -1,5 +1,4 @@
 import { CalendarDaysIcon } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 
@@ -33,12 +32,12 @@ const todaysEvents = [
 
 export function TodaysEvents() {
   return (
-    <Card className="px-4 lg:px-6">
-      <div className="flex items-center justify-between py-2">
+    <div>
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Today's Events</h3>
         <CalendarDaysIcon className="h-4 w-4 text-gray-500" />
       </div>
-      <CardContent className="p-0">
+      <div className="border rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -72,7 +71,7 @@ export function TodaysEvents() {
             ))}
           </TableBody>
         </Table>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
