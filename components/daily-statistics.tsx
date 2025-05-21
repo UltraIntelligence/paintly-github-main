@@ -35,15 +35,11 @@ const dailyStats = [
   },
 ]
 
-interface DailyStatisticsProps {
-  hideTitle?: boolean
-}
-
-export function DailyStatistics({ hideTitle = false }: DailyStatisticsProps) {
+export function DailyStatistics() {
   return (
     <div className="space-y-4">
-      {!hideTitle && <h3 className="text-lg font-semibold text-gray-900">Daily Statistics</h3>}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <h3 className="text-lg font-semibold text-gray-900">Daily Statistics</h3>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {dailyStats.map((stat, index) => (
           <Card key={index} className="overflow-hidden">
             <CardContent className="p-4">
@@ -64,7 +60,7 @@ export function DailyStatistics({ hideTitle = false }: DailyStatisticsProps) {
                     )}
                     {stat.change}
                   </div>
-                  <span className="text-xs text-gray-500">vs last week</span>
+                  <span className="text-xs text-gray-500">compared to last week</span>
                 </div>
               </div>
               <div className="mt-3 h-10 flex items-end space-x-1">

@@ -1,48 +1,47 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
-import { AlertCircleIcon, BellIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, XIcon } from "lucide-react"
+import { X, AlertCircle, Bell, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
-type NotificationType = "warning" | "error" | "info"
-
-interface Notification {
+type Notification = {
   id: string
-  icon: React.ElementType
+  icon: typeof Bell | typeof AlertCircle | typeof Clock
   title: string
   description: string
-  type: NotificationType
+  type: "warning" | "error" | "info"
 }
 
 export function NotificationBanner() {
+  // Define our notifications
   const notifications: Notification[] = [
     {
-      id: "new-availability",
-      icon: BellIcon,
+      id: "staff-availability",
+      icon: Bell,
       title: "New staff availability submitted",
       description: "Instructor Maria Garcia has submitted availability for June. Review and approve.",
       type: "warning",
     },
     {
       id: "scheduling-conflicts",
-      icon: AlertCircleIcon,
+      icon: AlertCircle,
       title: "Scheduling Conflicts",
       description: "2 scheduling conflicts detected for next week. Review and resolve.",
       type: "error",
     },
     {
       id: "pending-availability",
-      icon: ClockIcon,
+      icon: Clock,
       title: "Pending Staff Availability",
       description: "3 instructors have not submitted their availability for next month.",
       type: "info",
     },
   ]
 
-  const [dismissedNotifications, setDismissedNotifications] = useState<string[]>([])
-  const [currentIndex, setCurrentIndex] = useState(0)
+  // State to track which notifications have been dismissed
+  const [dismissedNotifications, setDismissedNotifications] = useState<Record<string, boolean>>({})
+  const [activeNotificationIndex, setActiveNotificationIndex] = useState(0)
 
   // Load dismissed notifications from localStorage on component mount
   useEffect(() => {
@@ -53,97 +52,74 @@ export function NotificationBanner() {
   }, [])
 
   // Filter out dismissed notifications
-  const activeNotifications = notifications.filter((notification) => !dismissedNotifications.includes(notification.id))
+  const activeNotifications = notifications.filter((notification) => !dismissedNotifications[notification.id])
 
-  // If there are no active notifications, don't render the banner
+  // If all notifications are dismissed, don't render anything
   if (activeNotifications.length === 0) {
     return null
   }
 
-  // Ensure currentIndex is within bounds
-  const safeIndex = Math.min(currentIndex, activeNotifications.length - 1)
-  const currentNotification = activeNotifications[safeIndex]
+  const currentNotification = activeNotifications[activeNotificationIndex]
 
   // Handle dismissing a notification
   const dismissNotification = (id: string) => {
-    const newDismissed = [...dismissedNotifications, id]
+    const newDismissed = { ...dismissedNotifications, [id]: true }
     setDismissedNotifications(newDismissed)
     localStorage.setItem("dismissedNotifications", JSON.stringify(newDismissed))
 
-    // If we dismissed the current notification and it was the last one, go to previous
-    if (safeIndex >= activeNotifications.length - 1 && safeIndex > 0) {
-      setCurrentIndex(safeIndex - 1)
+    // If we dismissed the last notification in the list, go back to the first one
+    if (activeNotificationIndex >= activeNotifications.length - 1) {
+      setActiveNotificationIndex(0)
     }
   }
 
-  // Get background and border colors based on notification type
-  const getTypeStyles = (type: NotificationType) => {
-    switch (type) {
-      case "warning":
-        return "border-yellow-400 bg-yellow-50"
-      case "error":
-        return "border-red-400 bg-red-50"
-      case "info":
-        return "border-blue-400 bg-blue-50"
-      default:
-        return "border-gray-200 bg-gray-50"
-    }
-  }
-
-  // Get icon color based on notification type
-  const getIconColor = (type: NotificationType) => {
-    switch (type) {
-      case "warning":
-        return "text-yellow-700"
-      case "error":
-        return "text-red-700"
-      case "info":
-        return "text-blue-700"
-      default:
-        return "text-gray-700"
-    }
+  // Handle cycling through notifications
+  const nextNotification = () => {
+    setActiveNotificationIndex((prev) => (prev < activeNotifications.length - 1 ? prev + 1 : 0))
   }
 
   return (
-    <div className={`mb-4 rounded-md border-l-4 p-4 ${getTypeStyles(currentNotification.type)}`} role="alert">
-      <div className="flex items-start justify-between">
-        <div className="flex items-start space-x-3">
-          <div className={`mt-0.5 ${getIconColor(currentNotification.type)}`}>
-            <currentNotification.icon className="h-5 w-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-gray-900">{currentNotification.title}</h3>
-            <p className="mt-1 text-sm text-gray-600">{currentNotification.description}</p>
+    <Card
+      className={`mb-4 overflow-hidden border-l-4 ${
+        currentNotification.type === "warning"
+          ? "border-l-yellow-500 bg-yellow-50"
+          : currentNotification.type === "error"
+            ? "border-l-red-500 bg-red-50"
+            : "border-l-blue-500 bg-blue-50"
+      }`}
+    >
+      <div className="relative flex items-center justify-between p-4">
+        <div className="flex items-start gap-3">
+          <currentNotification.icon
+            className={`h-5 w-5 mt-0.5 ${
+              currentNotification.type === "warning"
+                ? "text-yellow-700"
+                : currentNotification.type === "error"
+                  ? "text-red-700"
+                  : "text-blue-700"
+            }`}
+          />
+          <div className="flex-1">
+            <h4 className="text-sm font-medium text-gray-900">{currentNotification.title}</h4>
+            <p className="text-sm text-gray-600">{currentNotification.description}</p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           {activeNotifications.length > 1 && (
-            <div className="flex items-center space-x-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 rounded-full p-0"
-                onClick={() => setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev))}
-                disabled={safeIndex === 0}
-                aria-label="Previous notification"
-              >
-                <ChevronLeftIcon className="h-4 w-4" />
-              </Button>
-
+            <div className="flex items-center gap-1 mr-2">
               <span className="text-xs text-gray-500">
-                {safeIndex + 1}/{activeNotifications.length}
+                {activeNotificationIndex + 1}/{activeNotifications.length}
               </span>
-
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 w-8 rounded-full p-0"
-                onClick={() => setCurrentIndex((prev) => (prev < activeNotifications.length - 1 ? prev + 1 : prev))}
-                disabled={safeIndex === activeNotifications.length - 1}
+                className="h-8 w-8 p-0"
+                onClick={nextNotification}
                 aria-label="Next notification"
               >
-                <ChevronRightIcon className="h-4 w-4" />
+                <span className="sr-only">Next</span>
+                <span aria-hidden="true">›</span>
               </Button>
             </div>
           )}
@@ -151,14 +127,15 @@ export function NotificationBanner() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 rounded-full p-0"
+            className="h-8 w-8 p-0"
             onClick={() => dismissNotification(currentNotification.id)}
             aria-label="Dismiss notification"
           >
-            <XIcon className="h-4 w-4" />
+            <X className="h-4 w-4" />
+            <span className="sr-only">Dismiss</span>
           </Button>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

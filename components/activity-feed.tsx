@@ -48,30 +48,17 @@ const activities = [
   },
 ]
 
-interface ActivityFeedProps {
-  hideTitle?: boolean
-}
-
-export function ActivityFeed({ hideTitle = false }: ActivityFeedProps) {
+export function ActivityFeed() {
   return (
-    <div className="h-full">
-      {!hideTitle && (
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Latest Activity</h3>
-          <Button variant="ghost" size="sm" className="text-xs text-primary h-8 px-2">
-            View all
-            <ChevronRightIcon className="ml-1 h-4 w-4" />
-          </Button>
-        </div>
-      )}
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-sm text-gray-500">Real-time updates</span>
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Latest Activity</h3>
         <Button variant="ghost" size="sm" className="text-xs text-primary h-8 px-2">
           View all
           <ChevronRightIcon className="ml-1 h-4 w-4" />
         </Button>
       </div>
-      <div className="space-y-0 overflow-auto h-[400px] lg:h-[500px] border rounded-lg p-4">
+      <div className="space-y-0 overflow-auto h-[300px] pr-2 border rounded-lg p-4">
         {activities.map((activity, index) => (
           <ActivityItem
             key={index}
