@@ -1,71 +1,79 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, CheckCircle, AlertCircle, Calendar } from "lucide-react"
+import { ChevronRight, CheckCircle, AlertCircle, CreditCard, Calendar } from "lucide-react"
 
-const activities = [
-  {
-    type: "booked",
-    icon: CheckCircle,
-    iconColor: "text-green-500",
-    iconBg: "bg-green-100",
-    message: "Event booked",
-    time: "2 mins ago",
-    detail: "Family Fun Creative Canvas - Heart",
-  },
-  {
-    type: "declined",
-    icon: AlertCircle,
-    iconColor: "text-red-500",
-    iconBg: "bg-red-100",
-    message: "Card Declined",
-    time: "5 mins ago",
-    detail: "Family Fun Creative Canvas - Heart",
-  },
-  {
-    type: "booked",
-    icon: CheckCircle,
-    iconColor: "text-green-500",
-    iconBg: "bg-green-100",
-    message: "Event booked",
-    time: "10 mins ago",
-    detail: "Family Fun Creative Canvas - Heart",
-  },
-  {
-    type: "review",
-    icon: Calendar,
-    iconColor: "text-blue-500",
-    iconBg: "bg-blue-100",
-    message: "New Portfolio Review",
-    time: "1 hour ago",
-    detail: "Family Fun Creative Canvas - Heart",
-  },
-]
+interface ActivityProps {
+  type: "booked" | "declined" | "review" | "reminder"
+  description: string
+  time: string
+  event?: string
+}
+
+function ActivityItem({ type, description, time, event }: ActivityProps) {
+  const getIcon = () => {
+    switch (type) {
+      case "booked":
+        return <CheckCircle className="h-5 w-5 text-emerald-500" />
+      case "declined":
+        return <CreditCard className="h-5 w-5 text-rose-500" />
+      case "review":
+        return <Calendar className="h-5 w-5 text-amber-500" />
+      case "reminder":
+        return <AlertCircle className="h-5 w-5 text-blue-500" />
+    }
+  }
+
+  return (
+    <div className="flex items-start gap-3 py-3">
+      <div className="mt-0.5">{getIcon()}</div>
+      <div className="space-y-1">
+        <p className="font-medium">{description}</p>
+        <div className="flex flex-col text-sm text-muted-foreground">
+          <span>{time}</span>
+          {event && <span>{event}</span>}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export function ActivityFeed() {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-        <h3 className="text-lg font-semibold text-gray-900">Last Activity</h3>
-        <Button variant="ghost" size="sm" className="text-sm text-gray-500 hover:text-gray-900">
-          View all <ChevronRight className="ml-1 h-4 w-4" />
+    <Card className="h-full">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-lg font-medium">Last Activity</CardTitle>
+        <Button variant="ghost" size="sm" className="gap-1">
+          View all <ChevronRight className="h-4 w-4" />
         </Button>
       </CardHeader>
-      <CardContent className="p-4 pt-0">
-        <div className="space-y-4">
-          {activities.map((activity, index) => (
-            <div key={index} className="flex items-start">
-              <div className={`rounded-full p-2 ${activity.iconBg} mr-3`}>
-                <activity.icon className={`h-4 w-4 ${activity.iconColor}`} />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center">
-                  <span className="text-sm font-medium text-gray-900">{activity.message}</span>
-                  <span className="text-xs text-gray-500 ml-2">{activity.time}</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-0.5">{activity.detail}</p>
-              </div>
-            </div>
-          ))}
+      <CardContent className="max-h-[400px] overflow-auto">
+        <div className="space-y-1">
+          <ActivityItem
+            type="booked"
+            description="Event booked"
+            time="2 mins ago"
+            event="Family Fun Creative Canvas - Heart"
+          />
+          <ActivityItem
+            type="declined"
+            description="Card Declined"
+            time="7 mins ago"
+            event="Family Fun Creative Canvas - Heart"
+          />
+          <ActivityItem type="booked" description="Event booked" time="15 mins ago" event="Kids Safari Adventure" />
+          <ActivityItem
+            type="review"
+            description="New Positive Review"
+            time="1 hour ago"
+            event="Family Fun Creative Canvas - Heart"
+          />
+          <ActivityItem
+            type="reminder"
+            description="Payment reminder sent"
+            time="2 hours ago"
+            event="Private Play Date Special Rental"
+          />
+          <ActivityItem type="booked" description="Event booked" time="3 hours ago" event="Sunset Beach Scene" />
         </div>
       </CardContent>
     </Card>

@@ -1,60 +1,62 @@
+import type React from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowUpIcon } from "lucide-react"
+import { ArrowUp, ArrowDown, DollarSign, ShoppingCart, Eye, Calendar } from "lucide-react"
 
-const statistics = [
-  {
-    label: "Sales Value",
-    value: "$3,560.00",
-    change: "+5.65%",
-    trend: "up",
-  },
-  {
-    label: "Number of Orders",
-    value: "423",
-    change: "+3.85%",
-    trend: "up",
-  },
-  {
-    label: "Storefront Views",
-    value: "4,224",
-    change: "+7.65%",
-    trend: "up",
-  },
-  {
-    label: "Booking Views",
-    value: "1,245",
-    change: "+2.15%",
-    trend: "up",
-  },
-]
+interface StatCardProps {
+  title: string
+  value: string
+  change: number
+  icon: React.ReactNode
+}
+
+function StatCard({ title, value, change, icon }: StatCardProps) {
+  const isPositive = change >= 0
+
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold">{value}</p>
+            <div className="flex items-center gap-1">
+              {isPositive ? (
+                <ArrowUp className="h-4 w-4 text-emerald-500" />
+              ) : (
+                <ArrowDown className="h-4 w-4 text-rose-500" />
+              )}
+              <span className={`text-sm font-medium ${isPositive ? "text-emerald-500" : "text-rose-500"}`}>
+                {Math.abs(change)}% from last week
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex h-full items-end gap-1">
+              {/* Simplified vertical chart visualization */}
+              <div className="w-1.5 h-8 bg-primary/10 rounded-full"></div>
+              <div className="w-1.5 h-12 bg-primary/20 rounded-full"></div>
+              <div className="w-1.5 h-10 bg-primary/15 rounded-full"></div>
+              <div className="w-1.5 h-16 bg-primary/30 rounded-full"></div>
+              <div className="w-1.5 h-14 bg-primary/25 rounded-full"></div>
+              <div className="w-1.5 h-20 bg-primary rounded-full"></div>
+            </div>
+            <div className="rounded-full bg-primary/10 p-2 text-primary">{icon}</div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
 
 export function DailyStatistics() {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-900">Daily Statistics</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statistics.map((stat, index) => (
-          <Card key={index} className="overflow-hidden">
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                  <div className="flex items-center mt-1">
-                    <ArrowUpIcon className="h-3 w-3 text-green-500 mr-1" />
-                    <span className="text-xs font-medium text-green-600">{stat.change}</span>
-                    <span className="text-xs text-gray-500 ml-1">vs yesterday</span>
-                  </div>
-                </div>
-                <div className="h-12 w-6 flex items-end">
-                  <div className="w-2 h-8 bg-blue-100 rounded-sm relative overflow-hidden">
-                    <div className="absolute bottom-0 w-full bg-blue-500 rounded-sm" style={{ height: "60%" }}></div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <h2 className="text-xl font-semibold">Daily Statistics</h2>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard title="Sales Value" value="$3,560.00" change={5.65} icon={<DollarSign className="h-5 w-5" />} />
+        <StatCard title="Number of Orders" value="423" change={2.59} icon={<ShoppingCart className="h-5 w-5" />} />
+        <StatCard title="Storefront Views" value="4,224" change={-0.35} icon={<Eye className="h-5 w-5" />} />
+        <StatCard title="Booking Views" value="1,245" change={1.78} icon={<Calendar className="h-5 w-5" />} />
       </div>
     </div>
   )
