@@ -109,7 +109,7 @@ export function NotificationBanner() {
           <div className="flex-shrink-0 pt-0.5">{getIcon(currentNotification.type)}</div>
           <div className="ml-4">
             <h3 className="text-base font-bold">{currentNotification.title}</h3>
-            <div className="mt-1 text-sm font-medium">{currentNotification.message}</div>
+            <div className="mt-1 text-sm">{currentNotification.message}</div>
           </div>
         </div>
         <div className="ml-4 flex-shrink-0 flex items-center">
