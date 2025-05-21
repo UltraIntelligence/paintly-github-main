@@ -44,7 +44,7 @@ export function WeeklyEvents() {
     <Card className="col-span-1">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-medium">18 events this week</CardTitle>
-        <Button variant="ghost" size="sm" className="gap-1">
+        <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary/80">
           View all
           <ChevronRightIcon className="h-4 w-4" />
         </Button>

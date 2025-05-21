@@ -10,16 +10,29 @@ interface ActivityItemProps {
 }
 
 function ActivityItem({ type, description, time, event }: ActivityItemProps) {
+  const getIconClass = () => {
+    switch (type) {
+      case "booked":
+        return "text-chart-1"
+      case "declined":
+        return "text-destructive"
+      case "review":
+        return "text-chart-4"
+      case "viewed":
+        return "text-chart-2"
+    }
+  }
+
   const getIcon = () => {
     switch (type) {
       case "booked":
-        return <CheckCircleIcon className="h-5 w-5 text-green-500" />
+        return <CheckCircleIcon className={`h-5 w-5 ${getIconClass()}`} />
       case "declined":
-        return <XCircleIcon className="h-5 w-5 text-red-500" />
+        return <XCircleIcon className={`h-5 w-5 ${getIconClass()}`} />
       case "review":
-        return <StarIcon className="h-5 w-5 text-amber-500" />
+        return <StarIcon className={`h-5 w-5 ${getIconClass()}`} />
       case "viewed":
-        return <EyeIcon className="h-5 w-5 text-blue-500" />
+        return <EyeIcon className={`h-5 w-5 ${getIconClass()}`} />
     }
   }
 
@@ -40,7 +53,7 @@ export function ActivityFeed() {
     <Card className="col-span-1">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-medium">Last Activity</CardTitle>
-        <Button variant="ghost" size="sm" className="gap-1">
+        <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary/80">
           View all
           <ChevronRightIcon className="h-4 w-4" />
         </Button>

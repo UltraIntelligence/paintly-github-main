@@ -13,7 +13,7 @@ export function WelcomeHeader() {
     <div className="flex flex-col space-y-1.5 mb-6">
       <h2 className="text-3xl font-bold tracking-tight">Welcome back, Cathy</h2>
       <p className="text-muted-foreground flex items-center gap-1">
-        <CalendarIcon className="h-4 w-4" />
+        <CalendarIcon className="h-4 w-4 text-primary" />
         Your current stats for {currentDate}
       </p>
     </div>

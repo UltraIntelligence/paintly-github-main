@@ -5,9 +5,14 @@ interface StatCardProps {
   value: string
   change: string
   isPositive: boolean
+  chartIndex: number // To use different chart colors
 }
 
-function StatCard({ title, value, change, isPositive }: StatCardProps) {
+function StatCard({ title, value, change, isPositive, chartIndex }: StatCardProps) {
+  // Use different chart colors for variety
+  const chartColor = `bg-chart-${chartIndex}`
+  const chartLightColor = `bg-chart-${chartIndex}/20`
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -17,17 +22,17 @@ function StatCard({ title, value, change, isPositive }: StatCardProps) {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-2xl font-bold">{value}</p>
-            <p className={`text-xs ${isPositive ? "text-green-500" : "text-red-500"}`}>
+            <p className={`text-xs ${isPositive ? "text-primary" : "text-destructive"}`}>
               {isPositive ? "↑" : "↓"} {change} compared to yesterday
             </p>
           </div>
           <div className="h-16 w-12 flex items-end">
-            {/* Simple vertical bar chart */}
-            <div className="w-2 h-8 bg-primary/20 rounded-t-sm mx-0.5"></div>
-            <div className="w-2 h-10 bg-primary/30 rounded-t-sm mx-0.5"></div>
-            <div className="w-2 h-6 bg-primary/20 rounded-t-sm mx-0.5"></div>
-            <div className="w-2 h-12 bg-primary/40 rounded-t-sm mx-0.5"></div>
-            <div className="w-2 h-16 bg-primary rounded-t-sm mx-0.5"></div>
+            {/* Simple vertical bar chart using brand colors */}
+            <div className={`w-2 h-8 ${chartLightColor} rounded-t-sm mx-0.5`}></div>
+            <div className={`w-2 h-10 ${chartLightColor} rounded-t-sm mx-0.5`}></div>
+            <div className={`w-2 h-6 ${chartLightColor} rounded-t-sm mx-0.5`}></div>
+            <div className={`w-2 h-12 ${chartLightColor} rounded-t-sm mx-0.5`}></div>
+            <div className={`w-2 h-16 ${chartColor} rounded-t-sm mx-0.5`}></div>
           </div>
         </div>
       </CardContent>
@@ -40,10 +45,10 @@ export function DailyStatistics() {
     <div className="space-y-4">
       <h3 className="text-lg font-medium">Daily Statistics</h3>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Sales Value" value="$3,560.00" change="5.65%" isPositive={true} />
-        <StatCard title="Number of Orders" value="423" change="3.65%" isPositive={true} />
-        <StatCard title="Storefront Views" value="4,224" change="9.25%" isPositive={true} />
-        <StatCard title="Booking Views" value="1,245" change="2.15%" isPositive={false} />
+        <StatCard title="Sales Value" value="$3,560.00" change="5.65%" isPositive={true} chartIndex={1} />
+        <StatCard title="Number of Orders" value="423" change="3.65%" isPositive={true} chartIndex={2} />
+        <StatCard title="Storefront Views" value="4,224" change="9.25%" isPositive={true} chartIndex={3} />
+        <StatCard title="Booking Views" value="1,245" change="2.15%" isPositive={false} chartIndex={4} />
       </div>
     </div>
   )
