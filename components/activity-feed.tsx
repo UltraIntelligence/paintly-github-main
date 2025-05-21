@@ -50,17 +50,19 @@ const activities = [
 
 export function ActivityFeed() {
   return (
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="space-y-0 overflow-auto h-[300px]">
-        {activities.map((activity, index) => (
-          <ActivityItem
-            key={index}
-            type={activity.type}
-            title={activity.title}
-            time={activity.time}
-            event={activity.event}
-          />
-        ))}
+    <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
+      <div className="flex-grow overflow-hidden">
+        <div className="h-[300px] overflow-y-auto">
+          {activities.map((activity, index) => (
+            <ActivityItem
+              key={index}
+              type={activity.type}
+              title={activity.title}
+              time={activity.time}
+              event={activity.event}
+            />
+          ))}
+        </div>
       </div>
       <div className="mt-3 pt-3 border-t border-gray-200">
         <Button variant="ghost" size="sm" className="text-xs text-blue-600 h-8 px-2 w-full justify-center">

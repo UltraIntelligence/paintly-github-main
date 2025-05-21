@@ -26,11 +26,15 @@ export function TodaysOverview() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2">
               <h3 className="text-lg font-semibold mb-3">Today's Events</h3>
-              <TodaysEvents />
+              <div className="h-[calc(100%-2rem)]">
+                <TodaysEvents />
+              </div>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-3">Latest Activity</h3>
-              <ActivityFeed />
+              <div className="h-[calc(100%-2rem)]">
+                <ActivityFeed />
+              </div>
             </div>
           </div>
         </div>

@@ -104,9 +104,9 @@ const getGradientStyle = (gradientType: string) => {
 
 export function TodaysEvents() {
   return (
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="overflow-hidden">
-        <div className="max-h-[320px] overflow-y-auto pr-2 -mr-2">
+    <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
+      <div className="overflow-hidden flex-grow">
+        <div className="h-[300px] overflow-y-auto pr-2 -mr-2">
           <Table>
             <TableHeader className="sticky top-0 bg-gray-50 z-10">
               <TableRow className="border-b border-gray-200">
@@ -148,6 +148,18 @@ export function TodaysEvents() {
             </TableBody>
           </Table>
         </div>
+      </div>
+      <div className="mt-3 pt-3 border-t border-gray-200">
+        <button className="text-xs text-blue-600 w-full flex items-center justify-center">
+          View all events
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fillRule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   )
