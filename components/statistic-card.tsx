@@ -1,34 +1,39 @@
 "use client"
 
-import { ArrowDownIcon, ArrowUpIcon, TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-
+import { ArrowDownIcon, ArrowUpIcon, TrendingDown, TrendingUp } from "lucide-react"
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 import { Card, CardContent } from "@/components/ui/card"
-import { type ChartConfig, ChartContainer } from "@/components/ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 interface StatisticCardProps {
   label: string
   value: string
   change: string
   trend: "up" | "down"
-  chartData: { day: string; value: number }[]
+  chartData: Array<{ day: string; value: number }>
 }
 
 export function StatisticCard({ label, value, change, trend, chartData }: StatisticCardProps) {
+  // Transform data for the chart
+  const formattedData = chartData.map((item) => ({
+    label: item.day,
+    value: item.value,
+  }))
+
   const chartConfig = {
     value: {
       label: label,
-      color: "hsl(var(--primary))",
+      color: "hsl(var(--chart-1))",
     },
     label: {
       color: "hsl(var(--background))",
     },
-  } satisfies ChartConfig
+  }
 
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-4">
-        <div className="flex flex-col space-y-1">
+        <div className="flex flex-col space-y-1 mb-3">
           <p className="text-sm text-gray-500">{label}</p>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
           <div className="flex items-center space-x-1">
@@ -45,31 +50,45 @@ export function StatisticCard({ label, value, change, trend, chartData }: Statis
           </div>
         </div>
 
-        <div className="mt-3 h-24">
-          <ChartContainer config={chartConfig}>
-            <BarChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }} barSize={6}>
-              <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.2} />
-              <XAxis
-                dataKey="day"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 10 }}
-                tickFormatter={(value) => value.slice(0, 1)}
-              />
-              <YAxis hide domain={[0, "dataMax"]} />
-              <Bar
-                dataKey="value"
-                fill="var(--color-value)"
-                radius={[2, 2, 0, 0]}
-                className="opacity-80 hover:opacity-100 transition-opacity"
-              />
+        <div className="h-24">
+          <ChartContainer config={chartConfig} className="h-full">
+            <BarChart data={formattedData} layout="vertical" margin={{ top: 0, right: 16, bottom: 0, left: 0 }}>
+              <CartesianGrid horizontal={false} vertical={false} />
+              <YAxis dataKey="label" type="category" hide />
+              <XAxis type="number" hide />
+              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <Bar dataKey="value" fill="var(--color-value)" radius={4} barSize={18}>
+                <LabelList
+                  dataKey="label"
+                  position="insideLeft"
+                  offset={8}
+                  className="fill-[--color-label] text-xs"
+                  fontSize={10}
+                />
+                <LabelList
+                  dataKey="value"
+                  position="right"
+                  offset={8}
+                  className="fill-foreground text-xs"
+                  fontSize={10}
+                />
+              </Bar>
             </BarChart>
           </ChartContainer>
         </div>
 
-        <div className="mt-2 flex items-center gap-1 text-xs">
-          <TrendingUp className={`h-3 w-3 ${trend === "up" ? "text-green-500" : "text-red-500"}`} />
-          <span className="font-medium">{trend === "up" ? "Trending up" : "Trending down"} this week</span>
+        <div className="flex items-center gap-1 text-xs mt-2 text-muted-foreground">
+          {trend === "up" ? (
+            <>
+              <TrendingUp className="h-3 w-3" />
+              <span>Trending up this week</span>
+            </>
+          ) : (
+            <>
+              <TrendingDown className="h-3 w-3" />
+              <span>Trending down this week</span>
+            </>
+          )}
         </div>
       </CardContent>
     </Card>
