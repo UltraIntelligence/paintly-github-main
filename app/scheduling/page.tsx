@@ -4,7 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { SchedulingHeader } from "../../components/scheduling/scheduling-header"
 import { SchedulingCalendar } from "../../components/scheduling/scheduling-calendar"
 
-export default function SchedulingPage() {
+export default function CalendarPage() {
   return (
     <SidebarProvider>
       <AppSidebar variant="inset" />

@@ -28,10 +28,13 @@ export function NavMain({
     icon?: LucideIcon
   }[]
 }) {
-  // Modify items to rename "Events" to "Templates"
+  // Modify items to rename "Events" to "Templates" and "Scheduling" to "Calendar"
   const modifiedItems = items.map((item) => {
     if (item.title === "Events") {
       return { ...item, title: "Templates" }
+    }
+    if (item.title === "Scheduling") {
+      return { ...item, title: "Calendar" }
     }
     return item
   })

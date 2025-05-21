@@ -12,7 +12,7 @@ export function SiteHeader() {
   const getPageTitle = () => {
     if (pathname === "/dashboard") return "Welcome back, Cathy."
     if (pathname.includes("/dashboard")) return "Home"
-    if (pathname.includes("/scheduling")) return "Scheduling"
+    if (pathname.includes("/scheduling")) return "Calendar"
     if (pathname.includes("/instructors")) return "Instructors"
     if (pathname.includes("/events")) return "Templates"
     if (pathname.includes("/locations")) return "Locations"
