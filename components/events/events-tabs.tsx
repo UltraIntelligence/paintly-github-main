@@ -21,7 +21,7 @@ export function EventsTabs({ activeTab, onTabChange }: EventsTabsProps) {
               value={category}
               className="data-[state=active]:bg-background data-[state=active]:shadow-none"
             >
-              {category}
+              {category === "All" ? "All Event Templates" : category}
             </TabsTrigger>
           ))}
         </TabsList>
