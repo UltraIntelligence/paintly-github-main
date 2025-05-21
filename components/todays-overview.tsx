@@ -5,24 +5,16 @@ import { ActivityFeed } from "./activity-feed"
 
 export function TodaysOverview() {
   return (
-    <Card className="border-2 border-gray-100">
-      <CardHeader className="bg-gray-50/50 pb-3">
-        <CardTitle className="text-xl font-medium">Today's Overview</CardTitle>
+    <Card className="border-2 border-gray-200">
+      <CardHeader className="border-b border-gray-100 bg-gray-50">
+        <CardTitle className="text-xl font-semibold text-gray-900">Today's Overview</CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-4">
-            <div>
-              <h3 className="text-lg font-medium mb-3">Daily Statistics</h3>
-              <DailyStatistics />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium mb-3">Today's Events</h3>
-              <TodaysEvents />
-            </div>
-          </div>
-          <div>
-            <h3 className="text-lg font-medium mb-3">Latest Activity</h3>
+      <CardContent className="p-4 space-y-4">
+        <div className="space-y-4">
+          <DailyStatistics />
+          <TodaysEvents />
+
+          <div className="pt-2">
             <ActivityFeed />
           </div>
         </div>

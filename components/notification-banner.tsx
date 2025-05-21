@@ -1,16 +1,16 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X, AlertCircle, Bell, Clock } from "lucide-react"
+import { X, ChevronLeft, ChevronRight, AlertTriangle, AlertCircle, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 
-type Notification = {
+type NotificationType = "warning" | "error" | "info"
+
+interface Notification {
   id: string
-  icon: typeof Bell | typeof AlertCircle | typeof Clock
+  type: NotificationType
   title: string
-  description: string
-  type: "warning" | "error" | "info"
+  message: string
 }
 
 export function NotificationBanner() {
@@ -18,124 +18,139 @@ export function NotificationBanner() {
   const notifications: Notification[] = [
     {
       id: "staff-availability",
-      icon: Bell,
+      type: "info",
       title: "New staff availability submitted",
-      description: "Instructor Maria Garcia has submitted availability for June. Review and approve.",
-      type: "warning",
+      message: "Instructor Maria Garcia has submitted availability for June. Review and approve.",
     },
     {
       id: "scheduling-conflicts",
-      icon: AlertCircle,
-      title: "Scheduling Conflicts",
-      description: "2 scheduling conflicts detected for next week. Review and resolve.",
       type: "error",
+      title: "Scheduling Conflicts",
+      message: "2 scheduling conflicts detected for next week. Review and resolve.",
     },
     {
       id: "pending-availability",
-      icon: Clock,
+      type: "warning",
       title: "Pending Staff Availability",
-      description: "3 instructors have not submitted their availability for next month.",
-      type: "info",
+      message: "3 instructors have not submitted their availability for next month.",
     },
   ]
 
-  // State to track which notifications have been dismissed
-  const [dismissedNotifications, setDismissedNotifications] = useState<Record<string, boolean>>({})
-  const [activeNotificationIndex, setActiveNotificationIndex] = useState(0)
+  // State for tracking dismissed notifications and current notification index
+  const [dismissedNotifications, setDismissedNotifications] = useState<string[]>([])
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   // Load dismissed notifications from localStorage on component mount
   useEffect(() => {
-    const savedDismissed = localStorage.getItem("dismissedNotifications")
-    if (savedDismissed) {
-      setDismissedNotifications(JSON.parse(savedDismissed))
+    const storedDismissed = localStorage.getItem("dismissedNotifications")
+    if (storedDismissed) {
+      setDismissedNotifications(JSON.parse(storedDismissed))
     }
   }, [])
 
   // Filter out dismissed notifications
-  const activeNotifications = notifications.filter((notification) => !dismissedNotifications[notification.id])
+  const activeNotifications = notifications.filter((notification) => !dismissedNotifications.includes(notification.id))
 
-  // If all notifications are dismissed, don't render anything
+  // If no active notifications, don't render the banner
   if (activeNotifications.length === 0) {
     return null
   }
 
-  const currentNotification = activeNotifications[activeNotificationIndex]
+  // Ensure currentIndex is within bounds
+  const safeCurrentIndex = Math.min(currentIndex, activeNotifications.length - 1)
+  const currentNotification = activeNotifications[safeCurrentIndex]
 
-  // Handle dismissing a notification
+  // Function to dismiss a notification
   const dismissNotification = (id: string) => {
-    const newDismissed = { ...dismissedNotifications, [id]: true }
+    const newDismissed = [...dismissedNotifications, id]
     setDismissedNotifications(newDismissed)
     localStorage.setItem("dismissedNotifications", JSON.stringify(newDismissed))
 
-    // If we dismissed the last notification in the list, go back to the first one
-    if (activeNotificationIndex >= activeNotifications.length - 1) {
-      setActiveNotificationIndex(0)
+    // If we dismissed the last notification at the current index, go to previous notification
+    if (safeCurrentIndex >= activeNotifications.length - 1 && safeCurrentIndex > 0) {
+      setCurrentIndex(safeCurrentIndex - 1)
     }
   }
 
-  // Handle cycling through notifications
-  const nextNotification = () => {
-    setActiveNotificationIndex((prev) => (prev < activeNotifications.length - 1 ? prev + 1 : 0))
+  // Get the appropriate icon based on notification type
+  const getIcon = (type: NotificationType) => {
+    switch (type) {
+      case "warning":
+        return <AlertTriangle className="h-5 w-5" />
+      case "error":
+        return <AlertCircle className="h-5 w-5" />
+      case "info":
+      default:
+        return <Info className="h-5 w-5" />
+    }
+  }
+
+  // Get the appropriate color classes based on notification type
+  const getColorClasses = (type: NotificationType) => {
+    switch (type) {
+      case "warning":
+        return "border-amber-500 bg-amber-50 text-amber-800"
+      case "error":
+        return "border-red-500 bg-red-50 text-red-800"
+      case "info":
+      default:
+        return "border-blue-500 bg-blue-50 text-blue-800"
+    }
   }
 
   return (
-    <Card
-      className={`mb-4 overflow-hidden border-l-4 ${
-        currentNotification.type === "warning"
-          ? "border-l-yellow-500 bg-yellow-50"
-          : currentNotification.type === "error"
-            ? "border-l-red-500 bg-red-50"
-            : "border-l-blue-500 bg-blue-50"
-      }`}
+    <div
+      className={`relative mb-4 rounded-md border-l-4 p-4 shadow-sm ${getColorClasses(currentNotification.type)}`}
+      role="alert"
+      aria-live="polite"
     >
-      <div className="relative flex items-center justify-between p-4">
-        <div className="flex items-start gap-3">
-          <currentNotification.icon
-            className={`h-5 w-5 mt-0.5 ${
-              currentNotification.type === "warning"
-                ? "text-yellow-700"
-                : currentNotification.type === "error"
-                  ? "text-red-700"
-                  : "text-blue-700"
-            }`}
-          />
-          <div className="flex-1">
-            <h4 className="text-sm font-medium text-gray-900">{currentNotification.title}</h4>
-            <p className="text-sm text-gray-600">{currentNotification.description}</p>
+      <div className="flex items-start justify-between">
+        <div className="flex items-start">
+          <div className="flex-shrink-0 pt-0.5">{getIcon(currentNotification.type)}</div>
+          <div className="ml-3">
+            <h3 className="text-sm font-medium">{currentNotification.title}</h3>
+            <div className="mt-1 text-sm">{currentNotification.message}</div>
           </div>
         </div>
-
-        <div className="flex items-center gap-2">
+        <div className="ml-4 flex-shrink-0 flex items-center">
           {activeNotifications.length > 1 && (
-            <div className="flex items-center gap-1 mr-2">
-              <span className="text-xs text-gray-500">
-                {activeNotificationIndex + 1}/{activeNotifications.length}
+            <div className="flex items-center mr-4 text-xs">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 rounded-full"
+                onClick={() =>
+                  setCurrentIndex((safeCurrentIndex - 1 + activeNotifications.length) % activeNotifications.length)
+                }
+                aria-label="Previous notification"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <span className="mx-1">
+                {safeCurrentIndex + 1}/{activeNotifications.length}
               </span>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={nextNotification}
+                size="icon"
+                className="h-6 w-6 rounded-full"
+                onClick={() => setCurrentIndex((safeCurrentIndex + 1) % activeNotifications.length)}
                 aria-label="Next notification"
               >
-                <span className="sr-only">Next</span>
-                <span aria-hidden="true">›</span>
+                <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
           )}
-
           <Button
             variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
+            size="icon"
+            className="h-6 w-6 rounded-full"
             onClick={() => dismissNotification(currentNotification.id)}
             aria-label="Dismiss notification"
           >
             <X className="h-4 w-4" />
-            <span className="sr-only">Dismiss</span>
           </Button>
         </div>
       </div>
-    </Card>
+    </div>
   )
 }
