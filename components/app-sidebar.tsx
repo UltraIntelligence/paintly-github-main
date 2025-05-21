@@ -26,7 +26,7 @@ const data = {
   },
   navMain: [
     {
-      title: "Home",
+      title: "Home", // Updated title from "Dashboard" to "Home"
       url: "/dashboard",
       icon: LayoutDashboardIcon,
     },
@@ -41,7 +41,7 @@ const data = {
       icon: UsersIcon,
     },
     {
-      title: "Calendar",
+      title: "Events",
       url: "/events",
       icon: Palette,
     },
@@ -72,25 +72,25 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" className="border-r border-border bg-background" {...props}>
-      <SidebarHeader className="flex items-center justify-center p-4 h-[80px]">
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader className="flex items-center justify-center p-4">
         <Link href="/dashboard" className="flex w-full justify-center">
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-black%20%285%29-7VlW8Vv28HicXieXSskv296fVjqw8S.png"
             alt="Paintly Logo"
-            className="h-[50px] w-[50px] object-contain"
+            className="h-[60px] w-[60px] object-contain"
             style={{
-              minWidth: "50px",
-              minHeight: "50px",
+              minWidth: "60px",
+              minHeight: "60px",
             }}
           />
         </Link>
       </SidebarHeader>
-      <SidebarContent className="px-2">
+      <SidebarContent>
         <NavMain items={data.navMain} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter className="border-t border-border">
+      <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />

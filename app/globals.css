@@ -107,35 +107,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-@layer components {
-  [data-sidebar="sidebar"] {
-    @apply bg-background border-r border-border;
-  }
-
-  [data-sidebar="menu-button"] {
-    @apply text-sm font-medium;
-  }
-
-  [data-sidebar="group"] {
-    @apply py-2;
-  }
-
-  [data-sidebar="group-label"] {
-    @apply text-xs font-medium text-muted-foreground;
-  }
-
-  /* Sidebar icon alignment in collapsed state */
-  [data-collapsible="icon"] [data-sidebar="menu-button"] {
-    @apply justify-center !px-0;
-  }
-
-  [data-collapsible="icon"] [data-sidebar="menu-button"] svg {
-    @apply mx-auto;
-  }
-
-  /* Center avatar in collapsed sidebar */
-  [data-collapsible="icon"] [data-sidebar="menu-button"] .avatar {
-    @apply mx-auto;
-  }
-}

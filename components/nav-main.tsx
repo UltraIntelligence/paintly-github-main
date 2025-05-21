@@ -1,86 +1,89 @@
 "use client"
 
-import type * as React from "react"
-import type { LucideIcon } from "lucide-react"
-import { PlusCircle } from "lucide-react"
 import Link from "next/link"
-
+import { PlusCircleIcon, type LucideIcon, Palette, UsersIcon, MapPin } from "lucide-react"
 import {
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
 
 export function NavMain({
   items,
-  ...props
 }: {
   items: {
     title: string
     url: string
-    icon: LucideIcon
+    icon?: LucideIcon
   }[]
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+}) {
+  // Modify items to rename "Events" to "Templates"
+  const modifiedItems = items.map((item) => {
+    if (item.title === "Events") {
+      return { ...item, title: "Templates" }
+    }
+    return item
+  })
+
   return (
-    <SidebarGroup {...props}>
-      <SidebarGroupLabel className="flex items-center justify-between">
-        <span>Navigation</span>
-        <Dialog>
-          <DialogTrigger asChild>
-            <SidebarGroupAction className="group-data-[collapsible=icon]:opacity-0">
-              <PlusCircle className="h-4 w-4" />
-              <span className="sr-only">New</span>
-            </SidebarGroupAction>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>New Calendar Event</DialogTitle>
-              <DialogDescription>Create a new calendar event to share with your team.</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" autoFocus />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="description">Description</Label>
-                <Input id="description" />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit">Create</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </SidebarGroupLabel>
-      <SidebarGroupContent>
+    <SidebarGroup>
+      <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-          {items.map((item) => (
+          <SidebarMenuItem className="flex items-center">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button effect="gradientSlideShow" className="flex items-center gap-2 w-full justify-start pl-3">
+                  <PlusCircleIcon className="h-4 w-4" />
+                  <span>New</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Quick Create</DialogTitle>
+                  <DialogDescription>Create a new item quickly. Choose from the options below.</DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <Button asChild variant="outline" className="justify-start">
+                    <Link href="/events/new">
+                      <Palette className="mr-2 h-4 w-4" />
+                      New Template
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="justify-start">
+                    <Link href="/instructors/new">
+                      <UsersIcon className="mr-2 h-4 w-4" />
+                      New Instructor
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="justify-start">
+                    <Link href="/locations/new">
+                      <MapPin className="mr-2 h-4 w-4" />
+                      New Location
+                    </Link>
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <SidebarMenu>
+          {modifiedItems.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                tooltip={item.title}
-                asChild
-                className="h-9 text-sm font-medium group-data-[collapsible=icon]:justify-center"
-              >
+              <SidebarMenuButton tooltip={item.title} asChild>
                 <Link href={item.url}>
-                  <item.icon className="h-4 w-4 flex-shrink-0" />
-                  <span className="group-data-[collapsible=icon]:sr-only">{item.title}</span>
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

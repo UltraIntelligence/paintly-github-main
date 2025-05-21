@@ -52,7 +52,7 @@ export function ActivityFeed() {
   return (
     <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
       <div className="flex-grow overflow-hidden">
-        <div className="h-[300px] overflow-y-auto">
+        <div className="h-[280px] overflow-y-auto">
           {activities.map((activity, index) => (
             <ActivityItem
               key={index}
@@ -64,8 +64,8 @@ export function ActivityFeed() {
           ))}
         </div>
       </div>
-      <div className="mt-3 pt-3 border-t border-gray-200">
-        <Button variant="ghost" size="sm" className="text-xs text-blue-600 h-8 px-2 w-full justify-center">
+      <div className="mt-2 pt-2 border-t border-gray-200">
+        <Button variant="ghost" size="sm" className="text-xs text-blue-600 h-7 px-2 w-full justify-center">
           View all activity
           <ChevronRightIcon className="ml-1 h-4 w-4" />
         </Button>
