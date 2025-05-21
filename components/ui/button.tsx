@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -97,7 +99,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps
 
     // Regular button implementation (not asChild)
     return (
-      <button className={cn(buttonVariants({ variant, effect, size, className }))} ref={ref} {...props}>
+      <div
+        className={cn(buttonVariants({ variant, effect, size, className }))}
+        ref={ref as React.RefObject<HTMLDivElement>}
+        {...(props as React.HTMLAttributes<HTMLDivElement>)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            ;(e.currentTarget as HTMLDivElement).click()
+          }
+        }}
+      >
         {Icon &&
           iconPlacement === "left" &&
           (effect === "expandIcon" ? (
@@ -117,7 +131,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps
           ) : (
             <Icon />
           ))}
-      </button>
+      </div>
     )
   },
 )
