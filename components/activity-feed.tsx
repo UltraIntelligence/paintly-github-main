@@ -50,15 +50,8 @@ const activities = [
 
 export function ActivityFeed() {
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Latest Activity</h3>
-        <Button variant="ghost" size="sm" className="text-xs text-primary h-8 px-2">
-          View all
-          <ChevronRightIcon className="ml-1 h-4 w-4" />
-        </Button>
-      </div>
-      <div className="space-y-0 overflow-auto h-[300px] pr-2 border rounded-lg p-4">
+    <div className="bg-gray-50 rounded-lg p-4">
+      <div className="space-y-0 overflow-auto h-[300px]">
         {activities.map((activity, index) => (
           <ActivityItem
             key={index}
@@ -68,6 +61,12 @@ export function ActivityFeed() {
             event={activity.event}
           />
         ))}
+      </div>
+      <div className="mt-3 pt-3 border-t border-gray-200">
+        <Button variant="ghost" size="sm" className="text-xs text-blue-600 h-8 px-2 w-full justify-center">
+          View all activity
+          <ChevronRightIcon className="ml-1 h-4 w-4" />
+        </Button>
       </div>
     </div>
   )

@@ -1,4 +1,3 @@
-import { CalendarDaysIcon } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 
@@ -32,15 +31,11 @@ const todaysEvents = [
 
 export function TodaysEvents() {
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Today's Events</h3>
-        <CalendarDaysIcon className="h-4 w-4 text-gray-500" />
-      </div>
-      <div className="border rounded-lg overflow-hidden">
+    <div className="bg-gray-50 rounded-lg p-4">
+      <div className="overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="border-b border-gray-200">
               <TableHead className="w-[100px] text-xs text-gray-500">Time</TableHead>
               <TableHead className="text-xs text-gray-500">Event</TableHead>
               <TableHead className="hidden md:table-cell text-xs text-gray-500">Instructor</TableHead>
@@ -50,7 +45,7 @@ export function TodaysEvents() {
           </TableHeader>
           <TableBody>
             {todaysEvents.map((event) => (
-              <TableRow key={`${event.time}-${event.name}`} className="border-b border-gray-100">
+              <TableRow key={`${event.time}-${event.name}`} className="border-b border-gray-200">
                 <TableCell className="text-sm text-gray-600">{event.time}</TableCell>
                 <TableCell className="text-sm font-medium text-gray-900">{event.name}</TableCell>
                 <TableCell className="hidden md:table-cell text-sm text-gray-600">{event.instructor}</TableCell>
