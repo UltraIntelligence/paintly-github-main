@@ -4,6 +4,7 @@ import { AlertsSection } from "./alerts-section"
 import { SalesComparisonChart } from "./sales-comparison-chart"
 import { TodaysEvents } from "./todays-events"
 import { DailyStatistics } from "./daily-statistics"
+import { ActivityFeed } from "./activity-feed"
 
 export function DashboardContent() {
   return (
@@ -11,6 +12,7 @@ export function DashboardContent() {
       <AlertsSection />
       <DailyStatistics />
       <TodaysEvents />
+      <ActivityFeed />
       <SalesComparisonChart />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
