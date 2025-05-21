@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { AlertsSection } from "./alerts-section"
 import { SalesComparisonChart } from "./sales-comparison-chart"
 import { WeeklyEvents } from "./weekly-events"
 import { TodaysOverview } from "./todays-overview"
@@ -10,7 +9,6 @@ export function DashboardContent() {
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
       <NotificationBanner />
-      <AlertsSection />
       <TodaysOverview />
 
       {/* Weekly Events */}
