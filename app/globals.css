@@ -124,4 +124,16 @@
   [data-sidebar="group-label"] {
     @apply text-xs font-medium text-muted-foreground;
   }
+
+  [data-collapsible="icon"] [data-sidebar="menu-button"] {
+    @apply justify-center items-center;
+  }
+
+  [data-collapsible="icon"] [data-sidebar="menu-button"] > a {
+    @apply justify-center items-center px-0;
+  }
+
+  [data-collapsible="icon"] [data-sidebar="menu-button"] svg {
+    @apply mx-auto;
+  }
 }

@@ -37,10 +37,10 @@ export function NavMain({
               <DialogTrigger asChild>
                 <Button
                   effect="gradientSlideShow"
-                  className="flex items-center gap-2 w-full justify-start pl-3 h-9 text-sm font-medium"
+                  className="flex items-center gap-2 w-full justify-start pl-3 h-9 text-sm font-medium group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:pl-0"
                 >
                   <PlusCircleIcon className="h-4 w-4" />
-                  <span>New</span>
+                  <span className="group-data-[collapsible=icon]:hidden">New</span>
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -76,9 +76,9 @@ export function NavMain({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title} asChild className="h-9 text-sm font-medium">
-                <Link href={item.url}>
-                  {item.icon && <item.icon className="h-4 w-4" />}
-                  <span>{item.title}</span>
+                <Link href={item.url} className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
+                  {item.icon && <item.icon className="h-4 w-4 flex-shrink-0" />}
+                  <span className="truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
