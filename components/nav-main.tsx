@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import {
   Dialog,
@@ -28,10 +29,12 @@ export function NavMain({
     icon?: LucideIcon
   }[]
 }) {
-  // Modify items to rename "Events" to "Templates"
+  const { collapsed } = useSidebar()
+
+  // Modify items to rename "Events" to "Calendar"
   const modifiedItems = items.map((item) => {
     if (item.title === "Events") {
-      return { ...item, title: "Templates" }
+      return { ...item, title: "Calendar" }
     }
     return item
   })
@@ -40,13 +43,13 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-          <SidebarMenuItem className="flex items-center">
+          <SidebarMenuItem>
             <Dialog>
               <DialogTrigger asChild>
-                <Button effect="gradientSlideShow" className="flex items-center gap-2 w-full justify-start pl-3">
+                <SidebarMenuButton tooltip="New">
                   <PlusCircleIcon className="h-4 w-4" />
-                  <span>New</span>
-                </Button>
+                  {!collapsed && <span>New</span>}
+                </SidebarMenuButton>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -57,7 +60,7 @@ export function NavMain({
                   <Button asChild variant="outline" className="justify-start">
                     <Link href="/events/new">
                       <Palette className="mr-2 h-4 w-4" />
-                      New Template
+                      New Calendar Event
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="justify-start">

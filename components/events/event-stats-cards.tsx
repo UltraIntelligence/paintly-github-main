@@ -4,8 +4,8 @@ import Link from "next/link"
 export function EventStatsCards() {
   return (
     <div className="grid grid-cols-1 gap-4 mb-4">
-      {/* Quick Overview - full width */}
-      <div className="bg-white border border-gray-100 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+      {/* Quick Overview - full width with black border */}
+      <div className="rounded-lg border border-black p-6 bg-white shadow-sm">
         {/* Title Area */}
         <div className="mb-4">
           <h2 className="text-xl font-bold text-gray-900">Events Overview</h2>
