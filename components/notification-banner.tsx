@@ -76,12 +76,12 @@ export function NotificationBanner() {
   const getIcon = (type: NotificationType) => {
     switch (type) {
       case "warning":
-        return <AlertTriangle className="h-5 w-5" />
+        return <AlertTriangle className="h-6 w-6" />
       case "error":
-        return <AlertCircle className="h-5 w-5" />
+        return <AlertCircle className="h-6 w-6" />
       case "info":
       default:
-        return <Info className="h-5 w-5" />
+        return <Info className="h-6 w-6" />
     }
   }
 
@@ -100,25 +100,25 @@ export function NotificationBanner() {
 
   return (
     <div
-      className={`relative mb-4 rounded-md border-l-4 p-4 shadow-sm ${getColorClasses(currentNotification.type)}`}
+      className={`relative mb-6 rounded-md border-l-[6px] p-5 shadow-md ${getColorClasses(currentNotification.type)}`}
       role="alert"
       aria-live="polite"
     >
       <div className="flex items-start justify-between">
         <div className="flex items-start">
           <div className="flex-shrink-0 pt-0.5">{getIcon(currentNotification.type)}</div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium">{currentNotification.title}</h3>
-            <div className="mt-1 text-sm">{currentNotification.message}</div>
+          <div className="ml-4">
+            <h3 className="text-base font-bold">{currentNotification.title}</h3>
+            <div className="mt-1 text-sm font-medium">{currentNotification.message}</div>
           </div>
         </div>
         <div className="ml-4 flex-shrink-0 flex items-center">
           {activeNotifications.length > 1 && (
-            <div className="flex items-center mr-4 text-xs">
+            <div className="flex items-center mr-4 text-sm bg-white bg-opacity-50 px-3 py-1 rounded-full">
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 rounded-full"
+                className="h-7 w-7 rounded-full hover:bg-white hover:bg-opacity-70"
                 onClick={() =>
                   setCurrentIndex((safeCurrentIndex - 1 + activeNotifications.length) % activeNotifications.length)
                 }
@@ -126,13 +126,13 @@ export function NotificationBanner() {
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <span className="mx-1">
+              <span className="mx-2 font-medium">
                 {safeCurrentIndex + 1}/{activeNotifications.length}
               </span>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 rounded-full"
+                className="h-7 w-7 rounded-full hover:bg-white hover:bg-opacity-70"
                 onClick={() => setCurrentIndex((safeCurrentIndex + 1) % activeNotifications.length)}
                 aria-label="Next notification"
               >
@@ -143,11 +143,11 @@ export function NotificationBanner() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-6 w-6 rounded-full"
+            className="h-8 w-8 rounded-full bg-white bg-opacity-50 hover:bg-opacity-70"
             onClick={() => dismissNotification(currentNotification.id)}
             aria-label="Dismiss notification"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         </div>
       </div>
