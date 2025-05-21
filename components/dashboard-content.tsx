@@ -5,14 +5,16 @@ import { SalesComparisonChart } from "./sales-comparison-chart"
 import { TodaysEvents } from "./todays-events"
 import { DailyStatistics } from "./daily-statistics"
 import { ActivityFeed } from "./activity-feed"
+import { WeeklyEvents } from "./weekly-events"
 
 export function DashboardContent() {
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
       <AlertsSection />
       <DailyStatistics />
-      <TodaysEvents />
+      <WeeklyEvents />
       <ActivityFeed />
+      <TodaysEvents />
       <SalesComparisonChart />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
