@@ -28,22 +28,17 @@ export function NavMain({
     icon?: LucideIcon
   }[]
 }) {
-  // Modify items to rename "Events" to "Templates"
-  const modifiedItems = items.map((item) => {
-    if (item.title === "Events") {
-      return { ...item, title: "Templates" }
-    }
-    return item
-  })
-
   return (
-    <SidebarGroup>
-      <SidebarGroupContent className="flex flex-col gap-2">
+    <SidebarGroup className="py-2">
+      <SidebarGroupContent className="flex flex-col gap-3">
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center">
             <Dialog>
               <DialogTrigger asChild>
-                <Button effect="gradientSlideShow" className="flex items-center gap-2 w-full justify-start pl-3">
+                <Button
+                  effect="gradientSlideShow"
+                  className="flex items-center gap-2 w-full justify-start pl-3 h-9 text-sm font-medium"
+                >
                   <PlusCircleIcon className="h-4 w-4" />
                   <span>New</span>
                 </Button>
@@ -57,7 +52,7 @@ export function NavMain({
                   <Button asChild variant="outline" className="justify-start">
                     <Link href="/events/new">
                       <Palette className="mr-2 h-4 w-4" />
-                      New Template
+                      New Calendar Event
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="justify-start">
@@ -78,11 +73,11 @@ export function NavMain({
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {modifiedItems.map((item) => (
+          {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} asChild>
+              <SidebarMenuButton tooltip={item.title} asChild className="h-9 text-sm font-medium">
                 <Link href={item.url}>
-                  {item.icon && <item.icon />}
+                  {item.icon && <item.icon className="h-4 w-4" />}
                   <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>
