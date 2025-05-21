@@ -9,21 +9,27 @@ export function TodaysOverview() {
       <CardHeader className="bg-gray-50/50 pb-3">
         <CardTitle className="text-xl font-medium">Today's Overview</CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-4">
-            <div>
-              <h3 className="text-lg font-medium mb-3">Daily Statistics</h3>
-              <DailyStatistics />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium mb-3">Today's Events</h3>
-              <TodaysEvents />
-            </div>
+      <CardContent className="p-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Daily Statistics - full width on mobile, 8/12 on desktop */}
+          <div className="lg:col-span-8 space-y-6">
+            <section>
+              <h3 className="text-lg font-medium mb-4">Daily Statistics</h3>
+              <DailyStatistics hideTitle />
+            </section>
+
+            <section>
+              <h3 className="text-lg font-medium mb-4">Today's Events</h3>
+              <TodaysEvents hideTitle />
+            </section>
           </div>
-          <div>
-            <h3 className="text-lg font-medium mb-3">Latest Activity</h3>
-            <ActivityFeed />
+
+          {/* Latest Activity - full width on mobile, 4/12 on desktop */}
+          <div className="lg:col-span-4">
+            <section>
+              <h3 className="text-lg font-medium mb-4">Latest Activity</h3>
+              <ActivityFeed hideTitle />
+            </section>
           </div>
         </div>
       </CardContent>
