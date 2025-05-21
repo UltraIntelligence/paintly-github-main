@@ -10,7 +10,7 @@ export function DashboardContent() {
       <NotificationBanner />
       <TodaysOverview />
 
-      {/* Weekly Events */}
+      {/* Weekly Performance */}
       <Card className="w-full">
         <CardContent className="p-6">
           <div className="flex flex-col space-y-6">
@@ -24,17 +24,19 @@ export function DashboardContent() {
               </div>
             </div>
 
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Weekly Events</h3>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <WeeklyEvents />
+            {/* Weekly Events and Sales Comparison side by side */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Weekly Events</h3>
+                <div className="h-[calc(100%-2rem)]">
+                  <WeeklyEvents />
+                </div>
               </div>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Sales Comparison</h3>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <SalesComparisonChart />
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Sales Comparison</h3>
+                <div className="h-[calc(100%-2rem)]">
+                  <SalesComparisonChart />
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,5 @@
-"use client"
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check, Circle } from "lucide-react"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 // Sample data for weekly events
@@ -16,7 +14,7 @@ const weeklyEventsData = [
         time: "10:30 AM - 12:30 PM",
         booked: 21,
         capacity: 23,
-        image: "/placeholder-3uwps.png",
+        image: "gradient-1",
       },
       {
         id: 2,
@@ -24,7 +22,7 @@ const weeklyEventsData = [
         time: "2:00 PM - 4:00 PM",
         booked: 18,
         capacity: 20,
-        image: "/placeholder-ai4dk.png",
+        image: "gradient-2",
       },
     ],
   },
@@ -38,7 +36,7 @@ const weeklyEventsData = [
         time: "9:00 AM - 11:00 AM",
         booked: 8,
         capacity: 15,
-        image: "/placeholder-okv7u.png",
+        image: "gradient-3",
       },
     ],
   },
@@ -52,7 +50,7 @@ const weeklyEventsData = [
         time: "1:00 PM - 3:30 PM",
         booked: 12,
         capacity: 15,
-        image: "/placeholder-n76wq.png",
+        image: "gradient-4",
       },
       {
         id: 5,
@@ -60,7 +58,7 @@ const weeklyEventsData = [
         time: "4:00 PM - 5:30 PM",
         booked: 10,
         capacity: 10,
-        image: "/placeholder-tp709.png",
+        image: "gradient-5",
       },
     ],
   },
@@ -74,106 +72,110 @@ const weeklyEventsData = [
         time: "6:00 PM - 8:30 PM",
         booked: 7,
         capacity: 20,
-        image: "/placeholder-tcgvz.png",
+        image: "gradient-6",
       },
     ],
   },
 ]
+
+// Function to generate gradient background for event images
+const getGradientStyle = (gradientType: string) => {
+  const gradients = {
+    "gradient-1": "bg-gradient-to-br from-blue-400 to-indigo-600",
+    "gradient-2": "bg-gradient-to-br from-pink-400 to-rose-600",
+    "gradient-3": "bg-gradient-to-br from-amber-400 to-orange-600",
+    "gradient-4": "bg-gradient-to-br from-emerald-400 to-green-600",
+    "gradient-5": "bg-gradient-to-br from-purple-400 to-violet-600",
+    "gradient-6": "bg-gradient-to-br from-red-400 to-rose-600",
+    "gradient-7": "bg-gradient-to-br from-cyan-400 to-blue-600",
+    "gradient-8": "bg-gradient-to-br from-yellow-400 to-amber-600",
+  }
+
+  return gradients[gradientType as keyof typeof gradients] || "bg-gray-200"
+}
 
 export function WeeklyEvents() {
   // Calculate total events
   const totalEvents = weeklyEventsData.reduce((sum, day) => sum + day.events.length, 0)
 
   return (
-    <Card className="h-full">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-lg font-medium">{totalEvents} events this week</CardTitle>
-        <a href="#" className="text-sm text-primary hover:underline">
-          View all
-        </a>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[400px] overflow-auto pr-1">
-          {weeklyEventsData.map((day) => (
-            <div key={day.day} className="mb-4">
-              <h3 className="mb-2 font-medium">
-                {day.day}, {day.date}
-              </h3>
-              <div className="space-y-3">
-                {day.events.map((event) => {
+    <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
+      <div className="overflow-hidden flex-grow">
+        <div className="h-[300px] overflow-y-auto pr-2 -mr-2">
+          <Table>
+            <TableHeader className="sticky top-0 bg-gray-50 z-10">
+              <TableRow className="border-b border-gray-200">
+                <TableHead className="w-[80px] text-xs text-gray-500">Event</TableHead>
+                <TableHead className="text-xs text-gray-500">Details</TableHead>
+                <TableHead className="hidden md:table-cell text-xs text-gray-500">Day</TableHead>
+                <TableHead className="text-right text-xs text-gray-500">Capacity</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {weeklyEventsData.flatMap((dayData) =>
+                dayData.events.map((event) => {
                   const bookingPercentage = Math.round((event.booked / event.capacity) * 100)
-                  let statusColor = "text-red-500"
-                  let bgColor = "bg-red-500"
-
-                  if (bookingPercentage >= 40 && bookingPercentage < 70) {
-                    statusColor = "text-yellow-500"
-                    bgColor = "bg-yellow-500"
-                  } else if (bookingPercentage >= 70) {
-                    statusColor = "text-green-500"
-                    bgColor = "bg-green-500"
-                  }
-
                   const isFullyBooked = event.booked === event.capacity
 
                   return (
-                    <div key={event.id} className="flex items-center justify-between rounded-lg border p-3">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 overflow-hidden rounded-md">
-                          <img
-                            src={event.image || "/placeholder.svg"}
-                            alt={event.title}
-                            className="h-full w-full object-cover"
-                          />
+                    <TableRow key={event.id} className="border-b border-gray-200">
+                      <TableCell className="align-top py-3">
+                        <div className="flex flex-col items-center space-y-1">
+                          <div className={`w-12 h-12 rounded-md ${getGradientStyle(event.image)}`}></div>
+                          <span className="text-xs text-gray-500 whitespace-nowrap">{event.time.split(" - ")[0]}</span>
                         </div>
-                        <div>
-                          <h4 className="font-medium truncate">{event.title}</h4>
-                          <div className="flex flex-col text-sm text-muted-foreground sm:flex-row sm:gap-2">
-                            <span>{event.time}</span>
-                            <span className="hidden sm:inline">•</span>
-                            <span>
-                              {event.booked} of {event.capacity} booked
-                            </span>
-                          </div>
+                      </TableCell>
+                      <TableCell className="text-sm font-medium text-gray-900">
+                        <div>{event.title}</div>
+                        <div className="text-xs text-gray-500 mt-1">{event.time}</div>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-sm text-gray-600">
+                        <span className="font-medium">{dayData.day}</span>
+                        <span className="text-xs text-gray-500 block">{dayData.date}</span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Badge
+                          variant={isFullyBooked ? "destructive" : "outline"}
+                          className={
+                            isFullyBooked
+                              ? "bg-red-100 text-red-700 hover:bg-red-100 hover:text-red-700"
+                              : bookingPercentage > 80
+                                ? "bg-amber-100 text-amber-700 hover:bg-amber-100 hover:text-amber-700"
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                          }
+                        >
+                          {event.booked}/{event.capacity}
+                        </Badge>
+                        <div className="mt-1 w-full bg-gray-200 rounded-full h-1.5">
+                          <div
+                            className={cn(
+                              "h-1.5 rounded-full",
+                              isFullyBooked ? "bg-red-500" : bookingPercentage > 80 ? "bg-amber-500" : "bg-blue-500",
+                            )}
+                            style={{ width: `${bookingPercentage}%` }}
+                          ></div>
                         </div>
-                      </div>
-                      <div className="flex h-10 w-10 items-center justify-center flex-shrink-0 ml-2">
-                        {isFullyBooked ? (
-                          <Check className="h-6 w-6 text-green-500" />
-                        ) : (
-                          <div className="relative h-10 w-10">
-                            <Circle className="h-10 w-10 stroke-[0.5] text-muted-foreground/30" />
-                            <svg className="absolute inset-0" viewBox="0 0 100 100" width="40" height="40">
-                              <circle
-                                cx="50"
-                                cy="50"
-                                r="40"
-                                fill="none"
-                                stroke={bgColor}
-                                strokeWidth="8"
-                                strokeDasharray={`${bookingPercentage * 2.51} 251`}
-                                strokeLinecap="round"
-                                transform="rotate(-90 50 50)"
-                              />
-                            </svg>
-                            <span
-                              className={cn(
-                                "absolute inset-0 flex items-center justify-center text-xs font-medium",
-                                statusColor,
-                              )}
-                            >
-                              {bookingPercentage}%
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                      </TableCell>
+                    </TableRow>
                   )
-                })}
-              </div>
-            </div>
-          ))}
+                }),
+              )}
+            </TableBody>
+          </Table>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+      <div className="mt-3 pt-3 border-t border-gray-200">
+        <button className="text-xs text-blue-600 w-full flex items-center justify-center">
+          View all upcoming events
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fillRule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
   )
 }

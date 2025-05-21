@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { Card, CardContent } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
@@ -56,37 +55,34 @@ export function SalesComparisonChart() {
   const filteredData = getFilteredData()
 
   return (
-    <Card className="px-4 lg:px-6">
-      <div className="flex flex-row items-center justify-between py-2">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900">Sales Comparison</h3>
-          <p className="text-sm text-gray-600">This month vs last month</p>
-        </div>
+    <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <div className="text-sm font-medium">This month vs last month</div>
         <ToggleGroup type="single" value={timeRange} onValueChange={(value) => value && setTimeRange(value)}>
           <ToggleGroupItem
             value="3m"
             aria-label="Last 3 months"
             className="text-xs border-gray-200 data-[state=on]:bg-gray-100 data-[state=on]:text-gray-900"
           >
-            Last 3 months
+            3M
           </ToggleGroupItem>
           <ToggleGroupItem
             value="30d"
             aria-label="Last 30 days"
             className="text-xs border-gray-200 data-[state=on]:bg-gray-100 data-[state=on]:text-gray-900"
           >
-            Last 30 days
+            30D
           </ToggleGroupItem>
           <ToggleGroupItem
             value="7d"
             aria-label="Last 7 days"
             className="text-xs border-gray-200 data-[state=on]:bg-gray-100 data-[state=on]:text-gray-900"
           >
-            Last 7 days
+            7D
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
-      <CardContent className="px-0 pt-4">
+      <div className="overflow-hidden flex-grow">
         <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
           <AreaChart data={filteredData}>
             <defs>
@@ -150,7 +146,19 @@ export function SalesComparisonChart() {
             />
           </AreaChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+      </div>
+      <div className="mt-3 pt-3 border-t border-gray-200">
+        <button className="text-xs text-blue-600 w-full flex items-center justify-center">
+          View detailed sales report
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fillRule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
   )
 }
