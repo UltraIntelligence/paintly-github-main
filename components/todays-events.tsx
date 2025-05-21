@@ -106,7 +106,7 @@ export function TodaysEvents() {
   return (
     <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
       <div className="overflow-hidden flex-grow">
-        <div className="h-[280px] overflow-y-auto pr-2 -mr-2">
+        <div className="h-[300px] overflow-y-auto pr-2 -mr-2">
           <Table>
             <TableHeader className="sticky top-0 bg-gray-50 z-10">
               <TableRow className="border-b border-gray-200">
@@ -120,7 +120,7 @@ export function TodaysEvents() {
             <TableBody>
               {todaysEvents.map((event) => (
                 <TableRow key={`${event.time}-${event.name}`} className="border-b border-gray-200">
-                  <TableCell className="align-top py-2">
+                  <TableCell className="align-top py-3">
                     <div className="flex flex-col items-center space-y-1">
                       <div className={`w-12 h-12 rounded-md ${getGradientStyle(event.image)}`}></div>
                       <span className="text-xs text-gray-500 whitespace-nowrap">{event.time}</span>
@@ -149,7 +149,7 @@ export function TodaysEvents() {
           </Table>
         </div>
       </div>
-      <div className="mt-2 pt-2 border-t border-gray-200">
+      <div className="mt-3 pt-3 border-t border-gray-200">
         <button className="text-xs text-blue-600 w-full flex items-center justify-center">
           View all events
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">

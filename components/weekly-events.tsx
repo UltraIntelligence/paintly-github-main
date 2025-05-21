@@ -99,15 +99,16 @@ export function WeeklyEvents() {
   const totalEvents = weeklyEventsData.reduce((sum, day) => sum + day.events.length, 0)
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
+    <div className="bg-gray-50 rounded-lg p-4 flex flex-col">
       <div className="overflow-hidden flex-grow">
-        <div className="h-[300px] overflow-y-auto pr-2 -mr-2">
+        <div className="h-[250px] overflow-y-auto pr-2 -mr-2">
           <Table>
             <TableHeader className="sticky top-0 bg-gray-50 z-10">
               <TableRow className="border-b border-gray-200">
                 <TableHead className="w-[80px] text-xs text-gray-500">Event</TableHead>
                 <TableHead className="text-xs text-gray-500">Details</TableHead>
                 <TableHead className="hidden md:table-cell text-xs text-gray-500">Day</TableHead>
+                <TableHead className="hidden md:table-cell text-xs text-gray-500">Location</TableHead>
                 <TableHead className="text-right text-xs text-gray-500">Capacity</TableHead>
               </TableRow>
             </TableHeader>
@@ -132,6 +133,10 @@ export function WeeklyEvents() {
                       <TableCell className="hidden md:table-cell text-sm text-gray-600">
                         <span className="font-medium">{dayData.day}</span>
                         <span className="text-xs text-gray-500 block">{dayData.date}</span>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-sm text-gray-600">
+                        <span className="font-medium">Main Studio</span>
+                        <span className="text-xs text-gray-500 block">Floor 2</span>
                       </TableCell>
                       <TableCell className="text-right">
                         <Badge

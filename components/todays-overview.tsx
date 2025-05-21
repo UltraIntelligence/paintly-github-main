@@ -1,63 +1,44 @@
 import { Card, CardContent } from "@/components/ui/card"
+import { DailyStatistics } from "./daily-statistics"
 import { TodaysEvents } from "./todays-events"
 import { ActivityFeed } from "./activity-feed"
-import { DailyStatistics } from "./daily-statistics"
 
 export function TodaysOverview() {
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Today's Overview</h2>
-        <p className="text-muted-foreground">Quick summary of today's events, statistics, and activity.</p>
-      </div>
+    <Card className="w-full">
+      <CardContent className="p-6">
+        <div className="flex flex-col space-y-6">
+          {/* Header with title */}
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-bold">Today's Overview</h2>
+              <p className="text-sm text-gray-500">Real-time metrics and activities</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-500">Last updated: Just now</span>
+            </div>
+          </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="md:col-span-2 lg:col-span-3">
-          <CardContent className="p-0">
-            <div className="p-6 pb-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-medium">Daily Statistics</h3>
-                  <p className="text-sm text-gray-500">Overview of today's key metrics</p>
-                </div>
+          {/* Daily Statistics */}
+          <DailyStatistics />
+
+          {/* Today's Events and Activity Feed side by side */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <h3 className="text-lg font-semibold mb-3">Today's Events</h3>
+              <div className="h-[calc(100%-2rem)]">
+                <TodaysEvents />
               </div>
             </div>
-            <DailyStatistics />
-          </CardContent>
-        </Card>
-
-        <Card className="md:col-span-2 lg:col-span-4">
-          <CardContent className="p-0">
-            <div className="p-6 pb-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-medium">Today's Events</h3>
-                  <p className="text-sm text-gray-500">Schedule for May 21, 2025</p>
-                </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Latest Activity</h3>
+              <div className="h-[calc(100%-2rem)]">
+                <ActivityFeed />
               </div>
             </div>
-            <div className="px-6 pb-6">
-              <TodaysEvents />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="md:col-span-2 lg:col-span-3">
-          <CardContent className="p-0">
-            <div className="p-6 pb-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-medium">Latest Activity</h3>
-                  <p className="text-sm text-gray-500">Recent bookings and interactions</p>
-                </div>
-              </div>
-            </div>
-            <div className="px-6 pb-6">
-              <ActivityFeed />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

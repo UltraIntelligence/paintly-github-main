@@ -55,7 +55,7 @@ export function SalesComparisonChart() {
   const filteredData = getFilteredData()
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4 h-full flex flex-col">
+    <div className="bg-gray-50 rounded-lg p-4 flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div className="text-sm font-medium">This month vs last month</div>
         <ToggleGroup type="single" value={timeRange} onValueChange={(value) => value && setTimeRange(value)}>
@@ -83,69 +83,71 @@ export function SalesComparisonChart() {
         </ToggleGroup>
       </div>
       <div className="overflow-hidden flex-grow">
-        <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillCurrentMonth" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(346, 84%, 81%)" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="hsl(346, 84%, 81%)" stopOpacity={0.1} />
-              </linearGradient>
-              <linearGradient id="fillLastMonth" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.1} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} stroke="#f1f1f1" />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              stroke="#9ca3af"
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return `Jun ${date.getDate()}`
-              }}
-            />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => `$${value}`}
-              width={60}
-              stroke="#9ca3af"
-            />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    const date = new Date(value)
-                    return `Jun ${date.getDate()}`
-                  }}
-                  formatter={(value) => [`$${value}`, ""]}
-                  indicator="dot"
-                />
-              }
-            />
-            <Area
-              dataKey="lastMonth"
-              type="natural"
-              fill="url(#fillLastMonth)"
-              stroke="var(--color-lastMonth)"
-              strokeWidth={2}
-              stackId="a"
-            />
-            <Area
-              dataKey="currentMonth"
-              type="natural"
-              fill="url(#fillCurrentMonth)"
-              stroke="var(--color-currentMonth)"
-              strokeWidth={2}
-              stackId="a"
-            />
-          </AreaChart>
-        </ChartContainer>
+        <div className="h-[250px]">
+          <ChartContainer config={chartConfig} className="h-full w-full">
+            <AreaChart data={filteredData}>
+              <defs>
+                <linearGradient id="fillCurrentMonth" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(346, 84%, 81%)" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="hsl(346, 84%, 81%)" stopOpacity={0.1} />
+                </linearGradient>
+                <linearGradient id="fillLastMonth" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="hsl(172, 67%, 73%)" stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} stroke="#f1f1f1" />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                stroke="#9ca3af"
+                tickFormatter={(value) => {
+                  const date = new Date(value)
+                  return `Jun ${date.getDate()}`
+                }}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `$${value}`}
+                width={60}
+                stroke="#9ca3af"
+              />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(value) => {
+                      const date = new Date(value)
+                      return `Jun ${date.getDate()}`
+                    }}
+                    formatter={(value) => [`$${value}`, ""]}
+                    indicator="dot"
+                  />
+                }
+              />
+              <Area
+                dataKey="lastMonth"
+                type="natural"
+                fill="url(#fillLastMonth)"
+                stroke="var(--color-lastMonth)"
+                strokeWidth={2}
+                stackId="a"
+              />
+              <Area
+                dataKey="currentMonth"
+                type="natural"
+                fill="url(#fillCurrentMonth)"
+                stroke="var(--color-currentMonth)"
+                strokeWidth={2}
+                stackId="a"
+              />
+            </AreaChart>
+          </ChartContainer>
+        </div>
       </div>
       <div className="mt-3 pt-3 border-t border-gray-200">
         <button className="text-xs text-blue-600 w-full flex items-center justify-center">

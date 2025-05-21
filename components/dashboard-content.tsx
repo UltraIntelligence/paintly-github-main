@@ -24,20 +24,16 @@ export function DashboardContent() {
               </div>
             </div>
 
-            {/* Weekly Events and Sales Comparison side by side */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Weekly Events</h3>
-                <div className="h-[calc(100%-2rem)]">
-                  <WeeklyEvents />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Sales Comparison</h3>
-                <div className="h-[calc(100%-2rem)]">
-                  <SalesComparisonChart />
-                </div>
-              </div>
+            {/* Weekly Events - Full Width */}
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Weekly Events</h3>
+              <WeeklyEvents />
+            </div>
+
+            {/* Sales Comparison - Full Width */}
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold mb-3">Sales Comparison</h3>
+              <SalesComparisonChart />
             </div>
           </div>
         </CardContent>
