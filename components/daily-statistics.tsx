@@ -1,46 +1,33 @@
-import type React from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowUp, ArrowDown, DollarSign, ShoppingCart, Eye, Calendar } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface StatCardProps {
   title: string
   value: string
-  change: number
-  icon: React.ReactNode
+  change: string
+  isPositive: boolean
 }
 
-function StatCard({ title, value, change, icon }: StatCardProps) {
-  const isPositive = change >= 0
-
+function StatCard({ title, value, change, isPositive }: StatCardProps) {
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
             <p className="text-2xl font-bold">{value}</p>
-            <div className="flex items-center gap-1">
-              {isPositive ? (
-                <ArrowUp className="h-4 w-4 text-emerald-500" />
-              ) : (
-                <ArrowDown className="h-4 w-4 text-rose-500" />
-              )}
-              <span className={`text-sm font-medium ${isPositive ? "text-emerald-500" : "text-rose-500"}`}>
-                {Math.abs(change)}% from last week
-              </span>
-            </div>
+            <p className={`text-xs ${isPositive ? "text-green-500" : "text-red-500"}`}>
+              {isPositive ? "↑" : "↓"} {change} compared to yesterday
+            </p>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex h-full items-end gap-1">
-              {/* Simplified vertical chart visualization */}
-              <div className="w-1.5 h-8 bg-primary/10 rounded-full"></div>
-              <div className="w-1.5 h-12 bg-primary/20 rounded-full"></div>
-              <div className="w-1.5 h-10 bg-primary/15 rounded-full"></div>
-              <div className="w-1.5 h-16 bg-primary/30 rounded-full"></div>
-              <div className="w-1.5 h-14 bg-primary/25 rounded-full"></div>
-              <div className="w-1.5 h-20 bg-primary rounded-full"></div>
-            </div>
-            <div className="rounded-full bg-primary/10 p-2 text-primary">{icon}</div>
+          <div className="h-16 w-12 flex items-end">
+            {/* Simple vertical bar chart */}
+            <div className="w-2 h-8 bg-primary/20 rounded-t-sm mx-0.5"></div>
+            <div className="w-2 h-10 bg-primary/30 rounded-t-sm mx-0.5"></div>
+            <div className="w-2 h-6 bg-primary/20 rounded-t-sm mx-0.5"></div>
+            <div className="w-2 h-12 bg-primary/40 rounded-t-sm mx-0.5"></div>
+            <div className="w-2 h-16 bg-primary rounded-t-sm mx-0.5"></div>
           </div>
         </div>
       </CardContent>
@@ -51,12 +38,12 @@ function StatCard({ title, value, change, icon }: StatCardProps) {
 export function DailyStatistics() {
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Daily Statistics</h2>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Sales Value" value="$3,560.00" change={5.65} icon={<DollarSign className="h-5 w-5" />} />
-        <StatCard title="Number of Orders" value="423" change={2.59} icon={<ShoppingCart className="h-5 w-5" />} />
-        <StatCard title="Storefront Views" value="4,224" change={-0.35} icon={<Eye className="h-5 w-5" />} />
-        <StatCard title="Booking Views" value="1,245" change={1.78} icon={<Calendar className="h-5 w-5" />} />
+      <h3 className="text-lg font-medium">Daily Statistics</h3>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard title="Sales Value" value="$3,560.00" change="5.65%" isPositive={true} />
+        <StatCard title="Number of Orders" value="423" change="3.65%" isPositive={true} />
+        <StatCard title="Storefront Views" value="4,224" change="9.25%" isPositive={true} />
+        <StatCard title="Booking Views" value="1,245" change="2.15%" isPositive={false} />
       </div>
     </div>
   )

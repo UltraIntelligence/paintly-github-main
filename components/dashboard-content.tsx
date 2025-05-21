@@ -6,25 +6,23 @@ import { ThisWeekStats } from "./this-week-stats"
 import { TodaysEvents } from "./todays-events"
 import { WelcomeHeader } from "./welcome-header"
 import { DailyStatistics } from "./daily-statistics"
-import { WeeklyEventsList } from "./weekly-events-list"
+import { WeeklyEvents } from "./weekly-events"
 import { ActivityFeed } from "./activity-feed"
 
 export function DashboardContent() {
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      {/* Alerts section at the top */}
+    <div className="flex flex-col gap-4 p-4 md:p-6">
       <AlertsSection />
 
-      {/* New components below notifications but above existing content */}
+      {/* New components added below notifications */}
       <WelcomeHeader />
       <DailyStatistics />
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <WeeklyEventsList />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mt-6">
+        <WeeklyEvents />
         <ActivityFeed />
       </div>
 
-      {/* Existing dashboard content */}
+      {/* Existing components */}
       <ThisWeekStats />
       <TodaysEvents />
       <SalesComparisonChart />
