@@ -15,6 +15,8 @@ const weeklyEventsData = [
         booked: 21,
         capacity: 23,
         image: "gradient-1",
+        location: "Main Studio",
+        floor: "Floor 2",
       },
       {
         id: 2,
@@ -23,6 +25,8 @@ const weeklyEventsData = [
         booked: 18,
         capacity: 20,
         image: "gradient-2",
+        location: "Main Studio",
+        floor: "Floor 2",
       },
     ],
   },
@@ -37,6 +41,8 @@ const weeklyEventsData = [
         booked: 8,
         capacity: 15,
         image: "gradient-3",
+        location: "Play Area",
+        floor: "Floor 1",
       },
     ],
   },
@@ -51,6 +57,8 @@ const weeklyEventsData = [
         booked: 12,
         capacity: 15,
         image: "gradient-4",
+        location: "Art Room",
+        floor: "Floor 3",
       },
       {
         id: 5,
@@ -59,6 +67,8 @@ const weeklyEventsData = [
         booked: 10,
         capacity: 10,
         image: "gradient-5",
+        location: "Pottery Studio",
+        floor: "Floor 1",
       },
     ],
   },
@@ -73,6 +83,8 @@ const weeklyEventsData = [
         booked: 7,
         capacity: 20,
         image: "gradient-6",
+        location: "Art Room",
+        floor: "Floor 3",
       },
     ],
   },
@@ -135,8 +147,8 @@ export function WeeklyEvents() {
                         <span className="text-xs text-gray-500 block">{dayData.date}</span>
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-sm text-gray-600">
-                        <span className="font-medium">Main Studio</span>
-                        <span className="text-xs text-gray-500 block">Floor 2</span>
+                        <span className="font-medium">{event.location}</span>
+                        <span className="text-xs text-gray-500 block">{event.floor}</span>
                       </TableCell>
                       <TableCell className="text-right">
                         <Badge

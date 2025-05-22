@@ -100,7 +100,7 @@ export function NotificationBanner() {
 
   return (
     <div
-      className={`relative mb-4 rounded-md border-l-4 p-4 shadow-sm ${getColorClasses(currentNotification.type)}`}
+      className={`relative mb-2 rounded-md border-l-4 p-4 shadow-sm ${getColorClasses(currentNotification.type)}`}
       role="alert"
       aria-live="polite"
     >

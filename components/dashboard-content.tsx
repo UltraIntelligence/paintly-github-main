@@ -10,7 +10,7 @@ export function DashboardContent() {
       <NotificationBanner />
       <TodaysOverview />
 
-      {/* Weekly Performance */}
+      {/* Weekly Performance - Full Width */}
       <Card className="w-full">
         <CardContent className="p-6">
           <div className="flex flex-col space-y-6">
