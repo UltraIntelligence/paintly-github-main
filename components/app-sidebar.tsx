@@ -3,6 +3,13 @@
 import type * as React from "react"
 import {
   PaintbrushIcon,
+  LayoutDashboardIcon,
+  CalendarDaysIcon,
+  Users2Icon,
+  MapPinIcon,
+  Building2Icon,
+  GiftIcon,
+  ImageIcon,
   BarChartIcon,
   CameraIcon,
   ClipboardListIcon,
@@ -10,13 +17,9 @@ import {
   FileCodeIcon,
   FileIcon,
   FileTextIcon,
-  FolderIcon,
   HelpCircleIcon,
-  LayoutDashboardIcon,
-  ListIcon,
   SearchIcon,
   SettingsIcon,
-  UsersIcon,
 } from "lucide-react"
 
 import { NavDocuments } from "./nav-documents"
@@ -46,24 +49,39 @@ const data = {
       icon: LayoutDashboardIcon,
     },
     {
-      title: "Lifecycle",
+      title: "Events",
       url: "#",
-      icon: ListIcon,
+      icon: CalendarDaysIcon,
     },
     {
-      title: "Analytics",
+      title: "Instructors",
+      url: "#",
+      icon: Users2Icon,
+    },
+    {
+      title: "Locations",
+      url: "#",
+      icon: MapPinIcon,
+    },
+    {
+      title: "Corporate",
+      url: "#",
+      icon: Building2Icon,
+    },
+    {
+      title: "Gift Certificates",
+      url: "#",
+      icon: GiftIcon,
+    },
+    {
+      title: "Banners",
+      url: "#",
+      icon: ImageIcon,
+    },
+    {
+      title: "Reports",
       url: "#",
       icon: BarChartIcon,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: FolderIcon,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: UsersIcon,
     },
   ],
   navClouds: [
