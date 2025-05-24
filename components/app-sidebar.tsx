@@ -22,6 +22,7 @@ import {
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
+import { CalendarSidebar } from "./calendar-sidebar"
 import {
   Sidebar,
   SidebarContent,
@@ -165,6 +166,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <div className="mt-4 group-data-[collapsible=icon]:hidden">
+          <CalendarSidebar />
+        </div>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
