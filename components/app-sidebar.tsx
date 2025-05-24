@@ -35,9 +35,9 @@ import {
 
 const data = {
   user: {
-    name: "Akira Tanaka",
-    email: "akira@artbar.tokyo",
-    avatar: "/placeholder.svg?height=32&width=32&query=artistic+painter+avatar+with+paint+palette",
+    name: "Cathy Thompson",
+    email: "tokyo@artbar.co.jp",
+    avatar: "/images/cathy-avatar.png",
   },
   navMain: [
     {
