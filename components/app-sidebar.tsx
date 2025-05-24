@@ -2,98 +2,177 @@
 
 import type * as React from "react"
 import {
-  Calendar,
-  LayoutDashboardIcon,
-  MapPin,
-  Palette,
-  SettingsIcon,
+  PaintbrushIcon,
+  BarChartIcon,
+  CameraIcon,
+  ClipboardListIcon,
+  DatabaseIcon,
+  FileCodeIcon,
+  FileIcon,
+  FileTextIcon,
+  FolderIcon,
   HelpCircleIcon,
+  LayoutDashboardIcon,
+  ListIcon,
   SearchIcon,
+  SettingsIcon,
   UsersIcon,
 } from "lucide-react"
-import Link from "next/link"
 
+import { NavDocuments } from "./nav-documents"
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
 
 const data = {
   user: {
-    name: "Cathy",
-    email: "tokyo@artbar.co.jp",
-    avatar: "/abstract-geometric-shapes.png",
+    name: "Akira Tanaka",
+    email: "akira@artbar.tokyo",
+    avatar: "/placeholder.svg?height=32&width=32&query=artistic+painter+avatar+with+paint+palette",
   },
   navMain: [
     {
-      title: "Home", // Updated title from "Dashboard" to "Home"
-      url: "/dashboard",
+      title: "Dashboard",
+      url: "#",
       icon: LayoutDashboardIcon,
     },
     {
-      title: "Scheduling",
-      url: "/scheduling",
-      icon: Calendar,
+      title: "Lifecycle",
+      url: "#",
+      icon: ListIcon,
     },
     {
-      title: "Instructors",
-      url: "/instructors",
+      title: "Analytics",
+      url: "#",
+      icon: BarChartIcon,
+    },
+    {
+      title: "Projects",
+      url: "#",
+      icon: FolderIcon,
+    },
+    {
+      title: "Team",
+      url: "#",
       icon: UsersIcon,
     },
+  ],
+  navClouds: [
     {
-      title: "Events",
-      url: "/events",
-      icon: Palette,
+      title: "Capture",
+      icon: CameraIcon,
+      isActive: true,
+      url: "#",
+      items: [
+        {
+          title: "Active Proposals",
+          url: "#",
+        },
+        {
+          title: "Archived",
+          url: "#",
+        },
+      ],
     },
     {
-      title: "Locations",
-      url: "/locations",
-      icon: MapPin,
+      title: "Proposal",
+      icon: FileTextIcon,
+      url: "#",
+      items: [
+        {
+          title: "Active Proposals",
+          url: "#",
+        },
+        {
+          title: "Archived",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Prompts",
+      icon: FileCodeIcon,
+      url: "#",
+      items: [
+        {
+          title: "Active Proposals",
+          url: "#",
+        },
+        {
+          title: "Archived",
+          url: "#",
+        },
+      ],
     },
   ],
   navSecondary: [
     {
       title: "Settings",
-      url: "/settings",
+      url: "#",
       icon: SettingsIcon,
     },
     {
       title: "Get Help",
-      url: "/help",
+      url: "#",
       icon: HelpCircleIcon,
     },
     {
       title: "Search",
-      url: "/search",
+      url: "#",
       icon: SearchIcon,
+    },
+  ],
+  documents: [
+    {
+      name: "Data Library",
+      url: "#",
+      icon: DatabaseIcon,
+    },
+    {
+      name: "Reports",
+      url: "#",
+      icon: ClipboardListIcon,
+    },
+    {
+      name: "Word Assistant",
+      url: "#",
+      icon: FileIcon,
     },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="flex items-center justify-center p-4">
-        <Link href="/dashboard" className="flex w-full justify-center">
-          <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-black%20%285%29-7VlW8Vv28HicXieXSskv296fVjqw8S.png"
-            alt="Paintly Logo"
-            className="h-[60px] w-[60px] object-contain"
-            style={{
-              minWidth: "60px",
-              minHeight: "60px",
-            }}
-          />
-        </Link>
+    <Sidebar collapsible="offcanvas" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
+              <a href="#">
+                <PaintbrushIcon className="h-5 w-5" />
+                <span className="text-base font-semibold">Artbar Tokyo</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }
