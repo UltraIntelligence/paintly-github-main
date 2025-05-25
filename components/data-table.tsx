@@ -425,7 +425,7 @@ export function DataTable({
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               {/* Mobile: Top section - Title + Thumbnail side by side */}
-              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=monet water lilies painting"
@@ -440,7 +440,7 @@ export function DataTable({
               </div>
 
               {/* Mobile: Middle section - Capacity info */}
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">8/12</span>
                   <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
@@ -453,7 +453,7 @@ export function DataTable({
               </div>
 
               {/* Mobile: Bottom section - Status + Instructor + Actions */}
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
                 <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
                   <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
                     <CheckCircle2Icon className="size-3 text-green-500" />
@@ -466,7 +466,7 @@ export function DataTable({
                     <span className="text-sm">Yuki Tanaka</span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
                   <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
@@ -475,13 +475,34 @@ export function DataTable({
                   </Button>
                 </div>
               </div>
+              <div className="md:basis-1/5">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+                      size="icon"
+                    >
+                      <MoreVerticalIcon />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-32">
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
+                    <DropdownMenuItem>Favorite</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
 
           {/* Repeat similar structure for other event cards with their respective data */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=van gogh starry night painting"
@@ -494,7 +515,7 @@ export function DataTable({
                   <p className="text-xs md:text-sm text-muted-foreground">7:30-9:30 PM • Artbar Shibuya</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">12/15</span>
                   <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
@@ -505,7 +526,7 @@ export function DataTable({
                   In progress
                 </Badge>
               </div>
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
                 <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
                   <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
                     <LoaderIcon className="size-3 text-blue-500" />
@@ -518,7 +539,7 @@ export function DataTable({
                     <span className="text-sm">Hiroshi Sato</span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
                   <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
@@ -527,13 +548,34 @@ export function DataTable({
                   </Button>
                 </div>
               </div>
+              <div className="md:basis-1/5">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+                      size="icon"
+                    >
+                      <MoreVerticalIcon />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-32">
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
+                    <DropdownMenuItem>Favorite</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
 
           {/* Continue with remaining event cards following the same pattern */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=hokusai great wave painting"
@@ -546,7 +588,7 @@ export function DataTable({
                   <p className="text-xs md:text-sm text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">6/10</span>
                   <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
@@ -557,7 +599,7 @@ export function DataTable({
                   Tomorrow
                 </Badge>
               </div>
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
                 <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
                   <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
                     <CheckCircle2Icon className="size-3 text-green-500" />
@@ -570,7 +612,7 @@ export function DataTable({
                     <span className="text-sm">Akiko Yamada</span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
                   <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
@@ -579,12 +621,33 @@ export function DataTable({
                   </Button>
                 </div>
               </div>
+              <div className="md:basis-1/5">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+                      size="icon"
+                    >
+                      <MoreVerticalIcon />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-32">
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
+                    <DropdownMenuItem>Favorite</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
 
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=cherry blossom sakura painting"
@@ -597,7 +660,7 @@ export function DataTable({
                   <p className="text-xs md:text-sm text-muted-foreground">11:00 AM-1:00 PM • Artbar Omotesando</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">4/8</span>
                   <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
@@ -608,7 +671,7 @@ export function DataTable({
                   This weekend
                 </Badge>
               </div>
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
                 <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
                   <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
                     <CheckCircle2Icon className="size-3 text-green-500" />
@@ -621,7 +684,7 @@ export function DataTable({
                     <span className="text-sm">Mei Suzuki</span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
                   <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
@@ -630,12 +693,33 @@ export function DataTable({
                   </Button>
                 </div>
               </div>
+              <div className="md:basis-1/5">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+                      size="icon"
+                    >
+                      <MoreVerticalIcon />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-32">
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
+                    <DropdownMenuItem>Favorite</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
 
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=abstract modern art painting colorful"
@@ -648,7 +732,7 @@ export function DataTable({
                   <p className="text-xs md:text-sm text-muted-foreground">3:00-5:00 PM • Artbar Shinjuku</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">2/6</span>
                   <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
@@ -659,7 +743,7 @@ export function DataTable({
                   Next week
                 </Badge>
               </div>
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
                 <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
                   <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
                     <CheckCircle2Icon className="size-3 text-green-500" />
@@ -675,7 +759,7 @@ export function DataTable({
                     <span className="text-sm">Kenji Nakamura</span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
                   <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
@@ -683,6 +767,27 @@ export function DataTable({
                     View Bookings
                   </Button>
                 </div>
+              </div>
+              <div className="md:basis-1/5">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+                      size="icon"
+                    >
+                      <MoreVerticalIcon />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-32">
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
+                    <DropdownMenuItem>Favorite</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>
