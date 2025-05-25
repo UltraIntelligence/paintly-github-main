@@ -72,7 +72,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { TableCell, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar } from "./ui/avatar"
 
@@ -420,424 +420,272 @@ export function DataTable({
         </div>
       </div>
       <TabsContent value="outline" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-        <div className="overflow-hidden rounded-lg border">
-          <Table>
-            <TableHeader className="sticky top-0 z-10 bg-muted">
-              <TableRow>
-                <TableHead>Event</TableHead>
-                <TableHead className="hidden lg:table-cell">Capacity & Time</TableHead>
-                <TableHead className="hidden lg:table-cell">Status & Instructor</TableHead>
-                <TableHead className="w-32">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {/* Sample Event Cards */}
-              <TableRow className="group hover:bg-muted/50">
-                <TableCell className="p-4">
-                  <div className="flex items-center gap-4 lg:w-full">
-                    <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                      <img
-                        src="/placeholder.svg?height=80&width=80&query=monet water lilies painting"
-                        alt="Monet Water Lilies"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
-                      <p className="text-sm text-muted-foreground mb-2 lg:mb-0">6:00-8:00 PM • Artbar Ginza</p>
-                      <div className="flex items-center gap-3 lg:hidden">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground">8/12</span>
-                          <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                            <div className="w-2/3 h-full bg-primary rounded-full"></div>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-xs px-2 py-1">
-                          Starting in 2 hours
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 mt-2 lg:hidden">
-                        <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                          <CheckCircle2Icon className="size-3 text-green-500" />
-                          Active
-                        </Badge>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <img src="/placeholder.svg?height=24&width=24&query=japanese woman instructor" alt="Yuki" />
-                          </Avatar>
-                          <span className="text-sm">Yuki Tanaka</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium">8/12</span>
-                      <div className="flex-1 max-w-24 h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="w-2/3 h-full bg-primary rounded-full"></div>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="text-xs px-2 py-1 w-fit">
-                      Starting in 2 hours
-                    </Badge>
-                  </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                      <CheckCircle2Icon className="size-3 text-green-500" />
-                      Active
-                    </Badge>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-7 w-7">
-                        <img src="/placeholder.svg?height=28&width=28&query=japanese woman instructor" alt="Yuki" />
-                      </Avatar>
-                      <span className="text-sm">Yuki Tanaka</span>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="p-4">
-                  <div className="flex flex-col gap-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Edit
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View Bookings
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
+        <div className="space-y-4">
+          {/* Sample Event Cards */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              {/* Mobile: Top section - Title + Thumbnail side by side */}
+              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=80&width=80&query=monet water lilies painting"
+                    alt="Monet Water Lilies"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-sm md:text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
+                </div>
+              </div>
 
-              <TableRow className="group hover:bg-muted/50">
-                <TableCell className="p-4">
-                  <div className="flex items-center gap-4 lg:w-full">
-                    <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                      <img
-                        src="/placeholder.svg?height=80&width=80&query=van gogh starry night painting"
-                        alt="Starry Night"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-base mb-1">ゴッホ 星月夜 Van Gogh Starry Night</h3>
-                      <p className="text-sm text-muted-foreground mb-2 lg:mb-0">7:30-9:30 PM • Artbar Shibuya</p>
-                      <div className="flex items-center gap-3 lg:hidden">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground">12/15</span>
-                          <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                            <div className="w-4/5 h-full bg-primary rounded-full"></div>
-                          </div>
-                        </div>
-                        <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-700">
-                          In progress
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 mt-2 lg:hidden">
-                        <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                          <LoaderIcon className="size-3 text-blue-500" />
-                          Live
-                        </Badge>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <img
-                              src="/placeholder.svg?height=24&width=24&query=japanese man instructor"
-                              alt="Hiroshi"
-                            />
-                          </Avatar>
-                          <span className="text-sm">Hiroshi Sato</span>
-                        </div>
-                      </div>
-                    </div>
+              {/* Mobile: Middle section - Capacity info */}
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">8/12</span>
+                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-2/3 h-full bg-primary rounded-full"></div>
                   </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium">12/15</span>
-                      <div className="flex-1 max-w-24 h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="w-4/5 h-full bg-primary rounded-full"></div>
-                      </div>
-                    </div>
-                    <Badge variant="secondary" className="text-xs px-2 py-1 w-fit bg-green-100 text-green-700">
-                      In progress
-                    </Badge>
-                  </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                      <LoaderIcon className="size-3 text-blue-500" />
-                      Live
-                    </Badge>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-7 w-7">
-                        <img src="/placeholder.svg?height=28&width=28&query=japanese man instructor" alt="Hiroshi" />
-                      </Avatar>
-                      <span className="text-sm">Hiroshi Sato</span>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="p-4">
-                  <div className="flex flex-col gap-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Edit
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View Bookings
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
+                </div>
+                <Badge variant="outline" className="text-xs px-2 py-1">
+                  Starting in 2 hours
+                </Badge>
+              </div>
 
-              <TableRow className="group hover:bg-muted/50">
-                <TableCell className="p-4">
-                  <div className="flex items-center gap-4 lg:w-full">
-                    <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                      <img
-                        src="/placeholder.svg?height=80&width=80&query=hokusai great wave painting"
-                        alt="Great Wave"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-base mb-1">北斎 神奈川沖浪裏 Hokusai Great Wave</h3>
-                      <p className="text-sm text-muted-foreground mb-2 lg:mb-0">2:00-4:00 PM • Artbar Harajuku</p>
-                      <div className="flex items-center gap-3 lg:hidden">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground">6/10</span>
-                          <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                            <div className="w-3/5 h-full bg-primary rounded-full"></div>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-xs px-2 py-1">
-                          Tomorrow
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 mt-2 lg:hidden">
-                        <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                          <CheckCircle2Icon className="size-3 text-green-500" />
-                          Scheduled
-                        </Badge>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <img
-                              src="/placeholder.svg?height=24&width=24&query=japanese woman art instructor"
-                              alt="Akiko"
-                            />
-                          </Avatar>
-                          <span className="text-sm">Akiko Yamada</span>
-                        </div>
-                      </div>
-                    </div>
+              {/* Mobile: Bottom section - Status + Instructor + Actions */}
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
+                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
+                    <CheckCircle2Icon className="size-3 text-green-500" />
+                    Active
+                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
+                      <img src="/placeholder.svg?height=28&width=28&query=japanese woman instructor" alt="Yuki" />
+                    </Avatar>
+                    <span className="text-sm">Yuki Tanaka</span>
                   </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium">6/10</span>
-                      <div className="flex-1 max-w-24 h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="w-3/5 h-full bg-primary rounded-full"></div>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="text-xs px-2 py-1 w-fit">
-                      Tomorrow
-                    </Badge>
-                  </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                      <CheckCircle2Icon className="size-3 text-green-500" />
-                      Scheduled
-                    </Badge>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-7 w-7">
-                        <img
-                          src="/placeholder.svg?height=28&width=28&query=japanese woman art instructor"
-                          alt="Akiko"
-                        />
-                      </Avatar>
-                      <span className="text-sm">Akiko Yamada</span>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="p-4">
-                  <div className="flex flex-col gap-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Edit
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View Bookings
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
+                </div>
+                <div className="flex gap-2 md:flex-col md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    Edit
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    View Bookings
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-              <TableRow className="group hover:bg-muted/50">
-                <TableCell className="p-4">
-                  <div className="flex items-center gap-4 lg:w-full">
-                    <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                      <img
-                        src="/placeholder.svg?height=80&width=80&query=cherry blossom sakura painting"
-                        alt="Cherry Blossoms"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-base mb-1">桜 Cherry Blossoms Spring Scene</h3>
-                      <p className="text-sm text-muted-foreground mb-2 lg:mb-0">11:00 AM-1:00 PM • Artbar Omotesando</p>
-                      <div className="flex items-center gap-3 lg:hidden">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground">4/8</span>
-                          <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                            <div className="w-1/2 h-full bg-primary rounded-full"></div>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-xs px-2 py-1">
-                          This weekend
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 mt-2 lg:hidden">
-                        <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                          <CheckCircle2Icon className="size-3 text-green-500" />
-                          Scheduled
-                        </Badge>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <img src="/placeholder.svg?height=24&width=24&query=japanese woman art teacher" alt="Mei" />
-                          </Avatar>
-                          <span className="text-sm">Mei Suzuki</span>
-                        </div>
-                      </div>
-                    </div>
+          {/* Repeat similar structure for other event cards with their respective data */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=80&width=80&query=van gogh starry night painting"
+                    alt="Starry Night"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-sm md:text-base mb-1">ゴッホ 星月夜 Van Gogh Starry Night</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground">7:30-9:30 PM • Artbar Shibuya</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">12/15</span>
+                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-4/5 h-full bg-primary rounded-full"></div>
                   </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium">4/8</span>
-                      <div className="flex-1 max-w-24 h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="w-1/2 h-full bg-primary rounded-full"></div>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="text-xs px-2 py-1 w-fit">
-                      This weekend
-                    </Badge>
+                </div>
+                <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-700">
+                  In progress
+                </Badge>
+              </div>
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
+                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
+                    <LoaderIcon className="size-3 text-blue-500" />
+                    Live
+                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
+                      <img src="/placeholder.svg?height=28&width=28&query=japanese man instructor" alt="Hiroshi" />
+                    </Avatar>
+                    <span className="text-sm">Hiroshi Sato</span>
                   </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                      <CheckCircle2Icon className="size-3 text-green-500" />
-                      Scheduled
-                    </Badge>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-7 w-7">
-                        <img src="/placeholder.svg?height=28&width=28&query=japanese woman art teacher" alt="Mei" />
-                      </Avatar>
-                      <span className="text-sm">Mei Suzuki</span>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="p-4">
-                  <div className="flex flex-col gap-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Edit
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View Bookings
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
+                </div>
+                <div className="flex gap-2 md:flex-col md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    Edit
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    View Bookings
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-              <TableRow className="group hover:bg-muted/50">
-                <TableCell className="p-4">
-                  <div className="flex items-center gap-4 lg:w-full">
-                    <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+          {/* Continue with remaining event cards following the same pattern */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=80&width=80&query=hokusai great wave painting"
+                    alt="Great Wave"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-sm md:text-base mb-1">北斎 神奈川沖浪裏 Hokusai Great Wave</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">6/10</span>
+                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-3/5 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs px-2 py-1">
+                  Tomorrow
+                </Badge>
+              </div>
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
+                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
+                    <CheckCircle2Icon className="size-3 text-green-500" />
+                    Scheduled
+                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
+                      <img src="/placeholder.svg?height=28&width=28&query=japanese woman art instructor" alt="Akiko" />
+                    </Avatar>
+                    <span className="text-sm">Akiko Yamada</span>
+                  </div>
+                </div>
+                <div className="flex gap-2 md:flex-col md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    Edit
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    View Bookings
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=80&width=80&query=cherry blossom sakura painting"
+                    alt="Cherry Blossoms"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-sm md:text-base mb-1">桜 Cherry Blossoms Spring Scene</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground">11:00 AM-1:00 PM • Artbar Omotesando</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">4/8</span>
+                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-1/2 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs px-2 py-1">
+                  This weekend
+                </Badge>
+              </div>
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
+                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
+                    <CheckCircle2Icon className="size-3 text-green-500" />
+                    Scheduled
+                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
+                      <img src="/placeholder.svg?height=28&width=28&query=japanese woman art teacher" alt="Mei" />
+                    </Avatar>
+                    <span className="text-sm">Mei Suzuki</span>
+                  </div>
+                </div>
+                <div className="flex gap-2 md:flex-col md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    Edit
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    View Bookings
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
+                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=80&width=80&query=abstract modern art painting colorful"
+                    alt="Abstract Art"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-sm md:text-base mb-1">Modern Abstract Expression Workshop</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground">3:00-5:00 PM • Artbar Shinjuku</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">2/6</span>
+                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-1/3 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs px-2 py-1">
+                  Next week
+                </Badge>
+              </div>
+              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/3">
+                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
+                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
+                    <CheckCircle2Icon className="size-3 text-green-500" />
+                    Scheduled
+                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
                       <img
-                        src="/placeholder.svg?height=80&width=80&query=abstract modern art painting colorful"
-                        alt="Abstract Art"
-                        className="w-full h-full object-cover"
+                        src="/placeholder.svg?height=28&width=28&query=japanese man modern art instructor"
+                        alt="Kenji"
                       />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-base mb-1">Modern Abstract Expression Workshop</h3>
-                      <p className="text-sm text-muted-foreground mb-2 lg:mb-0">3:00-5:00 PM • Artbar Shinjuku</p>
-                      <div className="flex items-center gap-3 lg:hidden">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground">2/6</span>
-                          <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                            <div className="w-1/3 h-full bg-primary rounded-full"></div>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-xs px-2 py-1">
-                          Next week
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 mt-2 lg:hidden">
-                        <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                          <CheckCircle2Icon className="size-3 text-green-500" />
-                          Scheduled
-                        </Badge>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <img
-                              src="/placeholder.svg?height=24&width=24&query=japanese man modern art instructor"
-                              alt="Kenji"
-                            />
-                          </Avatar>
-                          <span className="text-sm">Kenji Nakamura</span>
-                        </div>
-                      </div>
-                    </div>
+                    </Avatar>
+                    <span className="text-sm">Kenji Nakamura</span>
                   </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium">2/6</span>
-                      <div className="flex-1 max-w-24 h-2 bg-muted rounded-full overflow-hidden">
-                        <div className="w-1/3 h-full bg-primary rounded-full"></div>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="text-xs px-2 py-1 w-fit">
-                      Next week
-                    </Badge>
-                  </div>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell p-4">
-                  <div className="flex flex-col gap-3">
-                    <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                      <CheckCircle2Icon className="size-3 text-green-500" />
-                      Scheduled
-                    </Badge>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-7 w-7">
-                        <img
-                          src="/placeholder.svg?height=28&width=28&query=japanese man modern art instructor"
-                          alt="Kenji"
-                        />
-                      </Avatar>
-                      <span className="text-sm">Kenji Nakamura</span>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="p-4">
-                  <div className="flex flex-col gap-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Edit
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View Bookings
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+                </div>
+                <div className="flex gap-2 md:flex-col md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    Edit
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                    View Bookings
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         {/* Keep existing pagination section */}
         <div className="flex items-center justify-between px-4">
