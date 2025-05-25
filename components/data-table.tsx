@@ -422,7 +422,7 @@ export function DataTable({
         <div className="space-y-4">
           {/* Event Card 1 */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-2">
               {/* Column 1: Thumbnail */}
               <div className="flex items-start gap-2 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
@@ -448,7 +448,7 @@ export function DataTable({
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">8/12</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-2/3 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -489,7 +489,7 @@ export function DataTable({
 
           {/* Event Card 2 */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-2">
               <div className="flex items-start gap-2 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
@@ -512,7 +512,7 @@ export function DataTable({
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">12/15</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-4/5 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -551,7 +551,7 @@ export function DataTable({
 
           {/* Event Card 3 */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-2">
               <div className="flex items-start gap-2 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
@@ -574,7 +574,7 @@ export function DataTable({
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">6/10</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-3/5 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -613,7 +613,7 @@ export function DataTable({
 
           {/* Event Card 4 */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-2">
               <div className="flex items-start gap-2 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
@@ -636,7 +636,7 @@ export function DataTable({
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">4/8</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-1/2 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -675,7 +675,7 @@ export function DataTable({
 
           {/* Event Card 5 */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-2">
               <div className="flex items-start gap-2 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
@@ -698,7 +698,7 @@ export function DataTable({
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">2/6</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-1/3 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
