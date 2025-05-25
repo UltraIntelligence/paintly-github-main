@@ -347,6 +347,18 @@ export function DataTable({
 
   return (
     <Tabs defaultValue="outline" className="flex w-full flex-col justify-start gap-6">
+    <div style={{
+  background: 'red', 
+  color: 'white', 
+  padding: '10px', 
+  textAlign: 'center',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  margin: '10px 20px',
+  borderRadius: '8px'
+}}>
+  🔴 DEBUG: data-table.tsx is connected! - {new Date().toLocaleTimeString()}
+</div>
       <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
@@ -422,7 +434,7 @@ export function DataTable({
         <div className="space-y-4">
           {/* Event Card 1 */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-2">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
               {/* Column 1: Thumbnail */}
               <div className="flex items-start gap-2 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
@@ -433,7 +445,7 @@ export function DataTable({
                   />
                 </div>
                 <div className="flex-1 min-w-0 md:hidden">
-                  <h3 className="font-medium text-base mb-1 text-red-500 text-2xl">TEST CHANGE - Monet Water Lilies</h3>
+                  <h3 className="font-medium text-sm mb-1">モネ 睡蓮 Monet Water Lilies</h3>
                   <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
                 </div>
               </div>
@@ -448,7 +460,7 @@ export function DataTable({
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">8/12</span>
-                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-2/3 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
