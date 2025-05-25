@@ -74,7 +74,6 @@ import {
 } from "@/components/ui/sheet"
 import { TableCell, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar } from "./ui/avatar"
 
 export const schema = z.object({
   id: z.number(),
@@ -421,29 +420,35 @@ export function DataTable({
       </div>
       <TabsContent value="outline" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="space-y-4">
-          {/* Sample Event Cards */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+          {/* Event Card 1 */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              {/* Mobile: Top section - Title + Thumbnail side by side */}
-              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
+              {/* Column 1: Thumbnail */}
+              <div className="flex items-start gap-3 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
-                    src="/placeholder.svg?height=80&width=80&query=monet water lilies painting"
+                    src="/placeholder.svg?height=96&width=96&query=monet water lilies painting"
                     alt="Monet Water Lilies"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm md:text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">モネ 睡蓮 Monet Water Lilies</h3>
+                  <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
                 </div>
               </div>
 
-              {/* Mobile: Middle section - Capacity info */}
+              {/* Column 2: Event Details (Desktop only) */}
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
+                <p className="text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
+              </div>
+
+              {/* Column 3: Capacity & Progress */}
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">8/12</span>
-                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-2/3 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -452,73 +457,62 @@ export function DataTable({
                 </Badge>
               </div>
 
-              {/* Mobile: Bottom section - Status + Instructor + Actions */}
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
-                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
-                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                    <CheckCircle2Icon className="size-3 text-green-500" />
-                    Active
-                  </Badge>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
-                      <img src="/placeholder.svg?height=28&width=28&query=japanese woman instructor" alt="Yuki" />
-                    </Avatar>
-                    <span className="text-sm">Yuki Tanaka</span>
+              {/* Column 4: Status & Instructor */}
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman instructor"
+                      alt="Yuki Tanaka"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    Edit
-                  </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
-                    View Bookings
-                  </Button>
+                  <span className="text-sm">Yuki Tanaka</span>
                 </div>
               </div>
-              <div className="md:basis-1/5">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-                      size="icon"
-                    >
-                      <MoreVerticalIcon />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                    <DropdownMenuItem>Favorite</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+
+              {/* Column 5: Actions */}
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="sm" className="flex-1">
+                  Edit
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1">
+                  View Bookings
+                </Button>
               </div>
             </div>
           </div>
 
-          {/* Repeat similar structure for other event cards with their respective data */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+          {/* Event Card 2 */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
+              <div className="flex items-start gap-3 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
-                    src="/placeholder.svg?height=80&width=80&query=van gogh starry night painting"
-                    alt="Starry Night"
+                    src="/placeholder.svg?height=96&width=96&query=van gogh starry night painting"
+                    alt="Van Gogh Starry Night"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm md:text-base mb-1">ゴッホ 星月夜 Van Gogh Starry Night</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground">7:30-9:30 PM • Artbar Shibuya</p>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">ゴッホ 星月夜 Van Gogh Starry Night</h3>
+                  <p className="text-xs text-muted-foreground">7:30-9:30 PM • Artbar Shibuya</p>
                 </div>
               </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">ゴッホ 星月夜 Van Gogh Starry Night</h3>
+                <p className="text-sm text-muted-foreground">7:30-9:30 PM • Artbar Shibuya</p>
+              </div>
+
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">12/15</span>
-                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-4/5 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -526,72 +520,61 @@ export function DataTable({
                   In progress
                 </Badge>
               </div>
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
-                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
-                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                    <LoaderIcon className="size-3 text-blue-500" />
-                    Live
-                  </Badge>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
-                      <img src="/placeholder.svg?height=28&width=28&query=japanese man instructor" alt="Hiroshi" />
-                    </Avatar>
-                    <span className="text-sm">Hiroshi Sato</span>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  Live
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese man instructor"
+                      alt="Hiroshi Sato"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    Edit
-                  </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
-                    View Bookings
-                  </Button>
+                  <span className="text-sm">Hiroshi Sato</span>
                 </div>
               </div>
-              <div className="md:basis-1/5">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-                      size="icon"
-                    >
-                      <MoreVerticalIcon />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                    <DropdownMenuItem>Favorite</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="sm" className="flex-1">
+                  Edit
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1">
+                  View Bookings
+                </Button>
               </div>
             </div>
           </div>
 
-          {/* Continue with remaining event cards following the same pattern */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+          {/* Event Card 3 */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
+              <div className="flex items-start gap-3 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
-                    src="/placeholder.svg?height=80&width=80&query=hokusai great wave painting"
-                    alt="Great Wave"
+                    src="/placeholder.svg?height=96&width=96&query=hokusai great wave painting"
+                    alt="Hokusai Great Wave"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm md:text-base mb-1">北斎 神奈川沖浪裏 Hokusai Great Wave</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">北斎 神奈川沖浪裏 Hokusai Great Wave</h3>
+                  <p className="text-xs text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
                 </div>
               </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">北斎 神奈川沖浪裏 Hokusai Great Wave</h3>
+                <p className="text-sm text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
+              </div>
+
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">6/10</span>
-                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-3/5 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -599,71 +582,61 @@ export function DataTable({
                   Tomorrow
                 </Badge>
               </div>
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
-                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
-                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                    <CheckCircle2Icon className="size-3 text-green-500" />
-                    Scheduled
-                  </Badge>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
-                      <img src="/placeholder.svg?height=28&width=28&query=japanese woman art instructor" alt="Akiko" />
-                    </Avatar>
-                    <span className="text-sm">Akiko Yamada</span>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-gray-500"></div>
+                  Scheduled
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman art instructor"
+                      alt="Akiko Yamada"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    Edit
-                  </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
-                    View Bookings
-                  </Button>
+                  <span className="text-sm">Akiko Yamada</span>
                 </div>
               </div>
-              <div className="md:basis-1/5">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-                      size="icon"
-                    >
-                      <MoreVerticalIcon />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                    <DropdownMenuItem>Favorite</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="sm" className="flex-1">
+                  Edit
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1">
+                  View Bookings
+                </Button>
               </div>
             </div>
           </div>
 
-          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+          {/* Event Card 4 */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
+              <div className="flex items-start gap-3 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
-                    src="/placeholder.svg?height=80&width=80&query=cherry blossom sakura painting"
+                    src="/placeholder.svg?height=96&width=96&query=cherry blossom sakura painting"
                     alt="Cherry Blossoms"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm md:text-base mb-1">桜 Cherry Blossoms Spring Scene</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground">11:00 AM-1:00 PM • Artbar Omotesando</p>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">桜 Cherry Blossoms Spring Scene</h3>
+                  <p className="text-xs text-muted-foreground">11:00 AM-1:00 PM • Artbar Omotesando</p>
                 </div>
               </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">桜 Cherry Blossoms Spring Scene</h3>
+                <p className="text-sm text-muted-foreground">11:00 AM-1:00 PM • Artbar Omotesando</p>
+              </div>
+
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">4/8</span>
-                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-1/2 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -671,71 +644,61 @@ export function DataTable({
                   This weekend
                 </Badge>
               </div>
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
-                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
-                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                    <CheckCircle2Icon className="size-3 text-green-500" />
-                    Scheduled
-                  </Badge>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
-                      <img src="/placeholder.svg?height=28&width=28&query=japanese woman art teacher" alt="Mei" />
-                    </Avatar>
-                    <span className="text-sm">Mei Suzuki</span>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-gray-500"></div>
+                  Scheduled
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman art teacher"
+                      alt="Mei Suzuki"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    Edit
-                  </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
-                    View Bookings
-                  </Button>
+                  <span className="text-sm">Mei Suzuki</span>
                 </div>
               </div>
-              <div className="md:basis-1/5">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-                      size="icon"
-                    >
-                      <MoreVerticalIcon />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                    <DropdownMenuItem>Favorite</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="sm" className="flex-1">
+                  Edit
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1">
+                  View Bookings
+                </Button>
               </div>
             </div>
           </div>
 
-          <div className="group hover:bg-muted/50 border rounded-lg p-4">
+          {/* Event Card 5 */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex items-start gap-3 md:flex-1 md:basis-1/4">
+              <div className="flex items-start gap-3 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
-                    src="/placeholder.svg?height=80&width=80&query=abstract modern art painting colorful"
+                    src="/placeholder.svg?height=96&width=96&query=abstract modern art painting colorful"
                     alt="Abstract Art"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm md:text-base mb-1">Modern Abstract Expression Workshop</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground">3:00-5:00 PM • Artbar Shinjuku</p>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">Modern Abstract Expression Workshop</h3>
+                  <p className="text-xs text-muted-foreground">3:00-5:00 PM • Artbar Shinjuku</p>
                 </div>
               </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">Modern Abstract Expression Workshop</h3>
+                <p className="text-sm text-muted-foreground">3:00-5:00 PM • Artbar Shinjuku</p>
+              </div>
+
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">2/6</span>
-                  <div className="w-16 md:w-20 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="w-1/3 h-full bg-primary rounded-full"></div>
                   </div>
                 </div>
@@ -743,56 +706,37 @@ export function DataTable({
                   Next week
                 </Badge>
               </div>
-              <div className="flex flex-col gap-3 md:flex-col md:items-start md:basis-1/4">
-                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
-                  <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground w-fit">
-                    <CheckCircle2Icon className="size-3 text-green-500" />
-                    Scheduled
-                  </Badge>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-6 w-6 md:h-7 md:w-7">
-                      <img
-                        src="/placeholder.svg?height=28&width=28&query=japanese man modern art instructor"
-                        alt="Kenji"
-                      />
-                    </Avatar>
-                    <span className="text-sm">Kenji Nakamura</span>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-gray-500"></div>
+                  Scheduled
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese man modern art instructor"
+                      alt="Kenji Nakamura"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <div className="flex flex-row gap-2 md:flex-col md:gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    Edit
-                  </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
-                    View Bookings
-                  </Button>
+                  <span className="text-sm">Kenji Nakamura</span>
                 </div>
               </div>
-              <div className="md:basis-1/5">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-                      size="icon"
-                    >
-                      <MoreVerticalIcon />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                    <DropdownMenuItem>Favorite</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="sm" className="flex-1">
+                  Edit
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1">
+                  View Bookings
+                </Button>
               </div>
             </div>
           </div>
         </div>
-        {/* Keep existing pagination section */}
+
+        {/* Pagination */}
         <div className="flex items-center justify-between px-4">
           <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">5 of 12 events today</div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
