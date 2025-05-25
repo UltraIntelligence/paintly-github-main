@@ -426,7 +426,7 @@ export function DataTable({
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               {/* Mobile: Top section - Title + Thumbnail side by side */}
               <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=monet water lilies painting"
                     alt="Monet Water Lilies"
@@ -466,11 +466,11 @@ export function DataTable({
                     <span className="text-sm">Yuki Tanaka</span>
                   </div>
                 </div>
-                <div className="flex gap-2 md:flex-col md:w-full">
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1">
                     View Bookings
                   </Button>
                 </div>
@@ -482,7 +482,7 @@ export function DataTable({
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=van gogh starry night painting"
                     alt="Starry Night"
@@ -518,11 +518,11 @@ export function DataTable({
                     <span className="text-sm">Hiroshi Sato</span>
                   </div>
                 </div>
-                <div className="flex gap-2 md:flex-col md:w-full">
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1">
                     View Bookings
                   </Button>
                 </div>
@@ -534,7 +534,7 @@ export function DataTable({
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=hokusai great wave painting"
                     alt="Great Wave"
@@ -570,11 +570,11 @@ export function DataTable({
                     <span className="text-sm">Akiko Yamada</span>
                   </div>
                 </div>
-                <div className="flex gap-2 md:flex-col md:w-full">
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1">
                     View Bookings
                   </Button>
                 </div>
@@ -585,7 +585,7 @@ export function DataTable({
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=cherry blossom sakura painting"
                     alt="Cherry Blossoms"
@@ -621,11 +621,11 @@ export function DataTable({
                     <span className="text-sm">Mei Suzuki</span>
                   </div>
                 </div>
-                <div className="flex gap-2 md:flex-col md:w-full">
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1">
                     View Bookings
                   </Button>
                 </div>
@@ -636,7 +636,7 @@ export function DataTable({
           <div className="group hover:bg-muted/50 border rounded-lg p-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex items-start gap-3 md:flex-1 md:basis-2/5">
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                   <img
                     src="/placeholder.svg?height=80&width=80&query=abstract modern art painting colorful"
                     alt="Abstract Art"
@@ -675,11 +675,11 @@ export function DataTable({
                     <span className="text-sm">Kenji Nakamura</span>
                   </div>
                 </div>
-                <div className="flex gap-2 md:flex-col md:w-full">
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">
                     Edit
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1 md:w-full">
+                  <Button variant="outline" size="sm" className="flex-1">
                     View Bookings
                   </Button>
                 </div>
