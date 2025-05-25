@@ -2,18 +2,15 @@
 
 import * as React from "react"
 import {
-  DndContext,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
-  closestCenter,
   useSensor,
   useSensors,
   type DragEndEvent,
   type UniqueIdentifier,
 } from "@dnd-kit/core"
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { arrayMove, useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import {
   type ColumnDef,
@@ -77,6 +74,8 @@ import {
 } from "@/components/ui/sheet"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Avatar } from "./ui/avatar"
+import { Card, CardContent } from "./ui/card"
 
 export const schema = z.object({
   id: z.number(),
@@ -423,116 +422,400 @@ export function DataTable({
       </div>
       <TabsContent value="outline" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="overflow-hidden rounded-lg border">
-          <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis]}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-            id={sortableId}
-          >
-            <Table>
-              <TableHeader className="sticky top-0 z-10 bg-muted">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(header.column.columnDef.header, header.getContext())}
-                        </TableHead>
-                      )
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody className="**:data-[slot=table-cell]:first:w-8">
-                {table.getRowModel().rows?.length ? (
-                  <SortableContext items={dataIds} strategy={verticalListSortingStrategy}>
-                    {table.getRowModel().rows.map((row) => (
-                      <DraggableRow key={row.id} row={row} />
-                    ))}
-                  </SortableContext>
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </DndContext>
+          <Table>
+            <TableHeader className="sticky top-0 z-10 bg-muted">
+              <TableRow>
+                <TableHead className="w-8"></TableHead>
+                <TableHead className="w-8"></TableHead>
+                <TableHead>Event</TableHead>
+                <TableHead className="w-24">Status</TableHead>
+                <TableHead className="w-32">Instructor</TableHead>
+                <TableHead className="w-12"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {/* Sample Event Cards */}
+              <TableRow className="group hover:bg-muted/50">
+                <TableCell className="p-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7 text-muted-foreground hover:bg-transparent cursor-grab"
+                  >
+                    <GripVerticalIcon className="size-3" />
+                  </Button>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Checkbox />
+                </TableCell>
+                <TableCell className="p-2">
+                  <Card className="border-0 shadow-none bg-transparent">
+                    <CardContent className="p-0 flex items-center gap-4">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                        <img
+                          src="/placeholder.svg?height=64&width=64&query=monet water lilies painting"
+                          alt="Monet Water Lilies"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate">モネ 睡蓮 Monet Water Lilies</h3>
+                        <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">8/12</span>
+                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                            <div className="w-2/3 h-full bg-primary rounded-full"></div>
+                          </div>
+                          <Badge variant="outline" className="text-xs px-1.5 py-0">
+                            Starting in 2 hours
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Badge variant="outline" className="flex gap-1 px-1.5 text-muted-foreground">
+                    <CheckCircle2Icon className="size-3 text-green-500" />
+                    Active
+                  </Badge>
+                </TableCell>
+                <TableCell className="p-2">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6">
+                      <img src="/placeholder.svg?height=24&width=24&query=japanese woman instructor" alt="Yuki" />
+                    </Avatar>
+                    <span className="text-sm">Yuki Tanaka</span>
+                  </div>
+                </TableCell>
+                <TableCell className="p-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="size-8">
+                        <MoreVerticalIcon className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Edit Event</DropdownMenuItem>
+                      <DropdownMenuItem>View Details</DropdownMenuItem>
+                      <DropdownMenuItem>Cancel Event</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+
+              <TableRow className="group hover:bg-muted/50">
+                <TableCell className="p-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7 text-muted-foreground hover:bg-transparent cursor-grab"
+                  >
+                    <GripVerticalIcon className="size-3" />
+                  </Button>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Checkbox />
+                </TableCell>
+                <TableCell className="p-2">
+                  <Card className="border-0 shadow-none bg-transparent">
+                    <CardContent className="p-0 flex items-center gap-4">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                        <img
+                          src="/placeholder.svg?height=64&width=64&query=van gogh starry night painting"
+                          alt="Starry Night"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate">ゴッホ 星月夜 Van Gogh Starry Night</h3>
+                        <p className="text-xs text-muted-foreground">7:30-9:30 PM • Artbar Shibuya</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">12/15</span>
+                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                            <div className="w-4/5 h-full bg-primary rounded-full"></div>
+                          </div>
+                          <Badge variant="secondary" className="text-xs px-1.5 py-0 bg-green-100 text-green-700">
+                            In progress
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Badge variant="outline" className="flex gap-1 px-1.5 text-muted-foreground">
+                    <LoaderIcon className="size-3 text-blue-500" />
+                    Live
+                  </Badge>
+                </TableCell>
+                <TableCell className="p-2">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6">
+                      <img src="/placeholder.svg?height=24&width=24&query=japanese man instructor" alt="Hiroshi" />
+                    </Avatar>
+                    <span className="text-sm">Hiroshi Sato</span>
+                  </div>
+                </TableCell>
+                <TableCell className="p-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="size-8">
+                        <MoreVerticalIcon className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Edit Event</DropdownMenuItem>
+                      <DropdownMenuItem>View Details</DropdownMenuItem>
+                      <DropdownMenuItem>Cancel Event</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+
+              <TableRow className="group hover:bg-muted/50">
+                <TableCell className="p-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7 text-muted-foreground hover:bg-transparent cursor-grab"
+                  >
+                    <GripVerticalIcon className="size-3" />
+                  </Button>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Checkbox />
+                </TableCell>
+                <TableCell className="p-2">
+                  <Card className="border-0 shadow-none bg-transparent">
+                    <CardContent className="p-0 flex items-center gap-4">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                        <img
+                          src="/placeholder.svg?height=64&width=64&query=hokusai great wave painting"
+                          alt="Great Wave"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate">北斎 神奈川沖浪裏 Hokusai Great Wave</h3>
+                        <p className="text-xs text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">6/10</span>
+                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                            <div className="w-3/5 h-full bg-primary rounded-full"></div>
+                          </div>
+                          <Badge variant="outline" className="text-xs px-1.5 py-0">
+                            Tomorrow
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Badge variant="outline" className="flex gap-1 px-1.5 text-muted-foreground">
+                    <CheckCircle2Icon className="size-3 text-green-500" />
+                    Scheduled
+                  </Badge>
+                </TableCell>
+                <TableCell className="p-2">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6">
+                      <img src="/placeholder.svg?height=24&width=24&query=japanese woman art instructor" alt="Akiko" />
+                    </Avatar>
+                    <span className="text-sm">Akiko Yamada</span>
+                  </div>
+                </TableCell>
+                <TableCell className="p-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="size-8">
+                        <MoreVerticalIcon className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Edit Event</DropdownMenuItem>
+                      <DropdownMenuItem>View Details</DropdownMenuItem>
+                      <DropdownMenuItem>Cancel Event</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+
+              <TableRow className="group hover:bg-muted/50">
+                <TableCell className="p-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7 text-muted-foreground hover:bg-transparent cursor-grab"
+                  >
+                    <GripVerticalIcon className="size-3" />
+                  </Button>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Checkbox />
+                </TableCell>
+                <TableCell className="p-2">
+                  <Card className="border-0 shadow-none bg-transparent">
+                    <CardContent className="p-0 flex items-center gap-4">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                        <img
+                          src="/placeholder.svg?height=64&width=64&query=cherry blossom sakura painting"
+                          alt="Cherry Blossoms"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate">桜 Cherry Blossoms Spring Scene</h3>
+                        <p className="text-xs text-muted-foreground">11:00 AM-1:00 PM • Artbar Omotesando</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">4/8</span>
+                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                            <div className="w-1/2 h-full bg-primary rounded-full"></div>
+                          </div>
+                          <Badge variant="outline" className="text-xs px-1.5 py-0">
+                            This weekend
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Badge variant="outline" className="flex gap-1 px-1.5 text-muted-foreground">
+                    <CheckCircle2Icon className="size-3 text-green-500" />
+                    Scheduled
+                  </Badge>
+                </TableCell>
+                <TableCell className="p-2">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6">
+                      <img src="/placeholder.svg?height=24&width=24&query=japanese woman art teacher" alt="Mei" />
+                    </Avatar>
+                    <span className="text-sm">Mei Suzuki</span>
+                  </div>
+                </TableCell>
+                <TableCell className="p-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="size-8">
+                        <MoreVerticalIcon className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Edit Event</DropdownMenuItem>
+                      <DropdownMenuItem>View Details</DropdownMenuItem>
+                      <DropdownMenuItem>Cancel Event</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+
+              <TableRow className="group hover:bg-muted/50">
+                <TableCell className="p-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7 text-muted-foreground hover:bg-transparent cursor-grab"
+                  >
+                    <GripVerticalIcon className="size-3" />
+                  </Button>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Checkbox />
+                </TableCell>
+                <TableCell className="p-2">
+                  <Card className="border-0 shadow-none bg-transparent">
+                    <CardContent className="p-0 flex items-center gap-4">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                        <img
+                          src="/placeholder.svg?height=64&width=64&query=abstract modern art painting colorful"
+                          alt="Abstract Art"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate">Modern Abstract Expression Workshop</h3>
+                        <p className="text-xs text-muted-foreground">3:00-5:00 PM • Artbar Shinjuku</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">2/6</span>
+                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                            <div className="w-1/3 h-full bg-primary rounded-full"></div>
+                          </div>
+                          <Badge variant="outline" className="text-xs px-1.5 py-0">
+                            Next week
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TableCell>
+                <TableCell className="p-2">
+                  <Badge variant="outline" className="flex gap-1 px-1.5 text-muted-foreground">
+                    <CheckCircle2Icon className="size-3 text-green-500" />
+                    Scheduled
+                  </Badge>
+                </TableCell>
+                <TableCell className="p-2">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6">
+                      <img
+                        src="/placeholder.svg?height=24&width=24&query=japanese man modern art instructor"
+                        alt="Kenji"
+                      />
+                    </Avatar>
+                    <span className="text-sm">Kenji Nakamura</span>
+                  </div>
+                </TableCell>
+                <TableCell className="p-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="size-8">
+                        <MoreVerticalIcon className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Edit Event</DropdownMenuItem>
+                      <DropdownMenuItem>View Details</DropdownMenuItem>
+                      <DropdownMenuItem>Cancel Event</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
+        {/* Keep existing pagination section */}
         <div className="flex items-center justify-between px-4">
-          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
-            {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-            selected.
-          </div>
+          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">5 of 12 events today</div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
               <Label htmlFor="rows-per-page" className="text-sm font-medium">
-                Rows per page
+                Events per page
               </Label>
-              <Select
-                value={`${table.getState().pagination.pageSize}`}
-                onValueChange={(value) => {
-                  table.setPageSize(Number(value))
-                }}
-              >
+              <Select defaultValue="10">
                 <SelectTrigger className="w-20" id="rows-per-page">
-                  <SelectValue placeholder={table.getState().pagination.pageSize} />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent side="top">
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                      {pageSize}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-            </div>
+            <div className="flex w-fit items-center justify-center text-sm font-medium">Page 1 of 2</div>
             <div className="ml-auto flex items-center gap-2 lg:ml-0">
-              <Button
-                variant="outline"
-                className="hidden h-8 w-8 p-0 lg:flex"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to first page</span>
+              <Button variant="outline" className="hidden h-8 w-8 p-0 lg:flex" disabled>
                 <ChevronsLeftIcon />
               </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to previous page</span>
+              <Button variant="outline" className="size-8" size="icon" disabled>
                 <ChevronLeftIcon />
               </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to next page</span>
+              <Button variant="outline" className="size-8" size="icon">
                 <ChevronRightIcon />
               </Button>
-              <Button
-                variant="outline"
-                className="hidden size-8 lg:flex"
-                size="icon"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to last page</span>
+              <Button variant="outline" className="hidden size-8 lg:flex" size="icon">
                 <ChevronsRightIcon />
               </Button>
             </div>
