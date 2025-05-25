@@ -347,18 +347,6 @@ export function DataTable({
 
   return (
     <Tabs defaultValue="outline" className="flex w-full flex-col justify-start gap-6">
-    <div style={{
-  background: 'red', 
-  color: 'white', 
-  padding: '10px', 
-  textAlign: 'center',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  margin: '10px 20px',
-  borderRadius: '8px'
-}}>
-  🔴 DEBUG: data-table.tsx is connected! - {new Date().toLocaleTimeString()}
-</div>
       <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
