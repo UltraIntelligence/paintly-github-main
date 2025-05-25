@@ -433,7 +433,7 @@ export function DataTable({
                   />
                 </div>
                 <div className="flex-1 min-w-0 md:hidden">
-                  <h3 className="font-medium text-sm mb-1">モネ 睡蓮 Monet Water Lilies</h3>
+                  <h3 className="font-medium text-base mb-1 text-red-500 text-2xl">TEST CHANGE - Monet Water Lilies</h3>
                   <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
                 </div>
               </div>
