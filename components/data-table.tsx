@@ -420,72 +420,72 @@ export function DataTable({
       </div>
       <TabsContent value="outline" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="space-y-4">
-          {/* Event Card 1 */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
-              {/* Column 1: Thumbnail */}
-              <div className="flex items-start gap-2 md:basis-1/5">
-                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                  <img
-                    src="/placeholder.svg?height=96&width=96&query=monet water lilies painting"
-                    alt="Monet Water Lilies"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 md:hidden">
-                  <h3 className="font-medium text-sm mb-1">モネ 睡蓮 Monet Water Lilies</h3>
-                  <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
-                </div>
-              </div>
+{/* Event Card 1 */}
+<div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+  <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+    {/* Column 1: Thumbnail */}
+    <div className="flex items-start gap-1 md:basis-1/5">
+      <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+        <img
+          src="/placeholder.svg?height=96&width=96&query=monet water lilies painting"
+          alt="Monet Water Lilies"
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="flex-1 min-w-0 md:hidden">
+        <h3 className="font-medium text-sm mb-1">モネ 睡蓮 Monet Water Lilies</h3>
+        <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
+      </div>
+    </div>
 
-              {/* Column 2: Event Details (Desktop only) */}
-              <div className="hidden md:block md:basis-1/4">
-                <h3 className="font-medium text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
-                <p className="text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
-              </div>
+    {/* Column 2: Event Details (Desktop only) */}
+    <div className="hidden md:block md:basis-1/4">
+      <h3 className="font-medium text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
+      <p className="text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
+    </div>
 
-              {/* Column 3: Capacity & Progress */}
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">8/12</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="w-2/3 h-full bg-primary rounded-full"></div>
-                  </div>
-                </div>
-                <Badge variant="outline" className="text-xs px-2 py-1">
-                  Starting in 2 hours
-                </Badge>
-              </div>
+    {/* Column 3: Capacity & Progress */}
+    <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium">8/12</span>
+        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+          <div className="w-2/3 h-full bg-primary rounded-full"></div>
+        </div>
+      </div>
+      <Badge variant="outline" className="text-xs px-2 py-1">
+        Starting in 2 hours
+      </Badge>
+    </div>
 
-              {/* Column 4: Status & Instructor */}
-              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                  Active
-                </Badge>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
-                    <img
-                      src="/placeholder.svg?height=28&width=28&query=japanese woman instructor"
-                      alt="Yuki Tanaka"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-sm">Yuki Tanaka</span>
-                </div>
-              </div>
+    {/* Column 4: Status & Instructor */}
+    <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+      <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+        Active
+      </Badge>
+      <div className="flex items-center gap-2">
+        <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+          <img
+            src="/placeholder.svg?height=28&width=28&query=japanese woman instructor"
+            alt="Yuki Tanaka"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <span className="text-sm">Yuki Tanaka</span>
+      </div>
+    </div>
 
-              {/* Column 5: Actions */}
-              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  Edit
-                </Button>
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  View Bookings
-                </Button>
-              </div>
-            </div>
-          </div>
+    {/* Column 5: Actions */}
+    <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+      <Button variant="outline" size="default" className="flex-1 h-9">
+        Edit
+      </Button>
+      <Button variant="outline" size="default" className="flex-1 h-9">
+        View Bookings
+      </Button>
+    </div>
+  </div>
+</div>
 
           {/* Event Card 2 */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
