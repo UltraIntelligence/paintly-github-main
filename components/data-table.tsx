@@ -1291,11 +1291,8 @@ export function DataTable({
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">8/12</span>
-                  <div className="w-32 h-2 bg-gradient-to-r from-gray-200 to-gray-600 dark:from-gray-700 dark:to-gray-300 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-white to-gray-800 dark:from-gray-900 dark:to-gray-100 rounded-full transition-all duration-300"
-                      style={{ width: "66.67%" }}
-                    ></div>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className={`w-2/3 h-full ${getProgressBarColor(8, 12)} rounded-full`}></div>
                   </div>
                 </div>
                 <Badge variant="outline" className="text-xs px-2 py-1">
@@ -1370,11 +1367,8 @@ export function DataTable({
               <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">12/15</span>
-                  <div className="w-24 h-2 bg-gradient-to-r from-gray-200 to-gray-600 dark:from-gray-700 dark:to-gray-300 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-white to-gray-800 dark:from-gray-900 dark:to-gray-100 rounded-full transition-all duration-300"
-                      style={{ width: "80%" }}
-                    ></div>
+                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className={`w-4/5 h-full ${getProgressBarColor(12, 15)} rounded-full`}></div>
                   </div>
                 </div>
                 <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-700">
@@ -1501,13 +1495,13 @@ export function DataTable({
                         <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium">{event.capacity}</span>
-                            <div className="w-32 h-2 bg-gradient-to-r from-gray-200 to-gray-600 dark:from-gray-700 dark:to-gray-300 rounded-full overflow-hidden">
+                            <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
                               {(() => {
                                 const { current, total } = parseCapacity(event.capacity)
                                 const percentage = (current / total) * 100
                                 return (
                                   <div
-                                    className="h-full bg-gradient-to-r from-white to-gray-800 dark:from-gray-900 dark:to-gray-100 rounded-full transition-all duration-300"
+                                    className={`h-full ${getProgressBarColor(current, total)} rounded-full`}
                                     style={{ width: `${percentage}%` }}
                                   ></div>
                                 )
