@@ -1,50 +1,80 @@
 "use client"
 
-import { TrendingUpIcon, CompassIcon, StarIcon, SettingsIcon, SquareTerminal, Bot, BookOpen } from "lucide-react"
-import { useSidebar } from "@/components/ui/sidebar"
+import type * as React from "react"
+import {
+  PaintbrushIcon,
+  LayoutDashboardIcon,
+  CalendarDaysIcon,
+  Users2Icon,
+  MapPinIcon,
+  Building2Icon,
+  GiftIcon,
+  LayoutTemplateIcon,
+  HelpCircleIcon,
+  SearchIcon,
+  SettingsIcon,
+} from "lucide-react"
+
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
-import { Separator } from "@/components/ui/separator"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
 import { NavDocuments } from "./nav-documents"
 
-export function AppSidebar({ variant }: { variant: "inset" | "icon" }) {
-  const { collapsed, onCollapse } = useSidebar()
-
-  const navMainItems = [
+const data = {
+  user: {
+    name: "Cathy Thompson",
+    email: "tokyo@artbar.co.jp",
+    avatar: "/images/cathy-avatar.png",
+  },
+  navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard",
-      icon: SquareTerminal,
+      url: "#",
+      icon: LayoutDashboardIcon,
+    },
+    {
+      title: "Schedule",
+      url: "#",
+      icon: CalendarDaysIcon,
     },
     {
       title: "Templates",
       url: "/templates",
-      icon: Bot,
+      icon: LayoutTemplateIcon,
     },
+  ],
+  navDocuments: [
     {
-      title: "Schedule",
-      url: "/schedule",
-      icon: BookOpen,
-    },
-  ]
-
-  const navSecondaryItems = [
-    {
-      title: "Trending",
+      name: "Instructors",
       url: "#",
-      icon: TrendingUpIcon,
+      icon: Users2Icon,
     },
     {
-      title: "Explore",
+      name: "Locations",
       url: "#",
-      icon: CompassIcon,
+      icon: MapPinIcon,
     },
     {
-      title: "Favourites",
+      name: "Gift Certificates",
       url: "#",
-      icon: StarIcon,
+      icon: GiftIcon,
     },
+    {
+      name: "Private Events",
+      url: "#",
+      icon: Building2Icon,
+    },
+  ],
+  navSecondary: [
     {
       title: "Settings",
       url: "#",
@@ -53,63 +83,39 @@ export function AppSidebar({ variant }: { variant: "inset" | "icon" }) {
     {
       title: "Get Help",
       url: "#",
-      icon: SettingsIcon,
+      icon: HelpCircleIcon,
     },
-  ]
+    {
+      title: "Search",
+      url: "#",
+      icon: SearchIcon,
+    },
+  ],
+}
 
-  const navDocumentsItems = [
-    {
-      name: "Cover page",
-      url: "#",
-      icon: SettingsIcon,
-    },
-    {
-      name: "Table of contents",
-      url: "#",
-      icon: SettingsIcon,
-    },
-    {
-      name: "Executive summary",
-      url: "#",
-      icon: SettingsIcon,
-    },
-    {
-      name: "Technical approach",
-      url: "#",
-      icon: SettingsIcon,
-    },
-    {
-      name: "Design",
-      url: "#",
-      icon: SettingsIcon,
-    },
-    {
-      name: "Capabilities",
-      url: "#",
-      icon: SettingsIcon,
-    },
-  ]
-
-  const user = {
-    name: "Cathy Truman",
-    email: "cathy@example.com",
-    avatar: "/images/cathy-avatar.png",
-  }
-
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <aside
-      data-collapsible={variant}
-      className="sidebar-wrapper fixed left-0 top-0 z-50 flex h-full w-64 flex-col border-r bg-sidebar data-[collapsible=inset]:w-16 data-[collapsible=icon]:w-16 data-[collapsed=true]:translate-x-[-100%]"
-    >
-      <div className="flex-1 overflow-y-auto py-2">
-        <NavUser user={user} />
-        <Separator className="my-2" />
-        <NavMain items={navMainItems} />
-        <Separator className="my-2" />
-        <NavDocuments items={navDocumentsItems} />
-        <Separator className="my-2" />
-        <NavSecondary items={navSecondaryItems} />
-      </div>
-    </aside>
+    <Sidebar collapsible="offcanvas" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
+              <a href="#">
+                <PaintbrushIcon className="h-5 w-5" />
+                <span className="text-base font-semibold">Artbar Tokyo</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain items={data.navMain} />
+        <NavDocuments items={data.navDocuments} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
+    </Sidebar>
   )
 }
