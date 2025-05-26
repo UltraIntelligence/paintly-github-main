@@ -36,15 +36,13 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* New Template Card */}
-          <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-gray-200">
+          <Card className="flex flex-col h-full cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-gray-200">
             <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold">New Template</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">
-                Create a reusable painting template
-              </CardDescription>
+              <CardTitle className="text-xl font-semibold text-gray-900">New Template</CardTitle>
+              <CardDescription className="text-sm text-gray-600">Create a reusable painting template</CardDescription>
             </CardHeader>
-            <CardContent className="pb-6">
-              <div className="space-y-3 text-sm text-gray-600">
+            <CardContent className="flex-1 pb-6">
+              <div className="space-y-3 text-sm text-gray-700">
                 <div>Set class details & pricing</div>
                 <div>Upload reference images</div>
                 <div>Define materials needed</div>
@@ -53,7 +51,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
             </CardContent>
             <CardFooter>
               <Button
-                className="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-medium py-2.5"
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5"
                 onClick={handleCreateTemplate}
               >
                 Create Template
@@ -62,13 +60,13 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
           </Card>
 
           {/* Schedule Event Card */}
-          <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-gray-200">
+          <Card className="flex flex-col h-full cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-gray-200">
             <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold">Schedule Event</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">Schedule an existing template</CardDescription>
+              <CardTitle className="text-xl font-semibold text-gray-900">Schedule Event</CardTitle>
+              <CardDescription className="text-sm text-gray-600">Schedule an existing template</CardDescription>
             </CardHeader>
-            <CardContent className="pb-6">
-              <div className="space-y-3 text-sm text-gray-600">
+            <CardContent className="flex-1 pb-6">
+              <div className="space-y-3 text-sm text-gray-700">
                 <div>Choose from templates</div>
                 <div>Set date and time</div>
                 <div>Assign instructor</div>
@@ -77,7 +75,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
             </CardContent>
             <CardFooter>
               <Button
-                className="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-medium py-2.5"
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5"
                 onClick={handleScheduleEvent}
               >
                 Schedule Event
@@ -86,15 +84,15 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
           </Card>
 
           {/* Private Event Card */}
-          <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-gray-200 md:col-span-2 lg:col-span-1">
+          <Card className="flex flex-col h-full cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-gray-200 md:col-span-2 lg:col-span-1">
             <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold">Private Event</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">
+              <CardTitle className="text-xl font-semibold text-gray-900">Private Event</CardTitle>
+              <CardDescription className="text-sm text-gray-600">
                 Book a private party or corporate event
               </CardDescription>
             </CardHeader>
-            <CardContent className="pb-6">
-              <div className="space-y-3 text-sm text-gray-600">
+            <CardContent className="flex-1 pb-6">
+              <div className="space-y-3 text-sm text-gray-700">
                 <div>Custom event details</div>
                 <div>Group size & pricing</div>
                 <div>Special requirements</div>
@@ -103,7 +101,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
             </CardContent>
             <CardFooter>
               <Button
-                className="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-medium py-2.5"
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5"
                 onClick={handleCreatePrivateEvent}
               >
                 Create Private Event
