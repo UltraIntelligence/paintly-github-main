@@ -228,7 +228,7 @@ export default function TemplatesPage() {
                   </div>
 
                   {/* Template Cards Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {filteredTemplates.map((template) => (
                       <Card
                         key={template.id}
@@ -247,7 +247,7 @@ export default function TemplatesPage() {
                         </div>
 
                         {/* Content Section */}
-                        <CardContent className="p-3 sm:p-4 flex flex-col h-[130px] sm:h-[140px]">
+                        <CardContent className="p-3 sm:p-4 flex flex-col">
                           <div className="space-y-1 flex-shrink-0">
                             <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
                               {template.japaneseTitle}
