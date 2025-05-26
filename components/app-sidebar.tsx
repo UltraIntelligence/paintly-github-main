@@ -38,17 +38,17 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: "#",
       icon: LayoutDashboardIcon,
     },
     {
       title: "Schedule",
-      url: "/schedule",
+      url: "#",
       icon: CalendarDaysIcon,
     },
     {
       title: "Templates",
-      url: "/templates",
+      url: "#",
       icon: LayoutTemplateIcon,
     },
   ],
