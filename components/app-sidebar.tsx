@@ -9,11 +9,8 @@ import {
   MapPinIcon,
   Building2Icon,
   GiftIcon,
-  ImageIcon,
-  BarChartIcon,
-  CameraIcon,
-  FileCodeIcon,
-  FileTextIcon,
+  LayoutTemplateIcon,
+  PlusCircleIcon,
   HelpCircleIcon,
   SearchIcon,
   SettingsIcon,
@@ -31,6 +28,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { NavDocuments } from "./nav-documents"
 
 const data = {
   user: {
@@ -45,10 +43,17 @@ const data = {
       icon: LayoutDashboardIcon,
     },
     {
-      title: "Events",
+      title: "Schedule",
       url: "#",
       icon: CalendarDaysIcon,
     },
+    {
+      title: "Templates",
+      url: "#",
+      icon: LayoutTemplateIcon,
+    },
+  ],
+  navDocuments: [
     {
       title: "Instructors",
       url: "#",
@@ -60,72 +65,14 @@ const data = {
       icon: MapPinIcon,
     },
     {
-      title: "Private Events",
-      url: "#",
-      icon: Building2Icon,
-    },
-    {
       title: "Gift Certificates",
       url: "#",
       icon: GiftIcon,
     },
     {
-      title: "Banners",
+      title: "Private Events",
       url: "#",
-      icon: ImageIcon,
-    },
-    {
-      title: "Reports",
-      url: "#",
-      icon: BarChartIcon,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: CameraIcon,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: FileTextIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: FileCodeIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      icon: Building2Icon,
     },
   ],
   navSecondary: [
@@ -160,10 +107,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="bg-black text-white hover:bg-black/90 data-[slot=sidebar-menu-button]:!p-2.5"
+            >
+              <a href="#">
+                <PlusCircleIcon className="h-4 w-4" />
+                <span className="font-medium">Quick Create</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavDocuments documents={data.navDocuments} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
