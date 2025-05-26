@@ -3,7 +3,7 @@
 import type * as React from "react"
 import {
   PaintbrushIcon,
-  LayoutDashboardIcon,
+  PaletteIcon,
   CalendarDaysIcon,
   Users2Icon,
   MapPinIcon,
@@ -37,9 +37,9 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Today",
       url: "#",
-      icon: LayoutDashboardIcon,
+      icon: PaletteIcon,
     },
     {
       title: "Schedule",
