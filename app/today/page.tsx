@@ -1,12 +1,33 @@
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "../../components/theme-provider"
+import { AppSidebar } from "../../components/app-sidebar"
+import { ChartAreaInteractive } from "../../components/chart-area-interactive"
+import { DataTable } from "../../components/data-table"
+import { SectionCards } from "../../components/section-cards"
+import { SiteHeader } from "../../components/site-header"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
-export default function TodayPage() {
+import data from "./data.json"
+
+export default function Page() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="today-theme">
-      <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <h1 className="text-4xl font-bold">Today</h1>
-        <p className="mt-3 text-2xl">This is the Today page.</p>
-      </div>
+      <SidebarProvider>
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <SectionCards />
+                <div className="px-4 lg:px-6">
+                  <ChartAreaInteractive />
+                </div>
+                <DataTable data={data} />
+              </div>
+            </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </ThemeProvider>
   )
 }
