@@ -156,6 +156,27 @@ export default function TemplatesPage() {
     return matchesSearch && matchesCategory
   })
 
+  const getCategoryCounts = () => {
+    const searchFilteredTemplates = templates.filter((template) => {
+      const matchesSearch =
+        template.japaneseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.englishTitle.toLowerCase().includes(searchQuery.toLowerCase())
+      return matchesSearch
+    })
+
+    const counts = {
+      All: searchFilteredTemplates.length,
+      "Kids Only": searchFilteredTemplates.filter((t) => t.category === "Kids Only").length,
+      "Master Artists": searchFilteredTemplates.filter((t) => t.category === "Master Artists").length,
+      "Paint Pouring": searchFilteredTemplates.filter((t) => t.category === "Paint Pouring").length,
+      Seasonal: searchFilteredTemplates.filter((t) => t.category === "Seasonal").length,
+    }
+
+    return counts
+  }
+
+  const categoryCounts = getCategoryCounts()
+
   return (
     <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
       <SidebarProvider>
@@ -207,11 +228,15 @@ export default function TemplatesPage() {
 
                       <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-auto">
                         <TabsList>
-                          <TabsTrigger value="All">All</TabsTrigger>
-                          <TabsTrigger value="Kids Only">Kids Only</TabsTrigger>
-                          <TabsTrigger value="Master Artists">Master Artists</TabsTrigger>
-                          <TabsTrigger value="Paint Pouring">Paint Pouring</TabsTrigger>
-                          <TabsTrigger value="Seasonal">Seasonal</TabsTrigger>
+                          <TabsTrigger value="All">All ({categoryCounts["All"]})</TabsTrigger>
+                          <TabsTrigger value="Kids Only">Kids Only ({categoryCounts["Kids Only"]})</TabsTrigger>
+                          <TabsTrigger value="Master Artists">
+                            Master Artists ({categoryCounts["Master Artists"]})
+                          </TabsTrigger>
+                          <TabsTrigger value="Paint Pouring">
+                            Paint Pouring ({categoryCounts["Paint Pouring"]})
+                          </TabsTrigger>
+                          <TabsTrigger value="Seasonal">Seasonal ({categoryCounts["Seasonal"]})</TabsTrigger>
                         </TabsList>
                       </Tabs>
                     </div>
