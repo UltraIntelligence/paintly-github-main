@@ -1,9 +1,4 @@
-"use client"
-
-import type * as React from "react"
 import {
-  PaintbrushIcon,
-  LayoutDashboardIcon,
   CalendarDaysIcon,
   Users2Icon,
   MapPinIcon,
@@ -11,111 +6,101 @@ import {
   GiftIcon,
   LayoutTemplateIcon,
   HelpCircleIcon,
-  SearchIcon,
   SettingsIcon,
 } from "lucide-react"
 
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { NavDocuments } from "./nav-documents"
-
-const data = {
-  user: {
-    name: "Cathy Thompson",
-    email: "tokyo@artbar.co.jp",
-    avatar: "/images/cathy-avatar.png",
+const navMain = [
+  {
+    title: "Today",
+    url: "/today",
+    icon: CalendarDaysIcon,
   },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: LayoutDashboardIcon,
-    },
-    {
-      title: "Schedule",
-      url: "#",
-      icon: CalendarDaysIcon,
-    },
-    {
-      title: "Templates",
-      url: "/templates",
-      icon: LayoutTemplateIcon,
-    },
-  ],
-  navDocuments: [
-    {
-      name: "Instructors",
-      url: "#",
-      icon: Users2Icon,
-    },
-    {
-      name: "Locations",
-      url: "#",
-      icon: MapPinIcon,
-    },
-    {
-      name: "Gift Certificates",
-      url: "#",
-      icon: GiftIcon,
-    },
-    {
-      name: "Private Events",
-      url: "#",
-      icon: Building2Icon,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: SettingsIcon,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: HelpCircleIcon,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: SearchIcon,
-    },
-  ],
+  {
+    title: "Schedule",
+    url: "#",
+    icon: CalendarDaysIcon,
+  },
+  {
+    title: "Templates",
+    url: "/templates",
+    icon: LayoutTemplateIcon,
+  },
+]
+
+const navSecondary = [
+  {
+    title: "Customers",
+    url: "#",
+    icon: Users2Icon,
+  },
+  {
+    title: "Locations",
+    url: "#",
+    icon: MapPinIcon,
+  },
+  {
+    title: "Properties",
+    url: "#",
+    icon: Building2Icon,
+  },
+  {
+    title: "Products",
+    url: "#",
+    icon: GiftIcon,
+  },
+]
+
+const navTertiary = [
+  {
+    title: "Help",
+    url: "#",
+    icon: HelpCircleIcon,
+  },
+  {
+    title: "Settings",
+    url: "#",
+    icon: SettingsIcon,
+  },
+]
+
+export function AppSidebar() {
+  return (
+    <div className="hidden w-[260px] flex-col border-r bg-white py-4 md:flex">
+      <div className="flex-1 space-y-2 px-3">
+        <div className="space-y-1">
+          <h2 className="text-sm font-semibold tracking-tight">Main</h2>
+          <div className="flex flex-col space-y-1">
+            {navMain.map((item) => (
+              <NavItem key={item.title} title={item.title} url={item.url} icon={item.icon} />
+            ))}
+          </div>
+        </div>
+        <div className="space-y-1">
+          <h2 className="text-sm font-semibold tracking-tight">Secondary</h2>
+          <div className="flex flex-col space-y-1">
+            {navSecondary.map((item) => (
+              <NavItem key={item.title} title={item.title} url={item.url} icon={item.icon} />
+            ))}
+          </div>
+        </div>
+        <div className="space-y-1">
+          <h2 className="text-sm font-semibold tracking-tight">More</h2>
+          <div className="flex flex-col space-y-1">
+            {navTertiary.map((item) => (
+              <NavItem key={item.title} title={item.title} url={item.url} icon={item.icon} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+function NavItem({ title, url, icon: Icon }: { title: string; url: string; icon: any }) {
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <a href="#">
-                <PaintbrushIcon className="h-5 w-5" />
-                <span className="text-base font-semibold text-black">Artbar Tokyo</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.navDocuments} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-    </Sidebar>
+    <a href={url} className="group flex items-center space-x-2 rounded-md p-2 text-sm font-medium hover:bg-slate-100">
+      <Icon className="h-4 w-4 text-slate-400" />
+      <span>{title}</span>
+    </a>
   )
 }
