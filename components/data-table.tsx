@@ -1495,14 +1495,17 @@ export function DataTable({
                         <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium">{event.capacity}</span>
-                            <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                            <div className="w-32 h-2 bg-gradient-to-r from-gray-200 to-gray-800 rounded-full overflow-hidden">
                               {(() => {
                                 const { current, total } = parseCapacity(event.capacity)
                                 const percentage = (current / total) * 100
                                 return (
                                   <div
-                                    className={`h-full ${getProgressBarColor(current, total)} rounded-full`}
-                                    style={{ width: `${percentage}%` }}
+                                    className="h-full bg-white rounded-full"
+                                    style={{
+                                      width: `${100 - percentage}%`,
+                                      marginLeft: `${percentage}%`,
+                                    }}
                                   ></div>
                                 )
                               })()}
