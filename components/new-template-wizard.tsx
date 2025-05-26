@@ -86,25 +86,11 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
     }
   }
 
-  const removeCategory = (categoryToRemove: string) => {
-    setAvailableCategories((prev) => prev.filter((cat) => cat !== categoryToRemove))
-    if (formData.category === categoryToRemove) {
-      updateFormData("category", "")
-    }
-  }
-
   const addNewCanvasSize = () => {
     if (newCanvasSize.trim() && !availableCanvasSizes.includes(newCanvasSize.trim())) {
       setAvailableCanvasSizes((prev) => [...prev, newCanvasSize.trim()])
       setNewCanvasSize("")
       setShowNewCanvasSizeInput(false)
-    }
-  }
-
-  const removeCanvasSize = (sizeToRemove: string) => {
-    setAvailableCanvasSizes((prev) => prev.filter((size) => size !== sizeToRemove))
-    if (formData.canvasSize === sizeToRemove) {
-      updateFormData("canvasSize", "")
     }
   }
 
@@ -222,63 +208,45 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-gray-700">Category</Label>
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-2">
+                  <Select value={formData.category} onValueChange={(value) => updateFormData("category", value)}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
                       {availableCategories.map((category) => (
-                        <div
-                          key={category}
-                          className="flex items-center gap-1 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm"
-                        >
-                          <button
-                            type="button"
-                            onClick={() => updateFormData("category", category)}
-                            className={`${formData.category === category ? "font-medium" : ""}`}
-                          >
-                            {category}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => removeCategory(category)}
-                            className="ml-1 text-blue-500 hover:text-blue-700"
-                          >
-                            ×
-                          </button>
-                        </div>
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
                       ))}
-                    </div>
+                    </SelectContent>
+                  </Select>
 
-                    {showNewCategoryInput ? (
-                      <div className="flex gap-2">
-                        <Input
-                          value={newCategory}
-                          onChange={(e) => setNewCategory(e.target.value)}
-                          placeholder="Enter new category"
-                          className="flex-1"
-                          onKeyPress={(e) => e.key === "Enter" && addNewCategory()}
-                        />
-                        <Button type="button" onClick={addNewCategory} size="sm">
-                          Add
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={() => setShowNewCategoryInput(false)}
-                          variant="outline"
-                          size="sm"
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    ) : (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setShowNewCategoryInput(true)}
-                        className="w-full"
-                      >
-                        Add New Category
+                  {showNewCategoryInput ? (
+                    <div className="flex gap-2">
+                      <Input
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                        placeholder="Enter new category"
+                        className="flex-1"
+                        onKeyPress={(e) => e.key === "Enter" && addNewCategory()}
+                      />
+                      <Button type="button" onClick={addNewCategory} size="sm">
+                        Save Category
                       </Button>
-                    )}
-                  </div>
+                      <Button type="button" onClick={() => setShowNewCategoryInput(false)} variant="outline" size="sm">
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowNewCategoryInput(true)}
+                      className="w-full"
+                    >
+                      Add New Category
+                    </Button>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -348,63 +316,50 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-gray-700">Canvas Size</Label>
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-2">
+                  <Select value={formData.canvasSize} onValueChange={(value) => updateFormData("canvasSize", value)}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select canvas size" />
+                    </SelectTrigger>
+                    <SelectContent>
                       {availableCanvasSizes.map((size) => (
-                        <div
-                          key={size}
-                          className="flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm"
-                        >
-                          <button
-                            type="button"
-                            onClick={() => updateFormData("canvasSize", size)}
-                            className={`${formData.canvasSize === size ? "font-medium" : ""}`}
-                          >
-                            {size}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => removeCanvasSize(size)}
-                            className="ml-1 text-green-500 hover:text-green-700"
-                          >
-                            ×
-                          </button>
-                        </div>
+                        <SelectItem key={size} value={size}>
+                          {size}
+                        </SelectItem>
                       ))}
-                    </div>
+                    </SelectContent>
+                  </Select>
 
-                    {showNewCanvasSizeInput ? (
-                      <div className="flex gap-2">
-                        <Input
-                          value={newCanvasSize}
-                          onChange={(e) => setNewCanvasSize(e.target.value)}
-                          placeholder="Enter new canvas size"
-                          className="flex-1"
-                          onKeyPress={(e) => e.key === "Enter" && addNewCanvasSize()}
-                        />
-                        <Button type="button" onClick={addNewCanvasSize} size="sm">
-                          Add
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={() => setShowNewCanvasSizeInput(false)}
-                          variant="outline"
-                          size="sm"
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    ) : (
+                  {showNewCanvasSizeInput ? (
+                    <div className="flex gap-2">
+                      <Input
+                        value={newCanvasSize}
+                        onChange={(e) => setNewCanvasSize(e.target.value)}
+                        placeholder="Enter new canvas size"
+                        className="flex-1"
+                        onKeyPress={(e) => e.key === "Enter" && addNewCanvasSize()}
+                      />
+                      <Button type="button" onClick={addNewCanvasSize} size="sm">
+                        Save Canvas Size
+                      </Button>
                       <Button
                         type="button"
+                        onClick={() => setShowNewCanvasSizeInput(false)}
                         variant="outline"
-                        onClick={() => setShowNewCanvasSizeInput(true)}
-                        className="w-full"
+                        size="sm"
                       >
-                        Add New Canvas Size
+                        Cancel
                       </Button>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowNewCanvasSizeInput(true)}
+                      className="w-full"
+                    >
+                      Add New Canvas Size
+                    </Button>
+                  )}
                 </div>
 
                 <div className="space-y-2">
