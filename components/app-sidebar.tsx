@@ -102,7 +102,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
               <a href="#">
                 <PaintbrushIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">Artbar Tokyo</span>
+                <span className="text-base font-semibold text-black">Artbar Tokyo</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
