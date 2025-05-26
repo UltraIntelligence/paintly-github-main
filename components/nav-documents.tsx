@@ -20,7 +20,7 @@ export function NavDocuments({
   }[]
 }) {
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+    <SidebarGroup>
       <SidebarGroupLabel>Studio</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
