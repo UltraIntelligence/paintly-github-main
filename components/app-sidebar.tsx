@@ -102,7 +102,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
               <a href="#">
                 <PaintbrushIcon className="h-5 w-5" />
-                <span className="text-2xl font-semibold">Artbar Tokyo</span>
+                <span
+                  className="text-[30px] leading-[36px] font-semibold text-[rgb(10,10,10)]"
+                  style={{ fontFamily: "Arial, Helvetica, sans-serif", fontWeight: 600 }}
+                >
+                  Artbar Tokyo
+                </span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
