@@ -82,6 +82,20 @@ import { Progress } from "@/components/ui/progress"
 import { CopyIcon, Globe, Users, Palette } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
+// Helper function to get progress bar color based on capacity percentage
+function getProgressBarColor(current: number, total: number): string {
+  const percentage = (current / total) * 100
+  if (percentage <= 50) return "bg-red-500"
+  if (percentage <= 75) return "bg-yellow-500"
+  return "bg-green-500"
+}
+
+// Helper function to parse capacity string like "8/12"
+function parseCapacity(capacityString: string): { current: number; total: number } {
+  const [current, total] = capacityString.split("/").map(Number)
+  return { current, total }
+}
+
 export const schema = z.object({
   id: z.number(),
   header: z.string(),
@@ -345,8 +359,8 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
     // Simple auto-population logic
     const otherLang = lang === "en" ? "jp" : "en"
     if (
-      !prev[otherLang][field as keyof typeof prev.en] ||
-      prev[otherLang][field as keyof typeof prev.en].includes("[Auto-generated]")
+      !formData[otherLang][field as keyof typeof formData.en] ||
+      formData[otherLang][field as keyof typeof formData.en].includes("[Auto-generated]")
     ) {
       const autoText =
         lang === "en" ? `[Auto-generated] ${value}の日本語版` : `[Auto-generated] English version of ${value}`
@@ -1277,7 +1291,7 @@ export function DataTable({
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">8/12</span>
                   <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="w-2/3 h-full bg-primary rounded-full"></div>
+                    <div className={`w-2/3 h-full ${getProgressBarColor(8, 12)} rounded-full`}></div>
                   </div>
                 </div>
                 <Badge variant="outline" className="text-xs px-2 py-1">
@@ -1353,7 +1367,7 @@ export function DataTable({
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">12/15</span>
                   <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="w-4/5 h-full bg-primary rounded-full"></div>
+                    <div className={`w-4/5 h-full ${getProgressBarColor(12, 15)} rounded-full`}></div>
                   </div>
                 </div>
                 <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-700">
@@ -1481,7 +1495,16 @@ export function DataTable({
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium">{event.capacity}</span>
                             <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                              <div className="w-2/3 h-full bg-primary rounded-full"></div>
+                              {(() => {
+                                const { current, total } = parseCapacity(event.capacity)
+                                const percentage = (current / total) * 100
+                                return (
+                                  <div
+                                    className={`h-full ${getProgressBarColor(current, total)} rounded-full`}
+                                    style={{ width: `${percentage}%` }}
+                                  ></div>
+                                )
+                              })()}
                             </div>
                           </div>
                           <Badge variant="outline" className="text-xs px-2 py-1">
