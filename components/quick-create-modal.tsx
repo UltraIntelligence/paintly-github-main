@@ -40,7 +40,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-semibold text-gray-900">New Template</CardTitle>
               <CardDescription className="text-sm text-gray-600 leading-5 h-10">
-                Create a reusable template that can be scheduled multiple times
+                Create a reusable template for your studio classes
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-1 p-6 pt-0">
@@ -66,7 +66,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-semibold text-gray-900">Schedule Event</CardTitle>
               <CardDescription className="text-sm text-gray-600 leading-5 h-10">
-                Add an existing template to your calendar with specific timing
+                Add an existing template to your event calendar
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-1 p-6 pt-0">
