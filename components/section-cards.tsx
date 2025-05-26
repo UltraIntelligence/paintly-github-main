@@ -9,7 +9,7 @@ export function SectionCards() {
       <Card className="@container/card">
         <CardHeader className="relative">
           <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">¥330,000</CardTitle>
+          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">¥10,527,000</CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
               <TrendingUpIcon className="size-3" />
