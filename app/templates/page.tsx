@@ -182,7 +182,7 @@ export default function TemplatesPage() {
 
                   {/* Filters */}
                   <div className="space-y-4 mb-8">
-                    <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                       <div className="relative flex-1 max-w-sm">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <Input
@@ -204,27 +204,17 @@ export default function TemplatesPage() {
                           <SelectItem value="yokohama">Artbar Yokohama</SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
 
-                    <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
-                      <TabsList className="grid w-full grid-cols-5 bg-gray-50">
-                        <TabsTrigger value="All" className="data-[state=active]:bg-white">
-                          All
-                        </TabsTrigger>
-                        <TabsTrigger value="Kids Only" className="data-[state=active]:bg-white">
-                          Kids Only
-                        </TabsTrigger>
-                        <TabsTrigger value="Master Artists" className="data-[state=active]:bg-white">
-                          Master Artists
-                        </TabsTrigger>
-                        <TabsTrigger value="Paint Pouring" className="data-[state=active]:bg-white">
-                          Paint Pouring
-                        </TabsTrigger>
-                        <TabsTrigger value="Seasonal" className="data-[state=active]:bg-white">
-                          Seasonal
-                        </TabsTrigger>
-                      </TabsList>
-                    </Tabs>
+                      <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-auto">
+                        <TabsList>
+                          <TabsTrigger value="All">All</TabsTrigger>
+                          <TabsTrigger value="Kids Only">Kids Only</TabsTrigger>
+                          <TabsTrigger value="Master Artists">Master Artists</TabsTrigger>
+                          <TabsTrigger value="Paint Pouring">Paint Pouring</TabsTrigger>
+                          <TabsTrigger value="Seasonal">Seasonal</TabsTrigger>
+                        </TabsList>
+                      </Tabs>
+                    </div>
                   </div>
 
                   {/* Template Cards Grid */}
