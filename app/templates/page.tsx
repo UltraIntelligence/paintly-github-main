@@ -125,7 +125,7 @@ const templates = [
     category: "Master Artists",
     scheduled: "2x this month",
     popular: false,
-  }
+  },
 ]
 
 const getDifficultyColor = (difficulty: string) => {
@@ -170,7 +170,9 @@ export default function TemplatesPage() {
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                       <h1 className="text-2xl font-bold text-gray-900">Templates</h1>
-                      <Badge variant="secondary" className="text-sm">{filteredTemplates.length}</Badge>
+                      <Badge variant="secondary" className="text-sm">
+                        {filteredTemplates.length}
+                      </Badge>
                     </div>
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                       <PlusCircle className="mr-2 h-4 w-4" />
@@ -206,24 +208,36 @@ export default function TemplatesPage() {
 
                     <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
                       <TabsList className="grid w-full grid-cols-5 bg-gray-50">
-                        <TabsTrigger value="All" className="data-[state=active]:bg-white">All</TabsTrigger>
-                        <TabsTrigger value="Kids Only" className="data-[state=active]:bg-white">Kids Only</TabsTrigger>
-                        <TabsTrigger value="Master Artists" className="data-[state=active]:bg-white">Master Artists</TabsTrigger>
-                        <TabsTrigger value="Paint Pouring" className="data-[state=active]:bg-white">Paint Pouring</TabsTrigger>
-                        <TabsTrigger value="Seasonal" className="data-[state=active]:bg-white">Seasonal</TabsTrigger>
+                        <TabsTrigger value="All" className="data-[state=active]:bg-white">
+                          All
+                        </TabsTrigger>
+                        <TabsTrigger value="Kids Only" className="data-[state=active]:bg-white">
+                          Kids Only
+                        </TabsTrigger>
+                        <TabsTrigger value="Master Artists" className="data-[state=active]:bg-white">
+                          Master Artists
+                        </TabsTrigger>
+                        <TabsTrigger value="Paint Pouring" className="data-[state=active]:bg-white">
+                          Paint Pouring
+                        </TabsTrigger>
+                        <TabsTrigger value="Seasonal" className="data-[state=active]:bg-white">
+                          Seasonal
+                        </TabsTrigger>
                       </TabsList>
                     </Tabs>
                   </div>
 
                   {/* Template Cards Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {filteredTemplates.map((template) => (
-                      <Card key={template.id} className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300">
+                      <Card
+                        key={template.id}
+                        className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300"
+                      >
                         {/* Image Section */}
                         <div className="relative">
                           <AspectRatio ratio={1} className="w-full">
-                            <div className="bg-gray-200 w-full h-full rounded-t-lg">
-                            </div>
+                            <div className="bg-gray-200 w-full h-full rounded-t-lg"></div>
                           </AspectRatio>
                           {template.popular && (
                             <Badge className="absolute top-2 right-2 bg-orange-100 text-orange-700 text-xs px-2 py-1">
@@ -238,30 +252,38 @@ export default function TemplatesPage() {
                             <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
                               {template.japaneseTitle}
                             </h3>
-                            <p className="text-xs text-gray-600 line-clamp-1">
-                              {template.englishTitle}
-                            </p>
+                            <p className="text-xs text-gray-600 line-clamp-1">{template.englishTitle}</p>
                           </div>
 
                           <div className="flex flex-wrap gap-1 mt-2 sm:mt-3 flex-shrink-0">
-                            <Badge variant="outline" className="text-xs px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200">
+                            <Badge
+                              variant="outline"
+                              className="text-xs px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
+                            >
                               {template.duration}
                             </Badge>
-                            <Badge variant="outline" className="text-xs px-1.5 sm:px-2 py-0.5 bg-green-50 text-green-700 border-green-200">
+                            <Badge
+                              variant="outline"
+                              className="text-xs px-1.5 sm:px-2 py-0.5 bg-green-50 text-green-700 border-green-200"
+                            >
                               {template.canvas}
                             </Badge>
-                            <Badge variant="outline" className={`text-xs px-1.5 sm:px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}>
+                            <Badge
+                              variant="outline"
+                              className={`text-xs px-1.5 sm:px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}
+                            >
                               {template.difficulty}
                             </Badge>
                           </div>
 
-                          <p className="text-xs text-gray-500 mt-2 flex-shrink-0">
-                            Used {template.scheduled}
-                          </p>
+                          <p className="text-xs text-gray-500 mt-2 flex-shrink-0">Used {template.scheduled}</p>
 
                           {/* Actions Section - Fixed at bottom */}
                           <div className="flex gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100 flex-shrink-0">
-                            <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 sm:px-3">
+                            <Button
+                              size="sm"
+                              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 sm:px-3"
+                            >
                               Schedule
                             </Button>
                             <Button size="sm" variant="outline" className="text-xs px-2 sm:px-3">
