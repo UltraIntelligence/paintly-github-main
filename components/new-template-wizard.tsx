@@ -419,7 +419,7 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
                 </div>
 
                 <div className="text-center py-4">
-                  <div className="text-green-600 font-medium">✓ Template is ready to schedule</div>
+                  <div className="text-green-600 font-medium">Template is ready to schedule</div>
                   <div className="text-sm text-gray-600 mt-1">
                     You can start scheduling events with this template once created
                   </div>
