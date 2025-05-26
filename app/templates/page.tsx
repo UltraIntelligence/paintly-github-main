@@ -265,7 +265,7 @@ export default function TemplatesPage() {
                       {filteredTemplates.map((template) => (
                         <Card
                           key={template.id}
-                          className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300"
+                          className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300 flex flex-col h-full"
                         >
                           {/* Image Section */}
                           <div className="relative">
@@ -280,15 +280,15 @@ export default function TemplatesPage() {
                           </div>
 
                           {/* Content Section */}
-                          <CardContent className="p-3 sm:p-4 flex flex-col">
-                            <div className="space-y-1 flex-shrink-0">
+                          <CardContent className="flex-1 p-3 sm:p-4 flex flex-col">
+                            <div className="space-y-1">
                               <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
                                 {template.japaneseTitle}
                               </h3>
                               <p className="text-xs text-gray-600 line-clamp-1">{template.englishTitle}</p>
                             </div>
 
-                            <div className="flex flex-wrap gap-1 mt-2 sm:mt-3 flex-shrink-0">
+                            <div className="flex flex-wrap gap-1 mt-2 sm:mt-3">
                               <Badge
                                 variant="outline"
                                 className="text-xs px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
@@ -309,10 +309,11 @@ export default function TemplatesPage() {
                               </Badge>
                             </div>
 
-                            <p className="text-xs text-gray-500 mt-2 flex-shrink-0">Used {template.scheduled}</p>
-
-                            {/* Actions Section - Fixed at bottom */}
-                            <div className="flex gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100 flex-shrink-0">
+                            <p className="text-xs text-gray-500 mt-2">Used {template.scheduled}</p>
+                          </CardContent>
+                          {/* Actions Section - Fixed at bottom */}
+                          <div className="mt-auto p-3 sm:p-4 pt-0 border-t border-gray-100">
+                            <div className="flex gap-1.5 sm:gap-2">
                               <Button size="sm" variant="outline" className="flex-1 text-xs px-2 sm:px-3">
                                 Schedule
                               </Button>
@@ -332,7 +333,7 @@ export default function TemplatesPage() {
                                 </DropdownMenuContent>
                               </DropdownMenu>
                             </div>
-                          </CardContent>
+                          </div>
                         </Card>
                       ))}
                     </div>
