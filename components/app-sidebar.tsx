@@ -1,80 +1,50 @@
 "use client"
 
-import type * as React from "react"
-import {
-  PaintbrushIcon,
-  LayoutDashboardIcon,
-  CalendarDaysIcon,
-  Users2Icon,
-  MapPinIcon,
-  Building2Icon,
-  GiftIcon,
-  LayoutTemplateIcon,
-  HelpCircleIcon,
-  SearchIcon,
-  SettingsIcon,
-} from "lucide-react"
-
+import { TrendingUpIcon, CompassIcon, StarIcon, SettingsIcon, SquareTerminal, Bot, BookOpen } from "lucide-react"
+import { useSidebar } from "@/components/ui/sidebar"
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar"
+import { Separator } from "@/components/ui/separator"
 import { NavDocuments } from "./nav-documents"
 
-const data = {
-  user: {
-    name: "Cathy Thompson",
-    email: "tokyo@artbar.co.jp",
-    avatar: "/images/cathy-avatar.png",
-  },
-  navMain: [
+export function AppSidebar({ variant }: { variant: "inset" | "icon" }) {
+  const { collapsed, onCollapse } = useSidebar()
+
+  const navMainItems = [
     {
       title: "Dashboard",
-      url: "#",
-      icon: LayoutDashboardIcon,
-    },
-    {
-      title: "Schedule",
-      url: "#",
-      icon: CalendarDaysIcon,
+      url: "/dashboard",
+      icon: SquareTerminal,
     },
     {
       title: "Templates",
-      url: "#",
-      icon: LayoutTemplateIcon,
-    },
-  ],
-  navDocuments: [
-    {
-      name: "Instructors",
-      url: "#",
-      icon: Users2Icon,
+      url: "/templates",
+      icon: Bot,
     },
     {
-      name: "Locations",
+      title: "Schedule",
+      url: "/schedule",
+      icon: BookOpen,
+    },
+  ]
+
+  const navSecondaryItems = [
+    {
+      title: "Trending",
       url: "#",
-      icon: MapPinIcon,
+      icon: TrendingUpIcon,
     },
     {
-      name: "Gift Certificates",
+      title: "Explore",
       url: "#",
-      icon: GiftIcon,
+      icon: CompassIcon,
     },
     {
-      name: "Private Events",
+      title: "Favourites",
       url: "#",
-      icon: Building2Icon,
+      icon: StarIcon,
     },
-  ],
-  navSecondary: [
     {
       title: "Settings",
       url: "#",
@@ -83,39 +53,63 @@ const data = {
     {
       title: "Get Help",
       url: "#",
-      icon: HelpCircleIcon,
+      icon: SettingsIcon,
+    },
+  ]
+
+  const navDocumentsItems = [
+    {
+      name: "Cover page",
+      url: "#",
+      icon: SettingsIcon,
     },
     {
-      title: "Search",
+      name: "Table of contents",
       url: "#",
-      icon: SearchIcon,
+      icon: SettingsIcon,
     },
-  ],
-}
+    {
+      name: "Executive summary",
+      url: "#",
+      icon: SettingsIcon,
+    },
+    {
+      name: "Technical approach",
+      url: "#",
+      icon: SettingsIcon,
+    },
+    {
+      name: "Design",
+      url: "#",
+      icon: SettingsIcon,
+    },
+    {
+      name: "Capabilities",
+      url: "#",
+      icon: SettingsIcon,
+    },
+  ]
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const user = {
+    name: "Cathy Truman",
+    email: "cathy@example.com",
+    avatar: "/images/cathy-avatar.png",
+  }
+
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <a href="#">
-                <PaintbrushIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">Artbar Tokyo</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.navDocuments} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-    </Sidebar>
+    <aside
+      data-collapsible={variant}
+      className="sidebar-wrapper fixed left-0 top-0 z-50 flex h-full w-64 flex-col border-r bg-sidebar data-[collapsible=inset]:w-16 data-[collapsible=icon]:w-16 data-[collapsed=true]:translate-x-[-100%]"
+    >
+      <div className="flex-1 overflow-y-auto py-2">
+        <NavUser user={user} />
+        <Separator className="my-2" />
+        <NavMain items={navMainItems} />
+        <Separator className="my-2" />
+        <NavDocuments items={navDocumentsItems} />
+        <Separator className="my-2" />
+        <NavSecondary items={navSecondaryItems} />
+      </div>
+    </aside>
   )
 }
