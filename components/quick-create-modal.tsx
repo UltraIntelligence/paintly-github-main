@@ -42,7 +42,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
               <CardDescription className="text-sm text-gray-600">Create a reusable painting template</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-6">
-              <div className="space-y-3 text-sm text-gray-700">
+              <div className="space-y-3 text-xs text-gray-700">
                 <div>Set class details & pricing</div>
                 <div>Upload reference images</div>
                 <div>Define materials needed</div>
@@ -66,7 +66,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
               <CardDescription className="text-sm text-gray-600">Schedule an existing template</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-6">
-              <div className="space-y-3 text-sm text-gray-700">
+              <div className="space-y-3 text-xs text-gray-700">
                 <div>Choose from templates</div>
                 <div>Set date and time</div>
                 <div>Assign instructor</div>
@@ -92,7 +92,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-6">
-              <div className="space-y-3 text-sm text-gray-700">
+              <div className="space-y-3 text-xs text-gray-700">
                 <div>Custom event details</div>
                 <div>Group size & pricing</div>
                 <div>Special requirements</div>
