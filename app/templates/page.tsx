@@ -216,16 +216,13 @@ export default function TemplatesPage() {
                   </div>
 
                   {/* Template Cards Grid */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {filteredTemplates.map((template) => (
                       <Card key={template.id} className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300">
                         {/* Image Section */}
                         <div className="relative">
                           <AspectRatio ratio={1} className="w-full">
-                            <div className="bg-gradient-to-br from-blue-50 to-purple-50 w-full h-full flex items-center justify-center rounded-t-lg border-b border-gray-100">
-                              <div className="w-16 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center text-2xl">
-                                🎨
-                              </div>
+                            <div className="bg-gray-200 w-full h-full rounded-t-lg">
                             </div>
                           </AspectRatio>
                           {template.popular && (
@@ -236,8 +233,8 @@ export default function TemplatesPage() {
                         </div>
 
                         {/* Content Section */}
-                        <CardContent className="p-4 space-y-3">
-                          <div className="space-y-1">
+                        <CardContent className="p-3 sm:p-4 flex flex-col h-[130px] sm:h-[140px]">
+                          <div className="space-y-1 flex-shrink-0">
                             <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
                               {template.japaneseTitle}
                             </h3>
@@ -246,33 +243,33 @@ export default function TemplatesPage() {
                             </p>
                           </div>
 
-                          <div className="flex flex-wrap gap-1">
-                            <Badge variant="outline" className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200">
+                          <div className="flex flex-wrap gap-1 mt-2 sm:mt-3 flex-shrink-0">
+                            <Badge variant="outline" className="text-xs px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200">
                               {template.duration}
                             </Badge>
-                            <Badge variant="outline" className="text-xs px-2 py-0.5 bg-green-50 text-green-700 border-green-200">
+                            <Badge variant="outline" className="text-xs px-1.5 sm:px-2 py-0.5 bg-green-50 text-green-700 border-green-200">
                               {template.canvas}
                             </Badge>
-                            <Badge variant="outline" className={`text-xs px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}>
+                            <Badge variant="outline" className={`text-xs px-1.5 sm:px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}>
                               {template.difficulty}
                             </Badge>
                           </div>
 
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 mt-2 flex-shrink-0">
                             Used {template.scheduled}
                           </p>
 
-                          {/* Actions Section */}
-                          <div className="flex gap-2 pt-2">
-                            <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs">
-                              Schedule This
+                          {/* Actions Section - Fixed at bottom */}
+                          <div className="flex gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100 flex-shrink-0">
+                            <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 sm:px-3">
+                              Schedule
                             </Button>
-                            <Button size="sm" variant="outline" className="text-xs">
+                            <Button size="sm" variant="outline" className="text-xs px-2 sm:px-3">
                               Edit
                             </Button>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="outline" className="px-2">
+                                <Button size="sm" variant="outline" className="px-1.5 sm:px-2">
                                   <MoreHorizontal className="h-3 w-3" />
                                 </Button>
                               </DropdownMenuTrigger>
