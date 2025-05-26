@@ -506,9 +506,6 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
             {currentStep === 4 && (
               <div className="space-y-4">
                 <div className="space-y-4">
-                  <Label htmlFor="image" className="text-sm font-medium text-gray-700">
-                    Template Image
-                  </Label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                     <Input
                       id="image"
