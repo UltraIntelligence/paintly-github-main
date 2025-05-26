@@ -447,11 +447,11 @@ export function DataTable({
 
   // Helper functions for date filtering
   const formatDateRange = () => {
-    if (!dateRange.from && !dateRange.to) return "📅 All Dates"
-    if (dateRange.from && !dateRange.to) return `📅 ${dateRange.from.toLocaleDateString()}`
+    if (!dateRange.from && !dateRange.to) return "All Dates"
+    if (dateRange.from && !dateRange.to) return `${dateRange.from.toLocaleDateString()}`
     if (dateRange.from && dateRange.to)
-      return `📅 ${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}`
-    return "📅 All Dates"
+      return `${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}`
+    return "All Dates"
   }
 
   const clearFilters = () => {
