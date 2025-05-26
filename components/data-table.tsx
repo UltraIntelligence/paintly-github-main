@@ -79,8 +79,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { Textarea } from "@/components/ui/textarea"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Progress } from "@/components/ui/progress"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Copy, Globe, Users, Palette, AlertTriangle, CheckCircle } from "lucide-react"
+import { CopyIcon, Globe, Users, Palette } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const schema = z.object({
   id: z.number(),
@@ -321,39 +321,45 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
       policies: "24時間前キャンセルポリシー。外部からの飲食物の持ち込みは禁止です。",
     },
     general: {
-      date: new Date(),
+      date: "2024-05-25",
       startTime: event.time.split("-")[0],
       endTime: event.time.split("-")[1],
       location: event.location,
       instructor: event.instructor,
-      canvas: "25cm round canvas",
-      ageRequirements: "All ages welcome",
       capacity: Number.parseInt(event.capacity.split("/")[1]),
       currentBookings: Number.parseInt(event.capacity.split("/")[0]),
       price: "¥4,400",
       status: event.status,
+      heroImage: null,
+      galleryImages: [],
     },
   })
 
-  const getCompletionStatus = (lang: "en" | "jp") => {
-    const data = formData[lang]
-    const completed = Object.values(data).every((value) => value && value.trim().length > 0)
-    return completed
-  }
-
-  const copyContent = (from: "en" | "jp", to: "en" | "jp", field: string) => {
+  // Auto-populate other language when typing
+  const handleContentChange = (field: string, value: string, lang: "en" | "jp") => {
     setFormData((prev) => ({
       ...prev,
-      [to]: {
-        ...prev[to],
-        [field]: prev[from][field as keyof typeof prev.en],
-      },
+      [lang]: { ...prev[lang], [field]: value },
     }))
+
+    // Simple auto-population logic
+    const otherLang = lang === "en" ? "jp" : "en"
+    if (
+      !prev[otherLang][field as keyof typeof prev.en] ||
+      prev[otherLang][field as keyof typeof prev.en].includes("[Auto-generated]")
+    ) {
+      const autoText =
+        lang === "en" ? `[Auto-generated] ${value}の日本語版` : `[Auto-generated] English version of ${value}`
+
+      setFormData((prev) => ({
+        ...prev,
+        [otherLang]: { ...prev[otherLang], [field]: autoText },
+      }))
+    }
   }
 
-  const handleSave = async (action: "draft" | "save" | "publish") => {
+  const handleSave = async (action: "save" | "publish") => {
     setIsLoading(true)
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000))
     setIsLoading(false)
     if (action === "publish") {
@@ -361,109 +367,144 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
     }
   }
 
+  const labels = {
+    en: {
+      eventBasics: "Event Basics",
+      bookingDetails: "Booking Details",
+      contentDetails: "Content & Details",
+      eventTitle: "Event Title",
+      date: "Date",
+      startTime: "Start Time",
+      endTime: "End Time",
+      location: "Location",
+      instructor: "Instructor",
+      heroImage: "Hero Image",
+      galleryImages: "Gallery Images",
+      capacity: "Capacity",
+      currentBookings: "Current Bookings",
+      price: "Price",
+      status: "Status",
+      description: "Event Description",
+      whatsIncluded: "What's Included",
+      specialRequirements: "Special Requirements",
+      policies: "Policies",
+    },
+    jp: {
+      eventBasics: "イベント基本情報",
+      bookingDetails: "予約詳細",
+      contentDetails: "内容・詳細",
+      eventTitle: "イベントタイトル",
+      date: "日付",
+      startTime: "開始時間",
+      endTime: "終了時間",
+      location: "場所",
+      instructor: "講師",
+      heroImage: "メイン画像",
+      galleryImages: "ギャラリー画像",
+      capacity: "定員",
+      currentBookings: "現在の予約状況",
+      price: "価格",
+      status: "ステータス",
+      description: "イベント説明",
+      whatsIncluded: "含まれるもの",
+      specialRequirements: "特別な要件",
+      policies: "ポリシー",
+    },
+  }
+
+  const t = labels[language]
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl">Edit Event: {formData[language].title}</DialogTitle>
+            <DialogTitle className="text-xl">
+              {language === "en" ? "Edit Event" : "イベント編集"}: {formData[language].title}
+            </DialogTitle>
             <ToggleGroup
               type="single"
               value={language}
               onValueChange={(value) => value && setLanguage(value as "en" | "jp")}
             >
-              <ToggleGroupItem value="en" className="flex items-center gap-1">
-                EN{" "}
-                {getCompletionStatus("en") ? (
-                  <CheckCircle className="h-3 w-3 text-green-500" />
-                ) : (
-                  <AlertTriangle className="h-3 w-3 text-yellow-500" />
-                )}
-              </ToggleGroupItem>
-              <ToggleGroupItem value="jp" className="flex items-center gap-1">
-                日本語{" "}
-                {getCompletionStatus("jp") ? (
-                  <CheckCircle className="h-3 w-3 text-green-500" />
-                ) : (
-                  <AlertTriangle className="h-3 w-3 text-yellow-500" />
-                )}
-              </ToggleGroupItem>
+              <ToggleGroupItem value="en">EN</ToggleGroupItem>
+              <ToggleGroupItem value="jp">日本語</ToggleGroupItem>
             </ToggleGroup>
           </div>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column - Event Details */}
-          <div className="space-y-6">
-            {/* Event Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
+        <div className="space-y-6">
+          {/* Event Basics Card */}
+          <Card className="bg-muted/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                 <Palette className="h-5 w-5" />
-                Event Information
-              </h3>
-
+                {t.eventBasics}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="title">Event Title ({language.toUpperCase()})</Label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => copyContent(language === "en" ? "jp" : "en", language, "title")}
-                  >
-                    <Copy className="h-3 w-3 mr-1" />
-                    Copy from {language === "en" ? "JP" : "EN"}
-                  </Button>
-                </div>
+                <Label>{t.eventTitle}</Label>
                 <Input
-                  id="title"
                   value={formData[language].title}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      [language]: { ...prev[language], title: e.target.value },
-                    }))
-                  }
+                  onChange={(e) => handleContentChange("title", e.target.value, language)}
+                  placeholder={language === "en" ? "Enter English title" : "日本語タイトルを入力"}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>Date</Label>
-                  <Input type="date" defaultValue="2024-05-25" />
+                  <Label>{t.date}</Label>
+                  <Input
+                    type="date"
+                    value={formData.general.date}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, date: e.target.value },
+                      }))
+                    }
+                  />
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-2">
-                    <Label>Start</Label>
-                    <Input
-                      defaultValue={formData.general.startTime}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          general: { ...prev.general, startTime: e.target.value },
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>End</Label>
-                    <Input
-                      defaultValue={formData.general.endTime}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          general: { ...prev.general, endTime: e.target.value },
-                        }))
-                      }
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label>{t.startTime}</Label>
+                  <Input
+                    value={formData.general.startTime}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, startTime: e.target.value },
+                      }))
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t.endTime}</Label>
+                  <Input
+                    value={formData.general.endTime}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, endTime: e.target.value },
+                      }))
+                    }
+                  />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Location</Label>
-                  <Select defaultValue={formData.general.location}>
+                  <Label>{t.location}</Label>
+                  <Select
+                    value={formData.general.location}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, location: value },
+                      }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -477,8 +518,16 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Instructor</Label>
-                  <Select defaultValue={formData.general.instructor}>
+                  <Label>{t.instructor}</Label>
+                  <Select
+                    value={formData.general.instructor}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, instructor: value },
+                      }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -495,47 +544,59 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Canvas Details</Label>
-                  <Input
-                    defaultValue={formData.general.canvas}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        general: { ...prev.general, canvas: e.target.value },
-                      }))
-                    }
-                  />
+                  <Label>{t.heroImage}</Label>
+                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center aspect-video bg-muted/20">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                        <CopyIcon className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {language === "en" ? "Click to upload hero image" : "メイン画像をアップロード"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">16:9 ratio recommended</p>
+                    </div>
+                  </div>
                 </div>
+
                 <div className="space-y-2">
-                  <Label>Age Requirements</Label>
-                  <Input
-                    defaultValue={formData.general.ageRequirements}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        general: { ...prev.general, ageRequirements: e.target.value },
-                      }))
-                    }
-                  />
+                  <Label>{t.galleryImages}</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[1, 2, 3].map((i) => (
+                      <div
+                        key={i}
+                        className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center aspect-square bg-muted/20"
+                      >
+                        <div className="flex flex-col items-center gap-1">
+                          <CopyIcon className="h-4 w-4 text-muted-foreground" />
+                          <p className="text-xs text-muted-foreground">
+                            {language === "en" ? "Add image" : "画像追加"}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Booking Details */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
+          {/* Booking Details Card */}
+          <Card className="bg-muted/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Booking Details
-              </h3>
-
-              <div className="grid grid-cols-3 gap-4">
+                {t.bookingDetails}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>Capacity</Label>
+                  <Label>{t.capacity}</Label>
                   <Input
                     type="number"
-                    defaultValue={formData.general.capacity}
+                    value={formData.general.capacity}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
@@ -545,21 +606,22 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Current Bookings</Label>
-                  <div className="p-2 bg-muted rounded">
-                    <div className="text-sm font-medium">
-                      {formData.general.currentBookings} of {formData.general.capacity}
+                  <Label>{t.currentBookings}</Label>
+                  <div className="p-3 bg-background rounded border">
+                    <div className="text-sm font-medium mb-2">
+                      {formData.general.currentBookings} of {formData.general.capacity}{" "}
+                      {language === "en" ? "booked" : "予約済み"}
                     </div>
                     <Progress
                       value={(formData.general.currentBookings / formData.general.capacity) * 100}
-                      className="mt-1"
+                      className="h-2"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Price</Label>
+                  <Label>{t.price}</Label>
                   <Input
-                    defaultValue={formData.general.price}
+                    value={formData.general.price}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
@@ -571,8 +633,16 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
               </div>
 
               <div className="space-y-2">
-                <Label>Status</Label>
-                <Select defaultValue={formData.general.status}>
+                <Label>{t.status}</Label>
+                <Select
+                  value={formData.general.status}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      general: { ...prev.general, status: value },
+                    }))
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -585,231 +655,121 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Description Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
+          {/* Content & Details Card */}
+          <Card className="bg-muted/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                 <Globe className="h-5 w-5" />
-                Description ({language.toUpperCase()})
-              </h3>
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>Event Description</Label>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => copyContent(language === "en" ? "jp" : "en", language, "description")}
-                    >
-                      <Copy className="h-3 w-3 mr-1" />
-                      Copy from {language === "en" ? "JP" : "EN"}
-                    </Button>
-                  </div>
-                  <Textarea
-                    value={formData[language].description}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        [language]: { ...prev[language], description: e.target.value },
-                      }))
-                    }
-                    rows={3}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>What's Included</Label>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => copyContent(language === "en" ? "jp" : "en", language, "whatsIncluded")}
-                    >
-                      <Copy className="h-3 w-3 mr-1" />
-                      Copy from {language === "en" ? "JP" : "EN"}
-                    </Button>
-                  </div>
-                  <Textarea
-                    value={formData[language].whatsIncluded}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        [language]: { ...prev[language], whatsIncluded: e.target.value },
-                      }))
-                    }
-                    rows={2}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>Special Requirements</Label>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => copyContent(language === "en" ? "jp" : "en", language, "specialRequirements")}
-                    >
-                      <Copy className="h-3 w-3 mr-1" />
-                      Copy from {language === "en" ? "JP" : "EN"}
-                    </Button>
-                  </div>
-                  <Textarea
-                    value={formData[language].specialRequirements}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        [language]: { ...prev[language], specialRequirements: e.target.value },
-                      }))
-                    }
-                    rows={2}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>Policies</Label>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => copyContent(language === "en" ? "jp" : "en", language, "policies")}
-                    >
-                      <Copy className="h-3 w-3 mr-1" />
-                      Copy from {language === "en" ? "JP" : "EN"}
-                    </Button>
-                  </div>
-                  <Textarea
-                    value={formData[language].policies}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        [language]: { ...prev[language], policies: e.target.value },
-                      }))
-                    }
-                    rows={2}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Management */}
-          <div className="space-y-6">
-            {/* Booking Management */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Booking Management</h3>
-              <div className="grid grid-cols-1 gap-2">
-                <Button variant="outline" className="justify-start">
-                  <Users className="h-4 w-4 mr-2" />
-                  View All Bookings
-                </Button>
-                <Button variant="outline" className="justify-start">
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Check-in Mode
-                </Button>
-                <Button variant="outline" className="justify-start">
-                  Send Reminder Emails
-                </Button>
-                <Button variant="outline" className="justify-start">
-                  Manage Waitlist
-                </Button>
-              </div>
-            </div>
-
-            {/* Event Actions */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Event Actions</h3>
-              <div className="grid grid-cols-1 gap-2">
-                <Button variant="outline" className="justify-start">
-                  <Copy className="h-4 w-4 mr-2" />
-                  Duplicate Event
-                </Button>
-                <Button variant="outline" className="justify-start">
-                  Create Template
-                </Button>
-                <Button variant="destructive" className="justify-start">
-                  Cancel Event
-                </Button>
-                <Button variant="outline" className="justify-start">
-                  Archive Event
-                </Button>
-              </div>
-            </div>
-
-            {/* Customer View */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Customer View</h3>
-              <div className="grid grid-cols-1 gap-2">
-                <Button variant="outline" className="justify-start">
-                  Preview as Customer
-                </Button>
-                <Button variant="outline" className="justify-start">
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy Booking URL
-                </Button>
-                <div className="space-y-2">
-                  <Label>Hero Image</Label>
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
-                    <p className="text-sm text-muted-foreground">Click to upload image</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Translation Status */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Translation Status</h3>
+                {t.contentDetails}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <div className="flex items-center justify-between p-2 bg-muted rounded">
-                  <span className="text-sm">English</span>
-                  <Badge variant={getCompletionStatus("en") ? "default" : "secondary"}>
-                    {getCompletionStatus("en") ? "Complete" : "Incomplete"}
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between p-2 bg-muted rounded">
-                  <span className="text-sm">Japanese</span>
-                  <Badge variant={getCompletionStatus("jp") ? "default" : "secondary"}>
-                    {getCompletionStatus("jp") ? "Complete" : "Incomplete"}
-                  </Badge>
-                </div>
+                <Label>{t.description}</Label>
+                <Textarea
+                  value={formData[language].description}
+                  onChange={(e) => handleContentChange("description", e.target.value, language)}
+                  rows={3}
+                  placeholder={
+                    language === "en" ? "Describe the event experience..." : "イベントの体験を説明してください..."
+                  }
+                />
+                {formData[language].description.includes("[Auto-generated]") && (
+                  <p className="text-xs text-muted-foreground">
+                    {language === "en"
+                      ? "Auto-generated content - please review and edit"
+                      : "自動生成されたコンテンツ - 確認・編集してください"}
+                  </p>
+                )}
               </div>
 
-              {(!getCompletionStatus("en") || !getCompletionStatus("jp")) && (
-                <Alert>
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    Some translations are incomplete. Complete all fields before publishing.
-                  </AlertDescription>
-                </Alert>
-              )}
-            </div>
-          </div>
+              <div className="space-y-2">
+                <Label>{t.whatsIncluded}</Label>
+                <Textarea
+                  value={formData[language].whatsIncluded}
+                  onChange={(e) => handleContentChange("whatsIncluded", e.target.value, language)}
+                  rows={2}
+                  placeholder={language === "en" ? "List what's included..." : "含まれるものをリストしてください..."}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t.specialRequirements}</Label>
+                <Textarea
+                  value={formData[language].specialRequirements}
+                  onChange={(e) => handleContentChange("specialRequirements", e.target.value, language)}
+                  rows={2}
+                  placeholder={language === "en" ? "Any special requirements..." : "特別な要件があれば..."}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t.policies}</Label>
+                <Textarea
+                  value={formData[language].policies}
+                  onChange={(e) => handleContentChange("policies", e.target.value, language)}
+                  rows={2}
+                  placeholder={language === "en" ? "Cancellation and other policies..." : "キャンセルポリシーなど..."}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Secondary Actions */}
+          <Card className="bg-muted/50">
+            <CardContent className="pt-6">
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm">
+                  {language === "en" ? "Preview as Customer" : "顧客として表示"}
+                </Button>
+                <Button variant="outline" size="sm">
+                  <CopyIcon className="h-4 w-4 mr-2" />
+                  {language === "en" ? "Copy Booking URL" : "予約URLをコピー"}
+                </Button>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <MoreVerticalIcon className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>
+                      <CopyIcon className="h-4 w-4 mr-2" />
+                      {language === "en" ? "Duplicate Event" : "イベントを複製"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>{language === "en" ? "Create Template" : "テンプレート作成"}</DropdownMenuItem>
+                    <DropdownMenuItem>{language === "en" ? "Archive Event" : "イベントをアーカイブ"}</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <Button variant="destructive" size="sm" className="ml-auto">
+                  {language === "en" ? "Cancel Event" : "イベントをキャンセル"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <DialogFooter className="flex flex-col sm:flex-row gap-2">
-          <div className="flex-1 text-sm text-muted-foreground">
-            EN: {getCompletionStatus("en") ? "Complete" : "Incomplete"}, JP:{" "}
-            {getCompletionStatus("jp") ? "Complete" : "Incomplete"}
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="outline" onClick={() => handleSave("draft")} disabled={isLoading}>
-              Save Draft
-            </Button>
-            <Button onClick={() => handleSave("save")} disabled={isLoading}>
-              {isLoading ? "Saving..." : "Save Changes"}
-            </Button>
-            <Button
-              onClick={() => handleSave("publish")}
-              disabled={isLoading || !getCompletionStatus("en") || !getCompletionStatus("jp")}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              Save & Publish
-            </Button>
-          </div>
+        <DialogFooter className="flex gap-2">
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
+            {language === "en" ? "Cancel" : "キャンセル"}
+          </Button>
+          <Button onClick={() => handleSave("save")} disabled={isLoading}>
+            {isLoading
+              ? language === "en"
+                ? "Saving..."
+                : "保存中..."
+              : language === "en"
+                ? "Save Changes"
+                : "変更を保存"}
+          </Button>
+          <Button onClick={() => handleSave("publish")} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
+            {language === "en" ? "Save & Publish" : "保存して公開"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
