@@ -420,72 +420,72 @@ export function DataTable({
       </div>
       <TabsContent value="outline" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="space-y-4">
-{/* Event Card 1 */}
-<div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-  <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-    {/* Column 1: Thumbnail */}
-    <div className="flex items-start gap-1 md:basis-1/5">
-      <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-        <img
-          src="/placeholder.svg?height=96&width=96&query=monet water lilies painting"
-          alt="Monet Water Lilies"
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="flex-1 min-w-0 md:hidden">
-        <h3 className="font-medium text-sm mb-1">モネ 睡蓮 Monet Water Lilies</h3>
-        <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
-      </div>
-    </div>
+          {/* Event Card 1 */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              {/* Column 1: Thumbnail */}
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=monet water lilies painting"
+                    alt="Monet Water Lilies"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">モネ 睡蓮 Monet Water Lilies</h3>
+                  <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
+                </div>
+              </div>
 
-    {/* Column 2: Event Details (Desktop only) */}
-    <div className="hidden md:block md:basis-1/4">
-      <h3 className="font-medium text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
-      <p className="text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
-    </div>
+              {/* Column 2: Event Details (Desktop only) */}
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
+                <p className="text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
+              </div>
 
-    {/* Column 3: Capacity & Progress */}
-    <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">8/12</span>
-        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-          <div className="w-2/3 h-full bg-primary rounded-full"></div>
-        </div>
-      </div>
-      <Badge variant="outline" className="text-xs px-2 py-1">
-        Starting in 2 hours
-      </Badge>
-    </div>
+              {/* Column 3: Capacity & Progress */}
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">8/12</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-2/3 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs px-2 py-1">
+                  Starting in 2 hours
+                </Badge>
+              </div>
 
-    {/* Column 4: Status & Instructor */}
-    <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-      <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-        Active
-      </Badge>
-      <div className="flex items-center gap-2">
-        <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
-          <img
-            src="/placeholder.svg?height=28&width=28&query=japanese woman instructor"
-            alt="Yuki Tanaka"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <span className="text-sm">Yuki Tanaka</span>
-      </div>
-    </div>
+              {/* Column 4: Status & Instructor */}
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman instructor"
+                      alt="Yuki Tanaka"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Yuki Tanaka</span>
+                </div>
+              </div>
 
-    {/* Column 5: Actions */}
-    <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-      <Button variant="outline" size="default" className="flex-1 h-9">
-        Edit
-      </Button>
-      <Button variant="outline" size="default" className="flex-1 h-9">
-        View Bookings
-      </Button>
-    </div>
-  </div>
-</div>
+              {/* Column 5: Actions */}
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
 
           {/* Event Card 2 */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
@@ -773,8 +773,541 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="past-performance" className="flex flex-col px-4 lg:px-6">
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
+      <TabsContent value="past-performance" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
+        <div className="space-y-4">
+          {/* Event Card 1 - Tomorrow */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=impressionist garden painting monet style"
+                    alt="Impressionist Garden"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">印象派ガーデン Impressionist Garden</h3>
+                  <p className="text-xs text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
+                </div>
+              </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">印象派ガーデン Impressionist Garden</h3>
+                <p className="text-sm text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
+              </div>
+
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">15/15</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-full h-full bg-red-500 rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="destructive" className="text-xs px-2 py-1">
+                  Sold Out
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                  Sold Out
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman art teacher"
+                      alt="Akiko Yamada"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Akiko Yamada</span>
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Event Card 2 - Wednesday AM */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=kids animal paradise colorful painting"
+                    alt="Kids Animal Paradise"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">子供向け 動物の楽園 Kids Animal Paradise</h3>
+                  <p className="text-xs text-muted-foreground">10:00 AM-12:00 PM • Artbar Yokohama</p>
+                </div>
+              </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">子供向け 動物の楽園 Kids Animal Paradise</h3>
+                <p className="text-sm text-muted-foreground">10:00 AM-12:00 PM • Artbar Yokohama</p>
+              </div>
+
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">6/12</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-1/2 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs px-2 py-1">
+                  Wednesday
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman kids art instructor"
+                      alt="Mineko Sato"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Mineko Sato</span>
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Event Card 3 - Wednesday PM */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=modern abstract art colorful expression"
+                    alt="Modern Abstract Expression"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">モダンアート Modern Abstract Expression</h3>
+                  <p className="text-xs text-muted-foreground">7:00-9:00 PM • Artbar Shinjuku</p>
+                </div>
+              </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">モダンアート Modern Abstract Expression</h3>
+                <p className="text-sm text-muted-foreground">7:00-9:00 PM • Artbar Shinjuku</p>
+              </div>
+
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">2/10</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-1/5 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs px-2 py-1">
+                  Wednesday
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese man modern art instructor"
+                      alt="Kenji Nakamura"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Kenji Nakamura</span>
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Event Card 4 - Thursday */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=van gogh sunflowers painting yellow"
+                    alt="Van Gogh Sunflowers"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">ゴッホ ひまわり Van Gogh Sunflowers</h3>
+                  <p className="text-xs text-muted-foreground">6:30-8:30 PM • Artbar Ginza</p>
+                </div>
+              </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">ゴッホ ひまわり Van Gogh Sunflowers</h3>
+                <p className="text-sm text-muted-foreground">6:30-8:30 PM • Artbar Ginza</p>
+              </div>
+
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">8/12</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-2/3 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs px-2 py-1">
+                  Thursday
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman instructor"
+                      alt="Yuki Tanaka"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Yuki Tanaka</span>
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Event Card 5 - Friday PM */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=cherry blossoms mount fuji japanese painting"
+                    alt="Cherry Blossoms & Mt. Fuji"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">桜と富士山 Cherry Blossoms & Mt. Fuji</h3>
+                  <p className="text-xs text-muted-foreground">7:00-9:00 PM • Artbar Shibuya</p>
+                </div>
+              </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">桜と富士山 Cherry Blossoms & Mt. Fuji</h3>
+                <p className="text-sm text-muted-foreground">7:00-9:00 PM • Artbar Shibuya</p>
+              </div>
+
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">11/12</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-11/12 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="text-xs px-2 py-1 bg-orange-100 text-orange-700">
+                  Friday evening
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese man instructor"
+                      alt="Hiroshi Sato"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Hiroshi Sato</span>
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Event Card 6 - Saturday AM */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=colorful fish kids painting underwater"
+                    alt="Kids Colorful Fish"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">キッズ only カラフルな魚 Kids Colorful Fish</h3>
+                  <p className="text-xs text-muted-foreground">10:00 AM-12:00 PM • Artbar Omotesando</p>
+                </div>
+              </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">キッズ only カラフルな魚 Kids Colorful Fish</h3>
+                <p className="text-sm text-muted-foreground">10:00 AM-12:00 PM • Artbar Omotesando</p>
+              </div>
+
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">8/10</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-4/5 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="text-xs px-2 py-1 bg-blue-100 text-blue-700">
+                  This weekend
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman kids art instructor"
+                      alt="Mineko Sato"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Mineko Sato</span>
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Event Card 7 - Saturday PM */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=city skyline night lights wine painting"
+                    alt="City Skyline Night"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">Wine & Paint 夜景 City Skyline Night</h3>
+                  <p className="text-xs text-muted-foreground">7:00-9:30 PM • Artbar Ginza</p>
+                </div>
+              </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">Wine & Paint 夜景 City Skyline Night</h3>
+                <p className="text-sm text-muted-foreground">7:00-9:30 PM • Artbar Ginza</p>
+              </div>
+
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">14/16</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-7/8 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="text-xs px-2 py-1 bg-purple-100 text-purple-700">
+                  This weekend
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman art teacher"
+                      alt="Akiko Yamada"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Akiko Yamada</span>
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Event Card 8 - Sunday */}
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+              <div className="flex items-start gap-1 md:basis-1/5">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  <img
+                    src="/placeholder.svg?height=96&width=96&query=family pet portrait painting dog cat"
+                    alt="Family Pet Portrait"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 md:hidden">
+                  <h3 className="font-medium text-sm mb-1">家族向け ペットポートレート Family Pet Portrait</h3>
+                  <p className="text-xs text-muted-foreground">1:00-3:00 PM • Artbar Harajuku</p>
+                </div>
+              </div>
+
+              <div className="hidden md:block md:basis-1/4">
+                <h3 className="font-medium text-base mb-1">家族向け ペットポートレート Family Pet Portrait</h3>
+                <p className="text-sm text-muted-foreground">1:00-3:00 PM • Artbar Harajuku</p>
+              </div>
+
+              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">6/8</span>
+                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="w-3/4 h-full bg-primary rounded-full"></div>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-700">
+                  This weekend
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
+                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  Active
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+                    <img
+                      src="/placeholder.svg?height=28&width=28&query=japanese woman instructor"
+                      alt="Yuki Tanaka"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm">Yuki Tanaka</span>
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  Edit
+                </Button>
+                <Button variant="outline" size="default" className="flex-1 h-9">
+                  View Bookings
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-between px-4">
+          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">8 of 48 events this week</div>
+          <div className="flex w-full items-center gap-8 lg:w-fit">
+            <div className="hidden items-center gap-2 lg:flex">
+              <Label htmlFor="rows-per-page" className="text-sm font-medium">
+                Events per page
+              </Label>
+              <Select defaultValue="10">
+                <SelectTrigger className="w-20" id="rows-per-page">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex w-fit items-center justify-center text-sm font-medium">Page 1 of 5</div>
+            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+              <Button variant="outline" className="hidden h-8 w-8 p-0 lg:flex" disabled>
+                <ChevronsLeftIcon />
+              </Button>
+              <Button variant="outline" className="size-8" size="icon" disabled>
+                <ChevronLeftIcon />
+              </Button>
+              <Button variant="outline" className="size-8" size="icon">
+                <ChevronRightIcon />
+              </Button>
+              <Button variant="outline" className="hidden size-8 lg:flex" size="icon">
+                <ChevronsRightIcon />
+              </Button>
+            </div>
+          </div>
+        </div>
       </TabsContent>
       <TabsContent value="key-personnel" className="flex flex-col px-4 lg:px-6">
         <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
