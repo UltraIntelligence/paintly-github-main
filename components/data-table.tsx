@@ -435,11 +435,27 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-2">
                     <Label>Start</Label>
-                    <Input value={formData.general.startTime} />
+                    <Input
+                      defaultValue={formData.general.startTime}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          general: { ...prev.general, startTime: e.target.value },
+                        }))
+                      }
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>End</Label>
-                    <Input value={formData.general.endTime} />
+                    <Input
+                      defaultValue={formData.general.endTime}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          general: { ...prev.general, endTime: e.target.value },
+                        }))
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -482,11 +498,27 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Canvas Details</Label>
-                  <Input value={formData.general.canvas} />
+                  <Input
+                    defaultValue={formData.general.canvas}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, canvas: e.target.value },
+                      }))
+                    }
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Age Requirements</Label>
-                  <Input value={formData.general.ageRequirements} />
+                  <Input
+                    defaultValue={formData.general.ageRequirements}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, ageRequirements: e.target.value },
+                      }))
+                    }
+                  />
                 </div>
               </div>
             </div>
@@ -501,7 +533,16 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label>Capacity</Label>
-                  <Input type="number" value={formData.general.capacity} />
+                  <Input
+                    type="number"
+                    defaultValue={formData.general.capacity}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, capacity: Number(e.target.value) },
+                      }))
+                    }
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Current Bookings</Label>
@@ -517,7 +558,15 @@ function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNo
                 </div>
                 <div className="space-y-2">
                   <Label>Price</Label>
-                  <Input value={formData.general.price} />
+                  <Input
+                    defaultValue={formData.general.price}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        general: { ...prev.general, price: e.target.value },
+                      }))
+                    }
+                  />
                 </div>
               </div>
 
