@@ -181,29 +181,29 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
             {currentStep === 1 && (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="nameJapanese" className="text-sm font-medium text-gray-700">
-                    Template Name (Japanese)
-                  </Label>
-                  <Input
-                    id="nameJapanese"
-                    value={formData.nameJapanese}
-                    onChange={(e) => updateFormData("nameJapanese", e.target.value)}
-                    placeholder="テンプレート名を入力してください"
-                    className="w-full"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="nameEnglish" className="text-sm font-medium text-gray-700">
-                    Template Name (English)
-                  </Label>
-                  <Input
-                    id="nameEnglish"
-                    value={formData.nameEnglish}
-                    onChange={(e) => updateFormData("nameEnglish", e.target.value)}
-                    placeholder="Enter template name"
-                    className="w-full"
-                  />
+                  <Label className="text-sm font-medium text-gray-700">Template Name</Label>
+                  <Tabs defaultValue="japanese" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="japanese">Japanese</TabsTrigger>
+                      <TabsTrigger value="english">English</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="japanese" className="mt-2">
+                      <Input
+                        value={formData.nameJapanese}
+                        onChange={(e) => updateFormData("nameJapanese", e.target.value)}
+                        placeholder="テンプレート名を入力してください"
+                        className="w-full"
+                      />
+                    </TabsContent>
+                    <TabsContent value="english" className="mt-2">
+                      <Input
+                        value={formData.nameEnglish}
+                        onChange={(e) => updateFormData("nameEnglish", e.target.value)}
+                        placeholder="Enter template name"
+                        className="w-full"
+                      />
+                    </TabsContent>
+                  </Tabs>
                 </div>
 
                 <div className="space-y-2">
