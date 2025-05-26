@@ -16,7 +16,7 @@ export function SiteHeader() {
           <Label htmlFor="language-toggle" className="text-sm font-medium">
             EN
           </Label>
-          <Switch id="language-toggle" />
+          <Switch id="language-toggle" className="data-[state=checked]:bg-blue-500" />
           <Label htmlFor="language-toggle" className="text-sm font-medium">
             JA
           </Label>
