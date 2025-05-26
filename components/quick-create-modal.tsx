@@ -47,7 +47,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
               <div className="space-y-2 text-xs text-gray-700 mt-4">
                 <div>Set class details & pricing</div>
                 <div>Upload reference images</div>
-                <div>What's included materials</div>
+                <div>Add event highlights</div>
                 <div>Ready to schedule</div>
               </div>
             </CardContent>
