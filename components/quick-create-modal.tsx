@@ -48,7 +48,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
                 <div>Set class details & pricing</div>
                 <div>Upload reference images</div>
                 <div>Add event highlights</div>
-                <div>Ready to schedule</div>
+                <div>Get ready for scheduling</div>
               </div>
             </CardContent>
             <CardFooter>
