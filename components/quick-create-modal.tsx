@@ -74,7 +74,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
                 <div>Choose from templates</div>
                 <div>Set date and time</div>
                 <div>Assign instructor</div>
-                <div>Open for bookings</div>
+                <div>Publish and go live</div>
               </div>
             </CardContent>
             <CardFooter>
