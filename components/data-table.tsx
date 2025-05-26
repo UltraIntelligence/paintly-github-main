@@ -907,6 +907,37 @@ export function DataTable({
     },
   ]
 
+  // Add pagination state for events
+  const [eventPagination, setEventPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  // Calculate paginated events
+  const paginatedEvents = React.useMemo(() => {
+    const startIndex = eventPagination.pageIndex * eventPagination.pageSize
+    const endIndex = startIndex + eventPagination.pageSize
+    return filteredEvents.slice(startIndex, endIndex)
+  }, [filteredEvents, eventPagination])
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredEvents.length / eventPagination.pageSize)
+  const canGoToPreviousPage = eventPagination.pageIndex > 0
+  const canGoToNextPage = eventPagination.pageIndex < totalPages - 1
+
+  // Navigation functions
+  const goToFirstPage = () => setEventPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  const goToPreviousPage = () => setEventPagination((prev) => ({ ...prev, pageIndex: Math.max(0, prev.pageIndex - 1) }))
+  const goToNextPage = () =>
+    setEventPagination((prev) => ({ ...prev, pageIndex: Math.min(totalPages - 1, prev.pageIndex + 1) }))
+  const goToLastPage = () => setEventPagination((prev) => ({ ...prev, pageIndex: totalPages - 1 }))
+  const changePageSize = (newPageSize: number) => setEventPagination({ pageIndex: 0, pageSize: newPageSize })
+
+  // Reset pagination when filters change
+  React.useEffect(() => {
+    setEventPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [searchTerm, selectedLocation, selectedInstructor, selectedStatus])
+
   // Filter events based on current filter states
   const filteredEvents = React.useMemo(() => {
     return allEvents.filter((event) => {
@@ -934,17 +965,17 @@ export function DataTable({
     })
   }, [searchTerm, selectedLocation, selectedInstructor, selectedStatus])
 
-  // Group filtered events by section
+  // Group paginated events by section
   const groupedEvents = React.useMemo(() => {
     const groups: { [key: string]: typeof allEvents } = {}
-    filteredEvents.forEach((event) => {
+    paginatedEvents.forEach((event) => {
       if (!groups[event.section]) {
         groups[event.section] = []
       }
       groups[event.section].push(event)
     })
     return groups
-  }, [filteredEvents])
+  }, [paginatedEvents])
 
   // Helper functions for date filtering
   const formatDateRange = () => {
@@ -1576,13 +1607,20 @@ export function DataTable({
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-4">
-          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">10 of 15 scheduled events</div>
+          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
+            {filteredEvents.length > 0
+              ? `${eventPagination.pageIndex * eventPagination.pageSize + 1}-${Math.min((eventPagination.pageIndex + 1) * eventPagination.pageSize, filteredEvents.length)} of ${filteredEvents.length} scheduled events`
+              : "No scheduled events"}
+          </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
               <Label htmlFor="rows-per-page-scheduled" className="text-sm font-medium">
                 Events per page
               </Label>
-              <Select defaultValue="10">
+              <Select
+                value={eventPagination.pageSize.toString()}
+                onValueChange={(value) => changePageSize(Number(value))}
+              >
                 <SelectTrigger className="w-20" id="rows-per-page-scheduled">
                   <SelectValue />
                 </SelectTrigger>
@@ -1593,18 +1631,43 @@ export function DataTable({
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex w-fit items-center justify-center text-sm font-medium">Page 1 of 2</div>
+            <div className="flex w-fit items-center justify-center text-sm font-medium">
+              Page {eventPagination.pageIndex + 1} of {Math.max(1, totalPages)}
+            </div>
             <div className="ml-auto flex items-center gap-2 lg:ml-0">
-              <Button variant="outline" className="hidden h-8 w-8 p-0 lg:flex" disabled>
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex"
+                onClick={goToFirstPage}
+                disabled={!canGoToPreviousPage}
+              >
                 <ChevronsLeftIcon />
               </Button>
-              <Button variant="outline" className="size-8" size="icon" disabled>
+              <Button
+                variant="outline"
+                className="size-8"
+                size="icon"
+                onClick={goToPreviousPage}
+                disabled={!canGoToPreviousPage}
+              >
                 <ChevronLeftIcon />
               </Button>
-              <Button variant="outline" className="size-8" size="icon">
+              <Button
+                variant="outline"
+                className="size-8"
+                size="icon"
+                onClick={goToNextPage}
+                disabled={!canGoToNextPage}
+              >
                 <ChevronRightIcon />
               </Button>
-              <Button variant="outline" className="hidden size-8 lg:flex" size="icon">
+              <Button
+                variant="outline"
+                className="hidden size-8 lg:flex"
+                size="icon"
+                onClick={goToLastPage}
+                disabled={!canGoToNextPage}
+              >
                 <ChevronsRightIcon />
               </Button>
             </div>
