@@ -120,7 +120,7 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
             ))}
           </div>
 
-          <DialogDescription className="text-base text-gray-600">
+          <DialogDescription className="text-xs text-gray-600">
             Step {currentStep} of 4 - {steps[currentStep - 1].title}
           </DialogDescription>
         </DialogHeader>

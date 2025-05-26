@@ -1283,7 +1283,7 @@ export function DataTable({
 
               {/* Column 2: Event Details (Desktop only) */}
               <div className="hidden md:block md:basis-1/4">
-                <h3 className="font-medium text-base mb-1 text-black">{event.title}</h3>
+                <h3 className="font-medium text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
                 <p className="text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
               </div>
 
