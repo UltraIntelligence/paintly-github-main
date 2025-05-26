@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, PlusCircle, MoreHorizontal } from "lucide-react"
+import { Search, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -171,20 +171,6 @@ export default function TemplatesPage() {
             <div className="@container/main flex flex-1 flex-col gap-2">
               <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                 <div className="px-4 lg:px-6">
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                      <h1 className="text-2xl font-bold text-gray-900">Templates</h1>
-                      <Badge variant="secondary" className="text-sm">
-                        {filteredTemplates.length}
-                      </Badge>
-                    </div>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      Create New Template
-                    </Button>
-                  </div>
-
                   {/* Filters */}
                   <div className="space-y-4 mb-8">
                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
