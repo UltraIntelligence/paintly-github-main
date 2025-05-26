@@ -45,7 +45,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl font-semibold text-gray-900">New Template</CardTitle>
                 <CardDescription className="text-sm text-gray-600 leading-5 h-10">
-                  Create a template to schedule as events
+                  Create a template now to schedule later in the calendar
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1 p-6 pt-0">
