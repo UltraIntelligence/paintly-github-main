@@ -346,7 +346,7 @@ export function DataTable({
   }
 
   return (
-    <Tabs defaultValue="today" className="flex w-full flex-col justify-start gap-6">
+    <Tabs defaultValue="today" className="flex w-full flex-col justify-start gap-2">
       <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
@@ -380,39 +380,135 @@ export function DataTable({
             </Badge>
           </TabsTrigger>
         </TabsList>
-        <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+
+        {/* Conditional rendering: Show original buttons for Today tab, filters for Scheduled tab */}
+        <Tabs defaultValue="today" className="contents">
+          <TabsContent value="today" className="contents m-0 data-[state=inactive]:hidden">
+            <div className="flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <ColumnsIcon />
+                    <span className="hidden lg:inline">Customize Columns</span>
+                    <span className="lg:hidden">Columns</span>
+                    <ChevronDownIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  {table
+                    .getAllColumns()
+                    .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
+                    .map((column) => {
+                      return (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          className="capitalize"
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                        >
+                          {column.id}
+                        </DropdownMenuCheckboxItem>
+                      )
+                    })}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button variant="outline" size="sm">
-                <ColumnsIcon />
-                <span className="hidden lg:inline">Customize Columns</span>
-                <span className="lg:hidden">Columns</span>
-                <ChevronDownIcon />
+                <PlusIcon />
+                <span className="hidden lg:inline">Add Section</span>
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              {table
-                .getAllColumns()
-                .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button variant="outline" size="sm">
-            <PlusIcon />
-            <span className="hidden lg:inline">Add Section</span>
-          </Button>
-        </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="scheduled" className="contents m-0 data-[state=inactive]:hidden">
+            {/* Filter Bar for Scheduled Tab */}
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2">
+              <div className="hidden md:flex items-center gap-2">
+                <Select defaultValue="all-locations">
+                  <SelectTrigger className="w-36">
+                    <SelectValue placeholder="All Locations" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all-locations">All Locations</SelectItem>
+                    <SelectItem value="artbar-ginza">Artbar Ginza</SelectItem>
+                    <SelectItem value="artbar-shibuya">Artbar Shibuya</SelectItem>
+                    <SelectItem value="artbar-harajuku">Artbar Harajuku</SelectItem>
+                    <SelectItem value="artbar-omotesando">Artbar Omotesando</SelectItem>
+                    <SelectItem value="artbar-daikanyama">Artbar Daikanyama</SelectItem>
+                    <SelectItem value="artbar-shinjuku">Artbar Shinjuku</SelectItem>
+                    <SelectItem value="artbar-yokohama">Artbar Yokohama</SelectItem>
+                    <SelectItem value="spaces-shinjuku">SPACES Shinjuku</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select defaultValue="all-instructors">
+                  <SelectTrigger className="w-36">
+                    <SelectValue placeholder="All Instructors" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all-instructors">All Instructors</SelectItem>
+                    <SelectItem value="yuki-tanaka">Yuki Tanaka</SelectItem>
+                    <SelectItem value="hiroshi-sato">Hiroshi Sato</SelectItem>
+                    <SelectItem value="akiko-yamada">Akiko Yamada</SelectItem>
+                    <SelectItem value="nanako">Nanako</SelectItem>
+                    <SelectItem value="naomi">Naomi</SelectItem>
+                    <SelectItem value="luci">Luci</SelectItem>
+                    <SelectItem value="jenna">Jenna</SelectItem>
+                    <SelectItem value="mei-suzuki">Mei Suzuki</SelectItem>
+                    <SelectItem value="kenji-nakamura">Kenji Nakamura</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select defaultValue="select-dates">
+                  <SelectTrigger className="w-32">
+                    <SelectValue placeholder="Select dates" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="select-dates">Select dates</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="tomorrow">Tomorrow</SelectItem>
+                    <SelectItem value="this-week">This Week</SelectItem>
+                    <SelectItem value="next-week">Next Week</SelectItem>
+                    <SelectItem value="this-month">This Month</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Input placeholder="Search events..." className="w-40" />
+
+                <Button variant="outline" size="sm">
+                  More Filters
+                  <ChevronDownIcon />
+                </Button>
+              </div>
+
+              {/* Mobile filter dropdown */}
+              <div className="md:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="w-full">
+                      Filters
+                      <ChevronDownIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="p-2 space-y-2">
+                      <Input placeholder="Search events..." />
+                      <Select defaultValue="all-locations">
+                        <SelectTrigger>
+                          <SelectValue placeholder="All Locations" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all-locations">All Locations</SelectItem>
+                          <SelectItem value="artbar-ginza">Artbar Ginza</SelectItem>
+                          <SelectItem value="artbar-shibuya">Artbar Shibuya</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
       <TabsContent value="today" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="space-y-4">
@@ -580,66 +676,8 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="scheduled" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-        {/* Filter Bar */}
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4 p-4 bg-muted/30 rounded-lg border">
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4 flex-1">
-            <Select defaultValue="all-locations">
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="All Locations" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all-locations">All Locations</SelectItem>
-                <SelectItem value="artbar-ginza">Artbar Ginza</SelectItem>
-                <SelectItem value="artbar-shibuya">Artbar Shibuya</SelectItem>
-                <SelectItem value="artbar-harajuku">Artbar Harajuku</SelectItem>
-                <SelectItem value="artbar-omotesando">Artbar Omotesando</SelectItem>
-                <SelectItem value="artbar-daikanyama">Artbar Daikanyama</SelectItem>
-                <SelectItem value="artbar-shinjuku">Artbar Shinjuku</SelectItem>
-                <SelectItem value="artbar-yokohama">Artbar Yokohama</SelectItem>
-                <SelectItem value="spaces-shinjuku">SPACES Shinjuku</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select defaultValue="all-instructors">
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="All Instructors" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all-instructors">All Instructors</SelectItem>
-                <SelectItem value="yuki-tanaka">Yuki Tanaka</SelectItem>
-                <SelectItem value="hiroshi-sato">Hiroshi Sato</SelectItem>
-                <SelectItem value="akiko-yamada">Akiko Yamada</SelectItem>
-                <SelectItem value="nanako">Nanako</SelectItem>
-                <SelectItem value="naomi">Naomi</SelectItem>
-                <SelectItem value="luci">Luci</SelectItem>
-                <SelectItem value="jenna">Jenna</SelectItem>
-                <SelectItem value="mei-suzuki">Mei Suzuki</SelectItem>
-                <SelectItem value="kenji-nakamura">Kenji Nakamura</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select defaultValue="select-dates">
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Select dates" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="select-dates">Select dates</SelectItem>
-                <SelectItem value="today">Today</SelectItem>
-                <SelectItem value="tomorrow">Tomorrow</SelectItem>
-                <SelectItem value="this-week">This Week</SelectItem>
-                <SelectItem value="next-week">Next Week</SelectItem>
-                <SelectItem value="this-month">This Month</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="w-full md:w-64">
-            <Input placeholder="Search events..." className="w-full" />
-          </div>
-        </div>
-
-        {/* Events List */}
+      <TabsContent value="scheduled" className="relative flex flex-col gap-2 overflow-auto px-4 lg:px-6">
+        {/* Events List - removed separate filter bar */}
         <div className="space-y-6">
           {/* TODAY Section */}
           <div>
