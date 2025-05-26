@@ -108,11 +108,11 @@ const chartConfig = {
   },
   desktop: {
     label: "Desktop",
-    color: "#f0efeb", // Custom light beige color
+    color: "#3b82f6", // Blue
   },
   mobile: {
     label: "Mobile",
-    color: "#f1f0ec", // Custom light cream color
+    color: "#f97316", // Orange
   },
 } satisfies ChartConfig
 
