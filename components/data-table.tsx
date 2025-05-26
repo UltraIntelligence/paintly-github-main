@@ -75,6 +75,13 @@ import { CalendarIcon, FilterIcon, SearchIcon } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { Progress } from "@/components/ui/progress"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Copy, Globe, Users, Palette, AlertTriangle, CheckCircle } from "lucide-react"
+
 export const schema = z.object({
   id: z.number(),
   header: z.string(),
@@ -287,6 +294,476 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
         <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
       ))}
     </TableRow>
+  )
+}
+
+function EventEditModal({ event, trigger }: { event: any; trigger: React.ReactNode }) {
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [language, setLanguage] = React.useState<"en" | "jp">("en")
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  // Form state for bilingual content
+  const [formData, setFormData] = React.useState({
+    en: {
+      title: event.title.split(" ").slice(2).join(" "), // Extract English part
+      description:
+        "Experience the beauty of Monet's Water Lilies in this relaxing paint & sip session. Perfect for beginners and art enthusiasts alike.",
+      whatsIncluded: "All painting materials, brushes, canvas, green tea, juice or water, light snacks",
+      specialRequirements: "No prior painting experience required. Aprons provided.",
+      policies: "24-hour cancellation policy. No outside food or drinks allowed.",
+    },
+    jp: {
+      title: event.title.split(" ").slice(0, 2).join(" "), // Extract Japanese part
+      description:
+        "モネの睡蓮の美しさを体験できるリラックスしたペイント&シップセッションです。初心者からアート愛好家まで楽しめます。",
+      whatsIncluded: "絵画材料一式、筆、キャンバス、緑茶、ジュースまたは水、軽食",
+      specialRequirements: "絵画経験は不要です。エプロンをご用意しています。",
+      policies: "24時間前キャンセルポリシー。外部からの飲食物の持ち込みは禁止です。",
+    },
+    general: {
+      date: new Date(),
+      startTime: event.time.split("-")[0],
+      endTime: event.time.split("-")[1],
+      location: event.location,
+      instructor: event.instructor,
+      canvas: "25cm round canvas",
+      ageRequirements: "All ages welcome",
+      capacity: Number.parseInt(event.capacity.split("/")[1]),
+      currentBookings: Number.parseInt(event.capacity.split("/")[0]),
+      price: "¥4,400",
+      status: event.status,
+    },
+  })
+
+  const getCompletionStatus = (lang: "en" | "jp") => {
+    const data = formData[lang]
+    const completed = Object.values(data).every((value) => value && value.trim().length > 0)
+    return completed
+  }
+
+  const copyContent = (from: "en" | "jp", to: "en" | "jp", field: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [to]: {
+        ...prev[to],
+        [field]: prev[from][field as keyof typeof prev.en],
+      },
+    }))
+  }
+
+  const handleSave = async (action: "draft" | "save" | "publish") => {
+    setIsLoading(true)
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    setIsLoading(false)
+    if (action === "publish") {
+      setIsOpen(false)
+    }
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-xl">Edit Event: {formData[language].title}</DialogTitle>
+            <ToggleGroup
+              type="single"
+              value={language}
+              onValueChange={(value) => value && setLanguage(value as "en" | "jp")}
+            >
+              <ToggleGroupItem value="en" className="flex items-center gap-1">
+                EN{" "}
+                {getCompletionStatus("en") ? (
+                  <CheckCircle className="h-3 w-3 text-green-500" />
+                ) : (
+                  <AlertTriangle className="h-3 w-3 text-yellow-500" />
+                )}
+              </ToggleGroupItem>
+              <ToggleGroupItem value="jp" className="flex items-center gap-1">
+                日本語{" "}
+                {getCompletionStatus("jp") ? (
+                  <CheckCircle className="h-3 w-3 text-green-500" />
+                ) : (
+                  <AlertTriangle className="h-3 w-3 text-yellow-500" />
+                )}
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+        </DialogHeader>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column - Event Details */}
+          <div className="space-y-6">
+            {/* Event Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Palette className="h-5 w-5" />
+                Event Information
+              </h3>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="title">Event Title ({language.toUpperCase()})</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyContent(language === "en" ? "jp" : "en", language, "title")}
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy from {language === "en" ? "JP" : "EN"}
+                  </Button>
+                </div>
+                <Input
+                  id="title"
+                  value={formData[language].title}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      [language]: { ...prev[language], title: e.target.value },
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Date</Label>
+                  <Input type="date" defaultValue="2024-05-25" />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-2">
+                    <Label>Start</Label>
+                    <Input value={formData.general.startTime} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>End</Label>
+                    <Input value={formData.general.endTime} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Location</Label>
+                  <Select defaultValue={formData.general.location}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Artbar Ginza">Artbar Ginza</SelectItem>
+                      <SelectItem value="Artbar Shibuya">Artbar Shibuya</SelectItem>
+                      <SelectItem value="Artbar Harajuku">Artbar Harajuku</SelectItem>
+                      <SelectItem value="SPACES Shinjuku">SPACES Shinjuku</SelectItem>
+                      <SelectItem value="Artbar Daikanyama">Artbar Daikanyama</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Instructor</Label>
+                  <Select defaultValue={formData.general.instructor}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Yuki Tanaka">Yuki Tanaka</SelectItem>
+                      <SelectItem value="Hiroshi Sato">Hiroshi Sato</SelectItem>
+                      <SelectItem value="Akiko Yamada">Akiko Yamada</SelectItem>
+                      <SelectItem value="Nanako">Nanako</SelectItem>
+                      <SelectItem value="Naomi">Naomi</SelectItem>
+                      <SelectItem value="Luci">Luci</SelectItem>
+                      <SelectItem value="Jenna">Jenna</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Canvas Details</Label>
+                  <Input value={formData.general.canvas} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Age Requirements</Label>
+                  <Input value={formData.general.ageRequirements} />
+                </div>
+              </div>
+            </div>
+
+            {/* Booking Details */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Booking Details
+              </h3>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Capacity</Label>
+                  <Input type="number" value={formData.general.capacity} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Current Bookings</Label>
+                  <div className="p-2 bg-muted rounded">
+                    <div className="text-sm font-medium">
+                      {formData.general.currentBookings} of {formData.general.capacity}
+                    </div>
+                    <Progress
+                      value={(formData.general.currentBookings / formData.general.capacity) * 100}
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Price</Label>
+                  <Input value={formData.general.price} />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select defaultValue={formData.general.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Live">Live</SelectItem>
+                    <SelectItem value="Sold Out">Sold Out</SelectItem>
+                    <SelectItem value="Scheduled">Scheduled</SelectItem>
+                    <SelectItem value="Cancelled">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Description Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Globe className="h-5 w-5" />
+                Description ({language.toUpperCase()})
+              </h3>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Event Description</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyContent(language === "en" ? "jp" : "en", language, "description")}
+                    >
+                      <Copy className="h-3 w-3 mr-1" />
+                      Copy from {language === "en" ? "JP" : "EN"}
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={formData[language].description}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        [language]: { ...prev[language], description: e.target.value },
+                      }))
+                    }
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>What's Included</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyContent(language === "en" ? "jp" : "en", language, "whatsIncluded")}
+                    >
+                      <Copy className="h-3 w-3 mr-1" />
+                      Copy from {language === "en" ? "JP" : "EN"}
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={formData[language].whatsIncluded}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        [language]: { ...prev[language], whatsIncluded: e.target.value },
+                      }))
+                    }
+                    rows={2}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Special Requirements</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyContent(language === "en" ? "jp" : "en", language, "specialRequirements")}
+                    >
+                      <Copy className="h-3 w-3 mr-1" />
+                      Copy from {language === "en" ? "JP" : "EN"}
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={formData[language].specialRequirements}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        [language]: { ...prev[language], specialRequirements: e.target.value },
+                      }))
+                    }
+                    rows={2}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Policies</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyContent(language === "en" ? "jp" : "en", language, "policies")}
+                    >
+                      <Copy className="h-3 w-3 mr-1" />
+                      Copy from {language === "en" ? "JP" : "EN"}
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={formData[language].policies}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        [language]: { ...prev[language], policies: e.target.value },
+                      }))
+                    }
+                    rows={2}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Management */}
+          <div className="space-y-6">
+            {/* Booking Management */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Booking Management</h3>
+              <div className="grid grid-cols-1 gap-2">
+                <Button variant="outline" className="justify-start">
+                  <Users className="h-4 w-4 mr-2" />
+                  View All Bookings
+                </Button>
+                <Button variant="outline" className="justify-start">
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Check-in Mode
+                </Button>
+                <Button variant="outline" className="justify-start">
+                  Send Reminder Emails
+                </Button>
+                <Button variant="outline" className="justify-start">
+                  Manage Waitlist
+                </Button>
+              </div>
+            </div>
+
+            {/* Event Actions */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Event Actions</h3>
+              <div className="grid grid-cols-1 gap-2">
+                <Button variant="outline" className="justify-start">
+                  <Copy className="h-4 w-4 mr-2" />
+                  Duplicate Event
+                </Button>
+                <Button variant="outline" className="justify-start">
+                  Create Template
+                </Button>
+                <Button variant="destructive" className="justify-start">
+                  Cancel Event
+                </Button>
+                <Button variant="outline" className="justify-start">
+                  Archive Event
+                </Button>
+              </div>
+            </div>
+
+            {/* Customer View */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Customer View</h3>
+              <div className="grid grid-cols-1 gap-2">
+                <Button variant="outline" className="justify-start">
+                  Preview as Customer
+                </Button>
+                <Button variant="outline" className="justify-start">
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy Booking URL
+                </Button>
+                <div className="space-y-2">
+                  <Label>Hero Image</Label>
+                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
+                    <p className="text-sm text-muted-foreground">Click to upload image</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Translation Status */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Translation Status</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-2 bg-muted rounded">
+                  <span className="text-sm">English</span>
+                  <Badge variant={getCompletionStatus("en") ? "default" : "secondary"}>
+                    {getCompletionStatus("en") ? "Complete" : "Incomplete"}
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-muted rounded">
+                  <span className="text-sm">Japanese</span>
+                  <Badge variant={getCompletionStatus("jp") ? "default" : "secondary"}>
+                    {getCompletionStatus("jp") ? "Complete" : "Incomplete"}
+                  </Badge>
+                </div>
+              </div>
+
+              {(!getCompletionStatus("en") || !getCompletionStatus("jp")) && (
+                <Alert>
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    Some translations are incomplete. Complete all fields before publishing.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          <div className="flex-1 text-sm text-muted-foreground">
+            EN: {getCompletionStatus("en") ? "Complete" : "Incomplete"}, JP:{" "}
+            {getCompletionStatus("jp") ? "Complete" : "Incomplete"}
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setIsOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="outline" onClick={() => handleSave("draft")} disabled={isLoading}>
+              Save Draft
+            </Button>
+            <Button onClick={() => handleSave("save")} disabled={isLoading}>
+              {isLoading ? "Saving..." : "Save Changes"}
+            </Button>
+            <Button
+              onClick={() => handleSave("publish")}
+              disabled={isLoading || !getCompletionStatus("en") || !getCompletionStatus("jp")}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              Save & Publish
+            </Button>
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
 
@@ -819,9 +1296,21 @@ export function DataTable({
 
               {/* Column 5: Actions */}
               <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  Edit
-                </Button>
+                <EventEditModal
+                  event={{
+                    title: "モネ 睡蓮 Monet Water Lilies",
+                    time: "6:00-8:00 PM",
+                    location: "Artbar Ginza",
+                    capacity: "8/12",
+                    status: "Active",
+                    instructor: "Yuki Tanaka",
+                  }}
+                  trigger={
+                    <Button variant="outline" size="default" className="flex-1 h-9">
+                      Edit
+                    </Button>
+                  }
+                />
                 <Button variant="outline" size="default" className="flex-1 h-9">
                   View Bookings
                 </Button>
@@ -878,9 +1367,21 @@ export function DataTable({
               </div>
 
               <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  Edit
-                </Button>
+                <EventEditModal
+                  event={{
+                    title: "ゴッホ 星月夜 Van Gogh Starry Night",
+                    time: "7:30-9:30 PM",
+                    location: "Artbar Shibuya",
+                    capacity: "12/15",
+                    status: "Live",
+                    instructor: "Hiroshi Sato",
+                  }}
+                  trigger={
+                    <Button variant="outline" size="default" className="flex-1 h-9">
+                      Edit
+                    </Button>
+                  }
+                />
                 <Button variant="outline" size="default" className="flex-1 h-9">
                   View Bookings
                 </Button>
@@ -1019,9 +1520,14 @@ export function DataTable({
                         </div>
 
                         <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                          <Button variant="outline" size="default" className="flex-1 h-9">
-                            Edit
-                          </Button>
+                          <EventEditModal
+                            event={event}
+                            trigger={
+                              <Button variant="outline" size="default" className="flex-1 h-9">
+                                Edit
+                              </Button>
+                            }
+                          />
                           <Button variant="outline" size="default" className="flex-1 h-9">
                             View Bookings
                           </Button>
