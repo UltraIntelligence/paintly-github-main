@@ -55,22 +55,22 @@ const data = {
   ],
   navDocuments: [
     {
-      title: "Instructors",
+      name: "Instructors",
       url: "#",
       icon: Users2Icon,
     },
     {
-      title: "Locations",
+      name: "Locations",
       url: "#",
       icon: MapPinIcon,
     },
     {
-      title: "Gift Certificates",
+      name: "Gift Certificates",
       url: "#",
       icon: GiftIcon,
     },
     {
-      title: "Private Events",
+      name: "Private Events",
       url: "#",
       icon: Building2Icon,
     },
@@ -122,7 +122,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments documents={data.navDocuments} />
+        <NavDocuments items={data.navDocuments} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
