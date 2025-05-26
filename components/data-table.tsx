@@ -87,6 +87,7 @@ function getProgressBarColor(current: number, total: number): string {
   const percentage = (current / total) * 100
   if (percentage <= 50) return "bg-red-500"
   if (percentage <= 75) return "bg-yellow-500"
+  return "bg-yellow-500"
   return "bg-green-500"
 }
 
@@ -1263,7 +1264,7 @@ export function DataTable({
       <TabsContent value="today" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="space-y-4">
           {/* Event Card 1 - Monet Water Lilies */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-card">
             <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
               {/* Column 1: Thumbnail */}
               <div className="flex items-start gap-1 md:basis-1/5">
@@ -1342,7 +1343,7 @@ export function DataTable({
           </div>
 
           {/* Event Card 2 - Van Gogh Starry Night */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-card">
             <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
               <div className="flex items-start gap-2 md:basis-1/5">
                 <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
@@ -1466,7 +1467,7 @@ export function DataTable({
                 <h3 className="text-sm font-medium text-muted-foreground mb-3 px-1">{section}</h3>
                 <div className="space-y-4">
                   {events.map((event) => (
-                    <div key={event.id} className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
+                    <div key={event.id} className="group hover:bg-muted/50 border rounded-lg p-4 bg-card">
                       <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
                         <div className="flex items-start gap-1 md:basis-1/5">
                           <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
