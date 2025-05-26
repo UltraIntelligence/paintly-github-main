@@ -10,7 +10,7 @@ import data from "./data.json"
 
 export default function Page() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="today-theme">
+    <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
       <SidebarProvider>
         <AppSidebar variant="inset" />
         <SidebarInset>

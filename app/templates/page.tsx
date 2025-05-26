@@ -1,10 +1,341 @@
-import data from "../today/data.json"
+"use client"
 
-export default function Page() {
+import { useState } from "react"
+import { Search, MoreHorizontal } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { ThemeProvider } from "../../components/theme-provider"
+import { AppSidebar } from "../../components/app-sidebar"
+import { SiteHeader } from "../../components/site-header"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+
+const templates = [
+  {
+    id: 1,
+    japaneseTitle: "モネ 睡蓮",
+    englishTitle: "Monet Water Lilies",
+    duration: "2 hours",
+    canvas: "F6",
+    difficulty: "Intermediate",
+    category: "Master Artists",
+    scheduled: "12x this month",
+    popular: true,
+  },
+  {
+    id: 2,
+    japaneseTitle: "たらし込みアート",
+    englishTitle: "Paint Pouring",
+    duration: "2 hours",
+    canvas: "30cm Round",
+    difficulty: "Beginner",
+    category: "Paint Pouring",
+    scheduled: "8x this month",
+    popular: false,
+  },
+  {
+    id: 3,
+    japaneseTitle: "キッズ カメレオン",
+    englishTitle: "Kids Chameleon",
+    duration: "2 hours",
+    canvas: "30cm Round",
+    difficulty: "Kids",
+    category: "Kids Only",
+    scheduled: "5x this month",
+    popular: false,
+  },
+  {
+    id: 4,
+    japaneseTitle: "ピカソ自画像",
+    englishTitle: "Picasso Self-Portrait",
+    duration: "2.5 hours",
+    canvas: "F6",
+    difficulty: "Advanced",
+    category: "Master Artists",
+    scheduled: "3x this month",
+    popular: false,
+  },
+  {
+    id: 5,
+    japaneseTitle: "東京タワー",
+    englishTitle: "Tokyo Tower",
+    duration: "2 hours",
+    canvas: "F6",
+    difficulty: "Intermediate",
+    category: "Seasonal",
+    scheduled: "6x this month",
+    popular: false,
+  },
+  {
+    id: 6,
+    japaneseTitle: "ゴッホ星月夜",
+    englishTitle: "Van Gogh Starry Night",
+    duration: "2.5 hours",
+    canvas: "F10",
+    difficulty: "Advanced",
+    category: "Master Artists",
+    scheduled: "4x this month",
+    popular: true,
+  },
+  {
+    id: 7,
+    japaneseTitle: "キッズ ナマケモノ",
+    englishTitle: "Kids Sloth",
+    duration: "1.5 hours",
+    canvas: "25cm Round",
+    difficulty: "Kids",
+    category: "Kids Only",
+    scheduled: "7x this month",
+    popular: false,
+  },
+  {
+    id: 8,
+    japaneseTitle: "花瓶のひまわり",
+    englishTitle: "Sunflowers Vase",
+    duration: "2 hours",
+    canvas: "F6",
+    difficulty: "Intermediate",
+    category: "All",
+    scheduled: "9x this month",
+    popular: false,
+  },
+  {
+    id: 9,
+    japaneseTitle: "アルコールインク",
+    englishTitle: "Alcohol Ink Art",
+    duration: "2 hours",
+    canvas: "30cm Round",
+    difficulty: "Intermediate",
+    category: "Paint Pouring",
+    scheduled: "11x this month",
+    popular: true,
+  },
+  {
+    id: 10,
+    japaneseTitle: "マティス 赤い室内",
+    englishTitle: "Matisse Red Room",
+    duration: "2.5 hours",
+    canvas: "F10",
+    difficulty: "Advanced",
+    category: "Master Artists",
+    scheduled: "2x this month",
+    popular: false,
+  },
+]
+
+const getDifficultyColor = (difficulty: string) => {
+  switch (difficulty) {
+    case "Beginner":
+      return "bg-emerald-100 text-emerald-700"
+    case "Intermediate":
+      return "bg-amber-100 text-amber-700"
+    case "Advanced":
+      return "bg-rose-100 text-rose-700"
+    case "Kids":
+      return "bg-purple-100 text-purple-700"
+    default:
+      return "bg-gray-100 text-gray-700"
+  }
+}
+
+export default function TemplatesPage() {
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedLocation, setSelectedLocation] = useState("all")
+  const [activeCategory, setActiveCategory] = useState("All")
+
+  const filteredTemplates = templates.filter((template) => {
+    const matchesSearch =
+      template.japaneseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      template.englishTitle.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory = activeCategory === "All" || template.category === activeCategory
+    return matchesSearch && matchesCategory
+  })
+
+  const getCategoryCount = (category: string) => {
+    if (category === "All") return templates.length
+    return templates.filter((template) => template.category === category).length
+  }
+
   return (
-    <div>
-      <h1>Today's Data</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
+    <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
+      <SidebarProvider>
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <div className="px-4 lg:px-6">
+                  {/* Filters */}
+                  <div className="space-y-4 mb-8">
+                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                      <div className="relative flex-1 max-w-sm">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                        <Input
+                          placeholder="Search templates..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                      <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                        <SelectTrigger className="w-full sm:w-[200px]">
+                          <SelectValue placeholder="All Locations" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Locations</SelectItem>
+                          <SelectItem value="ginza">Artbar Ginza</SelectItem>
+                          <SelectItem value="daikanyama">Artbar Daikanyama</SelectItem>
+                          <SelectItem value="catstreet">Artbar Cat Street</SelectItem>
+                          <SelectItem value="yokohama">Artbar Yokohama</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-auto">
+                        <TabsList>
+                          <TabsTrigger value="All" className="gap-1">
+                            All{" "}
+                            <Badge
+                              variant="secondary"
+                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                            >
+                              {getCategoryCount("All")}
+                            </Badge>
+                          </TabsTrigger>
+                          <TabsTrigger value="Kids Only" className="gap-1">
+                            Kids Only{" "}
+                            <Badge
+                              variant="secondary"
+                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                            >
+                              {getCategoryCount("Kids Only")}
+                            </Badge>
+                          </TabsTrigger>
+                          <TabsTrigger value="Master Artists" className="gap-1">
+                            Master Artists{" "}
+                            <Badge
+                              variant="secondary"
+                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                            >
+                              {getCategoryCount("Master Artists")}
+                            </Badge>
+                          </TabsTrigger>
+                          <TabsTrigger value="Paint Pouring" className="gap-1">
+                            Paint Pouring{" "}
+                            <Badge
+                              variant="secondary"
+                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                            >
+                              {getCategoryCount("Paint Pouring")}
+                            </Badge>
+                          </TabsTrigger>
+                          <TabsTrigger value="Seasonal" className="gap-1">
+                            Seasonal{" "}
+                            <Badge
+                              variant="secondary"
+                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                            >
+                              {getCategoryCount("Seasonal")}
+                            </Badge>
+                          </TabsTrigger>
+                        </TabsList>
+                      </Tabs>
+                    </div>
+                  </div>
+
+                  {/* Template Cards Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                    {filteredTemplates.map((template) => (
+                      <Card
+                        key={template.id}
+                        className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300"
+                      >
+                        {/* Image Section */}
+                        <div className="relative">
+                          <AspectRatio ratio={1} className="w-full">
+                            <div className="bg-gray-200 w-full h-full rounded-t-lg"></div>
+                          </AspectRatio>
+                          {template.popular && (
+                            <Badge className="absolute top-2 right-2 bg-orange-100 text-orange-700 text-xs px-2 py-1">
+                              Popular
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* Content Section */}
+                        <CardContent className="p-3 sm:p-4 flex flex-col">
+                          <div className="space-y-1 flex-shrink-0">
+                            <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
+                              {template.japaneseTitle}
+                            </h3>
+                            <p className="text-xs text-gray-600 line-clamp-1">{template.englishTitle}</p>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1 mt-2 sm:mt-3 flex-shrink-0">
+                            <Badge
+                              variant="outline"
+                              className="text-xs px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
+                            >
+                              {template.duration}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className="text-xs px-1.5 sm:px-2 py-0.5 bg-green-50 text-green-700 border-green-200"
+                            >
+                              {template.canvas}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className={`text-xs px-1.5 sm:px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}
+                            >
+                              {template.difficulty}
+                            </Badge>
+                          </div>
+
+                          <p className="text-xs text-gray-500 mt-2 flex-shrink-0">Used {template.scheduled}</p>
+
+                          {/* Actions Section - Fixed at bottom */}
+                          <div className="flex gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100 flex-shrink-0">
+                            <Button size="sm" variant="outline" className="flex-1 text-xs px-2 sm:px-3">
+                              Schedule
+                            </Button>
+                            <Button size="sm" variant="outline" className="text-xs px-2 sm:px-3">
+                              Edit
+                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="outline" className="px-1.5 sm:px-2">
+                                  <MoreHorizontal className="h-3 w-3" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem className="text-sm">View Details</DropdownMenuItem>
+                                <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
+                                <DropdownMenuItem className="text-sm text-red-600">Archive</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  {filteredTemplates.length === 0 && (
+                    <div className="text-center py-12">
+                      <div className="text-gray-400 text-sm">No templates found matching your criteria.</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </ThemeProvider>
   )
 }

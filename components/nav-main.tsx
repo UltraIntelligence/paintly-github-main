@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { MailIcon, PlusCircleIcon, type LucideIcon } from "lucide-react"
+import { MailIcon, PlusCircleIcon, Home, type LucideIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -49,7 +49,7 @@ export function NavMain({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title} asChild>
                 <Link href={item.url}>
-                  {item.icon && <item.icon />}
+                  {item.title === "Today" ? <Home /> : item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>
