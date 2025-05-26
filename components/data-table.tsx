@@ -416,7 +416,7 @@ export function DataTable({
       </div>
       <TabsContent value="today" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="space-y-4">
-          {/* Event Card 1 */}
+          {/* Event Card 1 - Monet Water Lilies */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
             <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
               {/* Column 1: Thumbnail */}
@@ -483,7 +483,7 @@ export function DataTable({
             </div>
           </div>
 
-          {/* Event Card 2 */}
+          {/* Event Card 2 - Van Gogh Starry Night */}
           <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
             <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
               <div className="flex items-start gap-2 md:basis-1/5">
@@ -518,10 +518,7 @@ export function DataTable({
               </div>
 
               <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                  Live
-                </Badge>
+                <Badge className="flex gap-1 px-2 bg-blue-500 text-white animate-pulse">Live</Badge>
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
                     <img
@@ -544,197 +541,11 @@ export function DataTable({
               </div>
             </div>
           </div>
-
-          {/* Event Card 3 */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-              <div className="flex items-start gap-2 md:basis-1/5">
-                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                  <img
-                    src="/placeholder.svg?height=96&width=96&query=hokusai great wave painting"
-                    alt="Hokusai Great Wave"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 md:hidden">
-                  <h3 className="font-medium text-sm mb-1">北斎 神奈川沖浪裏 Hokusai Great Wave</h3>
-                  <p className="text-xs text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
-                </div>
-              </div>
-
-              <div className="hidden md:block md:basis-1/4">
-                <h3 className="font-medium text-base mb-1">北斎 神奈川沖浪裏 Hokusai Great Wave</h3>
-                <p className="text-sm text-muted-foreground">2:00-4:00 PM • Artbar Harajuku</p>
-              </div>
-
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">6/10</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="w-3/5 h-full bg-primary rounded-full"></div>
-                  </div>
-                </div>
-                <Badge variant="outline" className="text-xs px-2 py-1">
-                  Tomorrow
-                </Badge>
-              </div>
-
-              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                  <div className="w-2 h-2 rounded-full bg-gray-500"></div>
-                  Scheduled
-                </Badge>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
-                    <img
-                      src="/placeholder.svg?height=28&width=28&query=japanese woman art instructor"
-                      alt="Akiko Yamada"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-sm">Akiko Yamada</span>
-                </div>
-              </div>
-
-              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  Edit
-                </Button>
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  View Bookings
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Event Card 4 */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-              <div className="flex items-start gap-2 md:basis-1/5">
-                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                  <img
-                    src="/placeholder.svg?height=96&width=96&query=cherry blossom sakura painting"
-                    alt="Cherry Blossoms"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 md:hidden">
-                  <h3 className="font-medium text-sm mb-1">桜 Cherry Blossoms Spring Scene</h3>
-                  <p className="text-xs text-muted-foreground">11:00 AM-1:00 PM • Artbar Omotesando</p>
-                </div>
-              </div>
-
-              <div className="hidden md:block md:basis-1/4">
-                <h3 className="font-medium text-base mb-1">桜 Cherry Blossoms Spring Scene</h3>
-                <p className="text-sm text-muted-foreground">11:00 AM-1:00 PM • Artbar Omotesando</p>
-              </div>
-
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">4/8</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="w-1/2 h-full bg-primary rounded-full"></div>
-                  </div>
-                </div>
-                <Badge variant="outline" className="text-xs px-2 py-1">
-                  This weekend
-                </Badge>
-              </div>
-
-              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                  <div className="w-2 h-2 rounded-full bg-gray-500"></div>
-                  Scheduled
-                </Badge>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
-                    <img
-                      src="/placeholder.svg?height=28&width=28&query=japanese woman art teacher"
-                      alt="Mei Suzuki"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-sm">Mei Suzuki</span>
-                </div>
-              </div>
-
-              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  Edit
-                </Button>
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  View Bookings
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Event Card 5 */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-white">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-              <div className="flex items-start gap-2 md:basis-1/5">
-                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                  <img
-                    src="/placeholder.svg?height=96&width=96&query=abstract modern art painting colorful"
-                    alt="Abstract Art"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 md:hidden">
-                  <h3 className="font-medium text-sm mb-1">Modern Abstract Expression Workshop</h3>
-                  <p className="text-xs text-muted-foreground">3:00-5:00 PM • Artbar Shinjuku</p>
-                </div>
-              </div>
-
-              <div className="hidden md:block md:basis-1/4">
-                <h3 className="font-medium text-base mb-1">Modern Abstract Expression Workshop</h3>
-                <p className="text-sm text-muted-foreground">3:00-5:00 PM • Artbar Shinjuku</p>
-              </div>
-
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">2/6</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="w-1/3 h-full bg-primary rounded-full"></div>
-                  </div>
-                </div>
-                <Badge variant="outline" className="text-xs px-2 py-1">
-                  Next week
-                </Badge>
-              </div>
-
-              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                  <div className="w-2 h-2 rounded-full bg-gray-500"></div>
-                  Scheduled
-                </Badge>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
-                    <img
-                      src="/placeholder.svg?height=28&width=28&query=japanese man modern art instructor"
-                      alt="Kenji Nakamura"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-sm">Kenji Nakamura</span>
-                </div>
-              </div>
-
-              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  Edit
-                </Button>
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  View Bookings
-                </Button>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-4">
-          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">5 of 12 events today</div>
+          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">2 of 2 events today</div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
               <Label htmlFor="rows-per-page" className="text-sm font-medium">
@@ -751,7 +562,7 @@ export function DataTable({
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex w-fit items-center justify-center text-sm font-medium">Page 1 of 2</div>
+            <div className="flex w-fit items-center justify-center text-sm font-medium">Page 1 of 1</div>
             <div className="ml-auto flex items-center gap-2 lg:ml-0">
               <Button variant="outline" className="hidden h-8 w-8 p-0 lg:flex" disabled>
                 <ChevronsLeftIcon />
@@ -759,10 +570,10 @@ export function DataTable({
               <Button variant="outline" className="size-8" size="icon" disabled>
                 <ChevronLeftIcon />
               </Button>
-              <Button variant="outline" className="size-8" size="icon">
+              <Button variant="outline" className="size-8" size="icon" disabled>
                 <ChevronRightIcon />
               </Button>
-              <Button variant="outline" className="hidden size-8 lg:flex" size="icon">
+              <Button variant="outline" className="hidden size-8 lg:flex" size="icon" disabled>
                 <ChevronsRightIcon />
               </Button>
             </div>
