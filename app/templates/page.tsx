@@ -288,6 +288,8 @@ export default function TemplatesPage() {
                               <p className="text-xs text-gray-600 line-clamp-1">{template.englishTitle}</p>
                             </div>
 
+                            <p className="text-xs text-gray-500 mt-2">Used {template.scheduled}</p>
+
                             <div className="flex flex-wrap gap-1 mt-2 sm:mt-3">
                               <Badge
                                 variant="outline"
@@ -308,8 +310,6 @@ export default function TemplatesPage() {
                                 {template.difficulty}
                               </Badge>
                             </div>
-
-                            <p className="text-xs text-gray-500 mt-2">Used {template.scheduled}</p>
                           </CardContent>
                           {/* Actions Section - Fixed at bottom */}
                           <div className="mt-auto p-3 sm:p-4 pt-0 border-t border-gray-100">
