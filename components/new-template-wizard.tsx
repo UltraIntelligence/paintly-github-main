@@ -1,13 +1,6 @@
 "use client"
 import { useState } from "react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/components/ui/dialog"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { ChevronRightIcon } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface NewTemplateWizardProps {
   open: boolean
@@ -27,7 +21,8 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
     nameJapanese: "",
     nameEnglish: "",
     category: "",
-    description: "",
+    descriptionJapanese: "",
+    descriptionEnglish: "",
     duration: "",
     difficulty: "",
     canvasSize: "",
@@ -68,7 +63,8 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
       nameJapanese: "",
       nameEnglish: "",
       category: "",
-      description: "",
+      descriptionJapanese: "",
+      descriptionEnglish: "",
       duration: "",
       difficulty: "",
       canvasSize: "",
@@ -95,9 +91,7 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl w-full p-6 sm:p-8">
-        <DialogHeader className="text-center space-y-4 mb-8">
-          <DialogTitle className="text-2xl font-semibold text-gray-900">Create New Template</DialogTitle>
-
+        <DialogHeader className="space-y-3 mb-6">
           {/* Breadcrumb Navigation */}
           <div className="flex items-center justify-center space-x-2 text-sm">
             {steps.map((step, index) => (
@@ -119,10 +113,6 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
               </div>
             ))}
           </div>
-
-          <DialogDescription className="text-xs text-gray-600">
-            Step {currentStep} of 4 - {steps[currentStep - 1].title}
-          </DialogDescription>
         </DialogHeader>
 
         <Card className="border-2 border-gray-200 bg-white">
@@ -174,16 +164,29 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-sm font-medium text-gray-700">
-                    Brief Description
-                  </Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => updateFormData("description", e.target.value)}
-                    placeholder="Describe what makes this template special..."
-                    className="w-full min-h-[100px]"
-                  />
+                  <Label className="text-sm font-medium text-gray-700">Brief Description</Label>
+                  <Tabs defaultValue="japanese" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="japanese">Japanese</TabsTrigger>
+                      <TabsTrigger value="english">English</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="japanese" className="mt-2">
+                      <Textarea
+                        value={formData.descriptionJapanese}
+                        onChange={(e) => updateFormData("descriptionJapanese", e.target.value)}
+                        placeholder="テンプレートの特徴を説明してください..."
+                        className="w-full min-h-[100px]"
+                      />
+                    </TabsContent>
+                    <TabsContent value="english" className="mt-2">
+                      <Textarea
+                        value={formData.descriptionEnglish}
+                        onChange={(e) => updateFormData("descriptionEnglish", e.target.value)}
+                        placeholder="Describe what makes this template special..."
+                        className="w-full min-h-[100px]"
+                      />
+                    </TabsContent>
+                  </Tabs>
                 </div>
               </div>
             )}
