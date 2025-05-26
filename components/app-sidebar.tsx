@@ -60,7 +60,7 @@ const data = {
       icon: MapPinIcon,
     },
     {
-      title: "Corporate",
+      title: "Private Events",
       url: "#",
       icon: Building2Icon,
     },
