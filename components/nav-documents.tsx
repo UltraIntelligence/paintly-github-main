@@ -1,18 +1,8 @@
 "use client"
 
-import {
-  FolderIcon,
-  MoreHorizontalIcon,
-  ShareIcon,
-  type LucideIcon,
-} from "lucide-react"
+import { FolderIcon, MoreHorizontalIcon, ShareIcon, type LucideIcon } from "lucide-react"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -36,7 +26,7 @@ export function NavDocuments({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Documents</SidebarGroupLabel>
+      <SidebarGroupLabel>Studio</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
@@ -48,10 +38,7 @@ export function NavDocuments({
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuAction
-                  showOnHover
-                  className="rounded-sm data-[state=open]:bg-accent"
-                >
+                <SidebarMenuAction showOnHover className="rounded-sm data-[state=open]:bg-accent">
                   <MoreHorizontalIcon />
                   <span className="sr-only">More</span>
                 </SidebarMenuAction>
