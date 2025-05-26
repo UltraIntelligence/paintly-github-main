@@ -14,6 +14,7 @@ import { ThemeProvider } from "../../components/theme-provider"
 import { AppSidebar } from "../../components/app-sidebar"
 import { SiteHeader } from "../../components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { motion, AnimatePresence } from "framer-motion"
 
 const templates = [
   {
@@ -143,6 +144,16 @@ const getDifficultyColor = (difficulty: string) => {
   }
 }
 
+const pageTransition = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+  transition: {
+    duration: typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.25,
+    ease: [0.4, 0.0, 0.2, 1],
+  },
+}
+
 export default function TemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedLocation, setSelectedLocation] = useState("all")
@@ -167,173 +178,175 @@ export default function TemplatesPage() {
         <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader />
-          <div className="flex flex-1 flex-col">
-            <div className="@container/main flex flex-1 flex-col gap-2">
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                <div className="px-4 lg:px-6">
-                  {/* Filters */}
-                  <div className="space-y-4 mb-8">
-                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                      <div className="relative flex-1 max-w-sm">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                        <Input
-                          placeholder="Search templates..."
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                      <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                        <SelectTrigger className="w-full sm:w-[200px]">
-                          <SelectValue placeholder="All Locations" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Locations</SelectItem>
-                          <SelectItem value="ginza">Artbar Ginza</SelectItem>
-                          <SelectItem value="daikanyama">Artbar Daikanyama</SelectItem>
-                          <SelectItem value="catstreet">Artbar Cat Street</SelectItem>
-                          <SelectItem value="yokohama">Artbar Yokohama</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-auto">
-                        <TabsList>
-                          <TabsTrigger value="All" className="gap-1">
-                            All{" "}
-                            <Badge
-                              variant="secondary"
-                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                            >
-                              {getCategoryCount("All")}
-                            </Badge>
-                          </TabsTrigger>
-                          <TabsTrigger value="Kids Only" className="gap-1">
-                            Kids Only{" "}
-                            <Badge
-                              variant="secondary"
-                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                            >
-                              {getCategoryCount("Kids Only")}
-                            </Badge>
-                          </TabsTrigger>
-                          <TabsTrigger value="Master Artists" className="gap-1">
-                            Master Artists{" "}
-                            <Badge
-                              variant="secondary"
-                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                            >
-                              {getCategoryCount("Master Artists")}
-                            </Badge>
-                          </TabsTrigger>
-                          <TabsTrigger value="Paint Pouring" className="gap-1">
-                            Paint Pouring{" "}
-                            <Badge
-                              variant="secondary"
-                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                            >
-                              {getCategoryCount("Paint Pouring")}
-                            </Badge>
-                          </TabsTrigger>
-                          <TabsTrigger value="Seasonal" className="gap-1">
-                            Seasonal{" "}
-                            <Badge
-                              variant="secondary"
-                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                            >
-                              {getCategoryCount("Seasonal")}
-                            </Badge>
-                          </TabsTrigger>
-                        </TabsList>
-                      </Tabs>
-                    </div>
-                  </div>
-
-                  {/* Template Cards Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {filteredTemplates.map((template) => (
-                      <Card
-                        key={template.id}
-                        className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300"
-                      >
-                        {/* Image Section */}
-                        <div className="relative">
-                          <AspectRatio ratio={1} className="w-full">
-                            <div className="bg-gray-200 w-full h-full rounded-t-lg"></div>
-                          </AspectRatio>
-                          {template.popular && (
-                            <Badge className="absolute top-2 right-2 bg-orange-100 text-orange-700 text-xs px-2 py-1">
-                              Popular
-                            </Badge>
-                          )}
+          <AnimatePresence mode="wait">
+            <motion.div key="templates" className="flex flex-1 flex-col" {...pageTransition}>
+              <div className="@container/main flex flex-1 flex-col gap-2">
+                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                  <div className="px-4 lg:px-6">
+                    {/* Filters */}
+                    <div className="space-y-4 mb-8">
+                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                        <div className="relative flex-1 max-w-sm">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                          <Input
+                            placeholder="Search templates..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="pl-10"
+                          />
                         </div>
+                        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                          <SelectTrigger className="w-full sm:w-[200px]">
+                            <SelectValue placeholder="All Locations" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Locations</SelectItem>
+                            <SelectItem value="ginza">Artbar Ginza</SelectItem>
+                            <SelectItem value="daikanyama">Artbar Daikanyama</SelectItem>
+                            <SelectItem value="catstreet">Artbar Cat Street</SelectItem>
+                            <SelectItem value="yokohama">Artbar Yokohama</SelectItem>
+                          </SelectContent>
+                        </Select>
 
-                        {/* Content Section */}
-                        <CardContent className="p-3 sm:p-4 flex flex-col">
-                          <div className="space-y-1 flex-shrink-0">
-                            <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
-                              {template.japaneseTitle}
-                            </h3>
-                            <p className="text-xs text-gray-600 line-clamp-1">{template.englishTitle}</p>
-                          </div>
-
-                          <div className="flex flex-wrap gap-1 mt-2 sm:mt-3 flex-shrink-0">
-                            <Badge
-                              variant="outline"
-                              className="text-xs px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                            >
-                              {template.duration}
-                            </Badge>
-                            <Badge
-                              variant="outline"
-                              className="text-xs px-1.5 sm:px-2 py-0.5 bg-green-50 text-green-700 border-green-200"
-                            >
-                              {template.canvas}
-                            </Badge>
-                            <Badge
-                              variant="outline"
-                              className={`text-xs px-1.5 sm:px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}
-                            >
-                              {template.difficulty}
-                            </Badge>
-                          </div>
-
-                          <p className="text-xs text-gray-500 mt-2 flex-shrink-0">Used {template.scheduled}</p>
-
-                          {/* Actions Section - Fixed at bottom */}
-                          <div className="flex gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100 flex-shrink-0">
-                            <Button size="sm" variant="outline" className="flex-1 text-xs px-2 sm:px-3">
-                              Schedule
-                            </Button>
-                            <Button size="sm" variant="outline" className="text-xs px-2 sm:px-3">
-                              Edit
-                            </Button>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="outline" className="px-1.5 sm:px-2">
-                                  <MoreHorizontal className="h-3 w-3" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem className="text-sm">View Details</DropdownMenuItem>
-                                <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
-                                <DropdownMenuItem className="text-sm text-red-600">Archive</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-
-                  {filteredTemplates.length === 0 && (
-                    <div className="text-center py-12">
-                      <div className="text-gray-400 text-sm">No templates found matching your criteria.</div>
+                        <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-auto">
+                          <TabsList>
+                            <TabsTrigger value="All" className="gap-1">
+                              All{" "}
+                              <Badge
+                                variant="secondary"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                              >
+                                {getCategoryCount("All")}
+                              </Badge>
+                            </TabsTrigger>
+                            <TabsTrigger value="Kids Only" className="gap-1">
+                              Kids Only{" "}
+                              <Badge
+                                variant="secondary"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                              >
+                                {getCategoryCount("Kids Only")}
+                              </Badge>
+                            </TabsTrigger>
+                            <TabsTrigger value="Master Artists" className="gap-1">
+                              Master Artists{" "}
+                              <Badge
+                                variant="secondary"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                              >
+                                {getCategoryCount("Master Artists")}
+                              </Badge>
+                            </TabsTrigger>
+                            <TabsTrigger value="Paint Pouring" className="gap-1">
+                              Paint Pouring{" "}
+                              <Badge
+                                variant="secondary"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                              >
+                                {getCategoryCount("Paint Pouring")}
+                              </Badge>
+                            </TabsTrigger>
+                            <TabsTrigger value="Seasonal" className="gap-1">
+                              Seasonal{" "}
+                              <Badge
+                                variant="secondary"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                              >
+                                {getCategoryCount("Seasonal")}
+                              </Badge>
+                            </TabsTrigger>
+                          </TabsList>
+                        </Tabs>
+                      </div>
                     </div>
-                  )}
+
+                    {/* Template Cards Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                      {filteredTemplates.map((template) => (
+                        <Card
+                          key={template.id}
+                          className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300"
+                        >
+                          {/* Image Section */}
+                          <div className="relative">
+                            <AspectRatio ratio={1} className="w-full">
+                              <div className="bg-gray-200 w-full h-full rounded-t-lg"></div>
+                            </AspectRatio>
+                            {template.popular && (
+                              <Badge className="absolute top-2 right-2 bg-orange-100 text-orange-700 text-xs px-2 py-1">
+                                Popular
+                              </Badge>
+                            )}
+                          </div>
+
+                          {/* Content Section */}
+                          <CardContent className="p-3 sm:p-4 flex flex-col">
+                            <div className="space-y-1 flex-shrink-0">
+                              <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
+                                {template.japaneseTitle}
+                              </h3>
+                              <p className="text-xs text-gray-600 line-clamp-1">{template.englishTitle}</p>
+                            </div>
+
+                            <div className="flex flex-wrap gap-1 mt-2 sm:mt-3 flex-shrink-0">
+                              <Badge
+                                variant="outline"
+                                className="text-xs px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
+                              >
+                                {template.duration}
+                              </Badge>
+                              <Badge
+                                variant="outline"
+                                className="text-xs px-1.5 sm:px-2 py-0.5 bg-green-50 text-green-700 border-green-200"
+                              >
+                                {template.canvas}
+                              </Badge>
+                              <Badge
+                                variant="outline"
+                                className={`text-xs px-1.5 sm:px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}
+                              >
+                                {template.difficulty}
+                              </Badge>
+                            </div>
+
+                            <p className="text-xs text-gray-500 mt-2 flex-shrink-0">Used {template.scheduled}</p>
+
+                            {/* Actions Section - Fixed at bottom */}
+                            <div className="flex gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100 flex-shrink-0">
+                              <Button size="sm" variant="outline" className="flex-1 text-xs px-2 sm:px-3">
+                                Schedule
+                              </Button>
+                              <Button size="sm" variant="outline" className="text-xs px-2 sm:px-3">
+                                Edit
+                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button size="sm" variant="outline" className="px-1.5 sm:px-2">
+                                    <MoreHorizontal className="h-3 w-3" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem className="text-sm">View Details</DropdownMenuItem>
+                                  <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
+                                  <DropdownMenuItem className="text-sm text-red-600">Archive</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+
+                    {filteredTemplates.length === 0 && (
+                      <div className="text-center py-12">
+                        <div className="text-gray-400 text-sm">No templates found matching your criteria.</div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </AnimatePresence>
         </SidebarInset>
       </SidebarProvider>
     </ThemeProvider>
