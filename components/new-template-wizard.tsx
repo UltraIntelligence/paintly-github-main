@@ -28,8 +28,7 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
     canvasSize: "",
     maxParticipants: "",
     whatsIncluded: "",
-    minPrice: "",
-    maxPrice: "",
+    ticketPrices: [{ type: "adult", amount: "" }],
     specialMaterials: "",
     image: null as File | null,
   })
@@ -70,8 +69,7 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
       canvasSize: "",
       maxParticipants: "",
       whatsIncluded: "",
-      minPrice: "",
-      maxPrice: "",
+      ticketPrices: [{ type: "adult", amount: "" }],
       specialMaterials: "",
       image: null,
     })
@@ -86,6 +84,27 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
     if (stepNumber <= currentStep) {
       setCurrentStep(stepNumber)
     }
+  }
+
+  const addTicketPrice = () => {
+    setFormData((prev) => ({
+      ...prev,
+      ticketPrices: [...prev.ticketPrices, { type: "", amount: "" }],
+    }))
+  }
+
+  const removeTicketPrice = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      ticketPrices: prev.ticketPrices.filter((_, i) => i !== index),
+    }))
+  }
+
+  const updateTicketPrice = (index: number, field: "type" | "amount", value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      ticketPrices: prev.ticketPrices.map((price, i) => (i === index ? { ...price, [field]: value } : price)),
+    }))
   }
 
   return (
@@ -115,8 +134,8 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
           </div>
         </DialogHeader>
 
-        <Card className="border-2 border-gray-200 bg-white">
-          <CardContent className="p-6">
+        <Card className="border-2 border-gray-200 bg-white min-h-[500px] h-[500px]">
+          <CardContent className="p-6 h-full overflow-y-auto">
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div className="space-y-2">
@@ -280,40 +299,52 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="minPrice" className="text-sm font-medium text-gray-700">
-                      Min Price
-                    </Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">¥</span>
-                      <Input
-                        id="minPrice"
-                        type="number"
-                        value={formData.minPrice}
-                        onChange={(e) => updateFormData("minPrice", e.target.value)}
-                        placeholder="3000"
-                        className="w-full pl-8"
-                      />
-                    </div>
-                  </div>
+                <div className="space-y-4">
+                  <Label className="text-sm font-medium text-gray-700">Default Ticket Prices</Label>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="maxPrice" className="text-sm font-medium text-gray-700">
-                      Max Price
-                    </Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">¥</span>
-                      <Input
-                        id="maxPrice"
-                        type="number"
-                        value={formData.maxPrice}
-                        onChange={(e) => updateFormData("maxPrice", e.target.value)}
-                        placeholder="5000"
-                        className="w-full pl-8"
-                      />
+                  {formData.ticketPrices.map((price, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 border rounded-lg bg-gray-50">
+                      <Select value={price.type} onValueChange={(value) => updateTicketPrice(index, "type", value)}>
+                        <SelectTrigger className="w-32">
+                          <SelectValue placeholder="Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="adult">Adult</SelectItem>
+                          <SelectItem value="kids">Kids</SelectItem>
+                          <SelectItem value="seniors">Seniors</SelectItem>
+                          <SelectItem value="students">Students</SelectItem>
+                          <SelectItem value="special">Special</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <div className="relative flex-1">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">¥</span>
+                        <Input
+                          type="number"
+                          value={price.amount}
+                          onChange={(e) => updateTicketPrice(index, "amount", e.target.value)}
+                          placeholder="0"
+                          className="pl-8"
+                        />
+                      </div>
+
+                      {formData.ticketPrices.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeTicketPrice(index)}
+                          className="px-2"
+                        >
+                          Remove
+                        </Button>
+                      )}
                     </div>
-                  </div>
+                  ))}
+
+                  <Button type="button" variant="outline" onClick={addTicketPrice} className="w-full">
+                    Add Another Price
+                  </Button>
                 </div>
 
                 <div className="space-y-2">
@@ -376,8 +407,13 @@ export function NewTemplateWizard({ open, onOpenChange }: NewTemplateWizardProps
                       <span className="font-medium">Max Participants:</span> {formData.maxParticipants || "Not set"}
                     </div>
                     <div>
-                      <span className="font-medium">Price Range:</span> ¥{formData.minPrice || "0"} - ¥
-                      {formData.maxPrice || "0"}
+                      <span className="font-medium">Ticket Prices:</span>
+                      {formData.ticketPrices.map((price, index) => (
+                        <span key={index}>
+                          {price.type ? `${price.type}: ¥${price.amount || "0"}` : "Not set"}
+                          {index < formData.ticketPrices.length - 1 ? ", " : ""}
+                        </span>
+                      )) || "Not set"}
                     </div>
                   </div>
                 </div>
