@@ -301,10 +301,7 @@ export default function TemplatesPage() {
 
                           {/* Actions Section - Fixed at bottom */}
                           <div className="flex gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-gray-100 flex-shrink-0">
-                            <Button
-                              size="sm"
-                              className="flex-1 bg-black hover:bg-gray-800 text-white text-xs px-2 sm:px-3"
-                            >
+                            <Button size="sm" variant="outline" className="flex-1 text-xs px-2 sm:px-3">
                               Schedule
                             </Button>
                             <Button size="sm" variant="outline" className="text-xs px-2 sm:px-3">
