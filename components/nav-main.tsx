@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { MailIcon, PlusCircleIcon, type LucideIcon } from "lucide-react"
 
@@ -11,6 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { QuickCreateModal } from "./quick-create-modal"
 
 export function NavMain({
   items,
@@ -21,6 +23,8 @@ export function NavMain({
     icon?: LucideIcon
   }[]
 }) {
+  const [isQuickCreateOpen, setIsQuickCreateOpen] = useState(false)
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -29,6 +33,7 @@ export function NavMain({
             <SidebarMenuButton
               tooltip="Quick Create"
               className="min-w-8 bg-[#3b82f6] text-white duration-200 ease-linear hover:bg-[#2563eb] hover:text-white active:bg-[#1d4ed8] active:text-white"
+              onClick={() => setIsQuickCreateOpen(true)}
             >
               <PlusCircleIcon />
               <span>Quick Create</span>
@@ -52,6 +57,8 @@ export function NavMain({
           ))}
         </SidebarMenu>
       </SidebarGroupContent>
+
+      <QuickCreateModal open={isQuickCreateOpen} onOpenChange={setIsQuickCreateOpen} />
     </SidebarGroup>
   )
 }
