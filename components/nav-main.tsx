@@ -1,84 +1,57 @@
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuContent,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { SidebarMenuButton } from "@/components/ui/sidebar-menu-button"
-import { siteConfig } from "@/config/site"
+"use client"
+
+import { MailIcon, PlusCircleIcon, type LucideIcon } from "lucide-react"
 import Link from "next/link"
 
-interface MainNavProps {
-  items?: {
-    title: string
-    href: string
-    disabled?: boolean
-  }[]
-}
+import { Button } from "@/components/ui/button"
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
 
-export function MainNav({ items }: MainNavProps) {
+export function NavMain({
+  items,
+}: {
+  items: {
+    title: string
+    url: string
+    icon?: LucideIcon
+  }[]
+}) {
   return (
-    <div className="flex gap-6 md:gap-10">
-      <Link href="/" className="flex items-center space-x-2">
-        {/* <Icons.logo className="h-6 w-6" /> */}
-        <span className="hidden font-bold sm:inline-block">{siteConfig.name}</span>
-      </Link>
-      {items?.length ? (
-        <NavigationMenu>
-          <NavigationMenuList>
-            {items?.map((item) => {
-              if (item.disabled) {
-                return null
-              }
-              return (
-                <NavigationMenuItem key={item.title}>
-                  <Link href={item.href} legacyBehavior passHref>
-                    <NavigationMenuTrigger className="text-sm font-medium capitalize">
-                      {item.title}
-                    </NavigationMenuTrigger>
-                  </Link>
-                  <NavigationMenuContent className="sm:hidden">
-                    <Link href={item.href} className="block text-sm font-medium capitalize">
-                      {item.title}
-                    </Link>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              )
-            })}
-          </NavigationMenuList>
-        </NavigationMenu>
-      ) : null}
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="sm" className="px-0 lg:hidden" aria-label="Open Menu">
-            <Menu className="h-5 w-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="pr-0">
-          <Link href="/" className="flex items-center space-x-2">
-            {/* <Icons.logo className="h-6 w-6" /> */}
-            <span className="font-bold">{siteConfig.name}</span>
-          </Link>
-          <NavigationMenu>
-            <NavigationMenuList>
-              {siteConfig.sidebarNav.map((item) => (
-                <NavigationMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
-        </SheetContent>
-      </Sheet>
-    </div>
+    <SidebarGroup>
+      <SidebarGroupContent className="flex flex-col gap-2">
+        <SidebarMenu>
+          <SidebarMenuItem className="flex items-center gap-2">
+            <SidebarMenuButton
+              tooltip="Quick Create"
+              className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
+            >
+              <PlusCircleIcon />
+              <span>Quick Create</span>
+            </SidebarMenuButton>
+            <Button size="icon" className="h-9 w-9 shrink-0 group-data-[collapsible=icon]:opacity-0" variant="outline">
+              <MailIcon />
+              <span className="sr-only">Inbox</span>
+            </Button>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <SidebarMenu>
+          {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton tooltip={item.title} asChild>
+                <Link href={item.url}>
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
   )
 }
