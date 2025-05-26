@@ -24,7 +24,8 @@ const templates = [
     canvas: "F6",
     difficulty: "Intermediate",
     category: "Master Artists",
-    scheduled: "Scheduled 12x this month",
+    scheduled: "12x this month",
+    popular: true,
   },
   {
     id: 2,
@@ -34,7 +35,8 @@ const templates = [
     canvas: "30cm Round",
     difficulty: "Beginner",
     category: "Paint Pouring",
-    scheduled: "Scheduled 8x this month",
+    scheduled: "8x this month",
+    popular: false,
   },
   {
     id: 3,
@@ -44,7 +46,8 @@ const templates = [
     canvas: "30cm Round",
     difficulty: "Kids",
     category: "Kids Only",
-    scheduled: "Scheduled 5x this month",
+    scheduled: "5x this month",
+    popular: false,
   },
   {
     id: 4,
@@ -54,7 +57,8 @@ const templates = [
     canvas: "F6",
     difficulty: "Advanced",
     category: "Master Artists",
-    scheduled: "Scheduled 3x this month",
+    scheduled: "3x this month",
+    popular: false,
   },
   {
     id: 5,
@@ -64,7 +68,8 @@ const templates = [
     canvas: "F6",
     difficulty: "Intermediate",
     category: "Seasonal",
-    scheduled: "Scheduled 6x this month",
+    scheduled: "6x this month",
+    popular: false,
   },
   {
     id: 6,
@@ -74,7 +79,8 @@ const templates = [
     canvas: "F10",
     difficulty: "Advanced",
     category: "Master Artists",
-    scheduled: "Scheduled 4x this month",
+    scheduled: "4x this month",
+    popular: true,
   },
   {
     id: 7,
@@ -84,7 +90,8 @@ const templates = [
     canvas: "25cm Round",
     difficulty: "Kids",
     category: "Kids Only",
-    scheduled: "Scheduled 7x this month",
+    scheduled: "7x this month",
+    popular: false,
   },
   {
     id: 8,
@@ -94,22 +101,45 @@ const templates = [
     canvas: "F6",
     difficulty: "Intermediate",
     category: "All",
-    scheduled: "Scheduled 9x this month",
+    scheduled: "9x this month",
+    popular: false,
   },
+  {
+    id: 9,
+    japaneseTitle: "アルコールインク",
+    englishTitle: "Alcohol Ink Art",
+    duration: "2 hours",
+    canvas: "30cm Round",
+    difficulty: "Intermediate",
+    category: "Paint Pouring",
+    scheduled: "11x this month",
+    popular: true,
+  },
+  {
+    id: 10,
+    japaneseTitle: "マティス 赤い室内",
+    englishTitle: "Matisse Red Room",
+    duration: "2.5 hours",
+    canvas: "F10",
+    difficulty: "Advanced",
+    category: "Master Artists",
+    scheduled: "2x this month",
+    popular: false,
+  }
 ]
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case "Beginner":
-      return "bg-green-100 text-green-800"
+      return "bg-emerald-100 text-emerald-700"
     case "Intermediate":
-      return "bg-yellow-100 text-yellow-800"
+      return "bg-amber-100 text-amber-700"
     case "Advanced":
-      return "bg-red-100 text-red-800"
+      return "bg-rose-100 text-rose-700"
     case "Kids":
-      return "bg-purple-100 text-purple-800"
+      return "bg-purple-100 text-purple-700"
     default:
-      return "bg-gray-100 text-gray-800"
+      return "bg-gray-100 text-gray-700"
   }
 }
 
@@ -137,21 +167,21 @@ export default function TemplatesPage() {
               <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                 <div className="px-4 lg:px-6">
                   {/* Header */}
-                  <div className="flex h-16 items-center justify-between border-b border-gray-200 pb-4 mb-6">
-                    <div className="flex items-center gap-2">
-                      <h1 className="text-2xl font-bold">Templates</h1>
-                      <Badge className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-sm">(24)</Badge>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <h1 className="text-2xl font-bold text-gray-900">Templates</h1>
+                      <Badge variant="secondary" className="text-sm">{filteredTemplates.length}</Badge>
                     </div>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
-                      <PlusCircle className="h-4 w-4" />
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                      <PlusCircle className="mr-2 h-4 w-4" />
                       Create New Template
                     </Button>
                   </div>
 
                   {/* Filters */}
-                  <div className="space-y-4 mb-6">
-                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                      <div className="relative w-full sm:w-80">
+                  <div className="space-y-4 mb-8">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <div className="relative flex-1 max-w-sm">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <Input
                           placeholder="Search templates..."
@@ -161,7 +191,7 @@ export default function TemplatesPage() {
                         />
                       </div>
                       <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                        <SelectTrigger className="w-full sm:w-48">
+                        <SelectTrigger className="w-full sm:w-[200px]">
                           <SelectValue placeholder="All Locations" />
                         </SelectTrigger>
                         <SelectContent>
@@ -170,82 +200,99 @@ export default function TemplatesPage() {
                           <SelectItem value="daikanyama">Artbar Daikanyama</SelectItem>
                           <SelectItem value="catstreet">Artbar Cat Street</SelectItem>
                           <SelectItem value="yokohama">Artbar Yokohama</SelectItem>
-                          <SelectItem value="shinjuku">SPACES Shinjuku</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
-                      <TabsList className="grid w-full grid-cols-5">
-                        <TabsTrigger value="All">All</TabsTrigger>
-                        <TabsTrigger value="Kids Only">Kids Only</TabsTrigger>
-                        <TabsTrigger value="Master Artists">Master Artists</TabsTrigger>
-                        <TabsTrigger value="Paint Pouring">Paint Pouring</TabsTrigger>
-                        <TabsTrigger value="Seasonal">Seasonal</TabsTrigger>
+                      <TabsList className="grid w-full grid-cols-5 bg-gray-50">
+                        <TabsTrigger value="All" className="data-[state=active]:bg-white">All</TabsTrigger>
+                        <TabsTrigger value="Kids Only" className="data-[state=active]:bg-white">Kids Only</TabsTrigger>
+                        <TabsTrigger value="Master Artists" className="data-[state=active]:bg-white">Master Artists</TabsTrigger>
+                        <TabsTrigger value="Paint Pouring" className="data-[state=active]:bg-white">Paint Pouring</TabsTrigger>
+                        <TabsTrigger value="Seasonal" className="data-[state=active]:bg-white">Seasonal</TabsTrigger>
                       </TabsList>
                     </Tabs>
                   </div>
 
                   {/* Template Cards Grid */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {filteredTemplates.map((template) => (
-                      <Card key={template.id} className="w-full hover:shadow-lg transition-shadow duration-200">
+                      <Card key={template.id} className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300">
                         {/* Image Section */}
-                        <AspectRatio ratio={1} className="w-full">
-                          <div className="bg-gray-200 rounded-t-lg w-full h-full flex items-center justify-center text-4xl">
-                            🎨
-                          </div>
-                        </AspectRatio>
+                        <div className="relative">
+                          <AspectRatio ratio={1} className="w-full">
+                            <div className="bg-gradient-to-br from-blue-50 to-purple-50 w-full h-full flex items-center justify-center rounded-t-lg border-b border-gray-100">
+                              <div className="w-16 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center text-2xl">
+                                🎨
+                              </div>
+                            </div>
+                          </AspectRatio>
+                          {template.popular && (
+                            <Badge className="absolute top-2 right-2 bg-orange-100 text-orange-700 text-xs px-2 py-1">
+                              Popular
+                            </Badge>
+                          )}
+                        </div>
 
                         {/* Content Section */}
-                        <CardContent className="p-4">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-1">{template.japaneseTitle}</h3>
-                          <p className="text-sm text-gray-500 mb-3">{template.englishTitle}</p>
+                        <CardContent className="p-4 space-y-3">
+                          <div className="space-y-1">
+                            <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
+                              {template.japaneseTitle}
+                            </h3>
+                            <p className="text-xs text-gray-600 line-clamp-1">
+                              {template.englishTitle}
+                            </p>
+                          </div>
 
-                          <div className="flex gap-2 mb-2 flex-wrap">
-                            <Badge className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                          <div className="flex flex-wrap gap-1">
+                            <Badge variant="outline" className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200">
                               {template.duration}
                             </Badge>
-                            <Badge className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                            <Badge variant="outline" className="text-xs px-2 py-0.5 bg-green-50 text-green-700 border-green-200">
                               {template.canvas}
                             </Badge>
-                            <Badge className={`px-2 py-1 rounded text-xs ${getDifficultyColor(template.difficulty)}`}>
+                            <Badge variant="outline" className={`text-xs px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}>
                               {template.difficulty}
                             </Badge>
                           </div>
 
-                          <p className="text-xs text-gray-400 mb-4">{template.scheduled}</p>
+                          <p className="text-xs text-gray-500">
+                            Used {template.scheduled}
+                          </p>
 
                           {/* Actions Section */}
-                          <div className="border-t border-gray-100 pt-4 -mx-4 px-4">
-                            <div className="flex gap-2 justify-between">
-                              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm flex-1">
-                                Schedule This
-                              </Button>
-                              <Button
-                                variant="outline"
-                                className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 px-3 py-2 rounded text-sm"
-                              >
-                                Edit
-                              </Button>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="outline" size="sm" className="px-2">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem>View Details</DropdownMenuItem>
-                                  <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                                  <DropdownMenuItem>Archive</DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
+                          <div className="flex gap-2 pt-2">
+                            <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs">
+                              Schedule This
+                            </Button>
+                            <Button size="sm" variant="outline" className="text-xs">
+                              Edit
+                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="outline" className="px-2">
+                                  <MoreHorizontal className="h-3 w-3" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem className="text-sm">View Details</DropdownMenuItem>
+                                <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
+                                <DropdownMenuItem className="text-sm text-red-600">Archive</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </CardContent>
                       </Card>
                     ))}
                   </div>
+
+                  {filteredTemplates.length === 0 && (
+                    <div className="text-center py-12">
+                      <div className="text-gray-400 text-sm">No templates found matching your criteria.</div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
