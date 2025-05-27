@@ -1,5 +1,5 @@
 import type React from "react"
-import { BookOpen, Bot, SquareTerminal } from "lucide-react"
+import { BookOpen, SquareTerminal, CalendarDaysIcon } from "lucide-react"
 import { NavItem } from "@/components/nav/nav-item"
 
 interface AppSidebarProps {
@@ -16,7 +16,7 @@ const data = {
     {
       title: "Schedule",
       url: "/schedule",
-      icon: Bot,
+      icon: CalendarDaysIcon,
     },
     {
       title: "Templates",
