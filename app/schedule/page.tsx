@@ -100,6 +100,7 @@ const scheduledEvents = [
     startHour: 8, // 6:00 PM (index 8)
     duration: 2,
     location: "ginza",
+    templateId: "monet", // Add this
   },
   {
     id: 2,
@@ -112,6 +113,7 @@ const scheduledEvents = [
     startHour: 9, // 7:00 PM (index 9)
     duration: 2,
     location: "daikanyama",
+    templateId: "vangogh", // Add this
   },
   {
     id: 3,
@@ -124,6 +126,7 @@ const scheduledEvents = [
     startHour: 8, // 6:00 PM (index 8)
     duration: 2,
     location: "catstreet",
+    templateId: "pouring", // Add this
   },
 ]
 
@@ -570,6 +573,37 @@ function ScheduleContent() {
       .filter(Boolean)
   }
 
+  // Add this helper function after getAvailableInstructorsForTemplate
+  const getDateLabel = (dayIndex) => {
+    const today = new Date()
+    const eventDate = new Date(today)
+    eventDate.setDate(today.getDate() + dayIndex)
+
+    if (dayIndex === 0) return "Today"
+    if (dayIndex === 1) return "Tomorrow"
+    return eventDate.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    })
+  }
+
+  // Transform events for list view
+  const eventsByDate = scheduledEvents
+    .sort((a, b) => {
+      if (a.day !== b.day) return a.day - b.day
+      return a.startHour - b.startHour
+    })
+    .reduce((groups, event) => {
+      const dateKey = `${event.day}`
+      if (!groups[dateKey]) groups[dateKey] = []
+      groups[dateKey].push(event)
+      return groups
+    }, {})
+
+  // Generate next 7 days for empty state
+  const next7Days = Array.from({ length: 7 }, (_, i) => i)
+
   return (
     <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
       <div className="px-4 lg:px-6">
@@ -691,56 +725,219 @@ function ScheduleContent() {
           </div>
         </div>
 
-        {/* Calendar Grid */}
-        <Card className="overflow-hidden mb-6">
-          <CardContent className="p-0">
-            {/* Header */}
-            <div className="grid grid-cols-8 border-b">
-              <div className="p-4 bg-gray-50 border-r flex items-center justify-center">
-                <Clock className="h-4 w-4 text-gray-500" />
+        {/* Calendar Grid - Week View */}
+        {selectedView === "week" && (
+          <Card className="overflow-hidden mb-6">
+            <CardContent className="p-0">
+              {/* Header */}
+              <div className="grid grid-cols-8 border-b">
+                <div className="p-4 bg-gray-50 border-r flex items-center justify-center">
+                  <Clock className="h-4 w-4 text-gray-500" />
+                </div>
+                {days.map((day, index) => (
+                  <div key={day} className="p-4 bg-gray-50 text-center border-r last:border-r-0">
+                    <div className="font-medium text-gray-900">{shortDays[index]}</div>
+                    <div className="text-sm text-gray-500">May {19 + index}</div>
+                  </div>
+                ))}
               </div>
-              {days.map((day, index) => (
-                <div key={day} className="p-4 bg-gray-50 text-center border-r last:border-r-0">
-                  <div className="font-medium text-gray-900">{shortDays[index]}</div>
-                  <div className="text-sm text-gray-500">May {19 + index}</div>
-                </div>
-              ))}
-            </div>
 
-            {/* Time slots with proper grid structure for spanning */}
-            <div className="grid grid-cols-8" style={{ gridTemplateRows: `repeat(${timeSlots.length}, 80px)` }}>
-              {/* Render all time labels first */}
-              {timeSlots.map((time, hourIndex) => (
-                <div
-                  key={`time-${hourIndex}`}
-                  className="p-4 bg-gray-50 border-r border-b text-sm text-gray-600 flex items-center"
-                  style={{ gridColumn: 1, gridRow: hourIndex + 1 }}
-                >
-                  {time}
-                </div>
-              ))}
+              {/* Time slots with proper grid structure for spanning */}
+              <div className="grid grid-cols-8" style={{ gridTemplateRows: `repeat(${timeSlots.length}, 80px)` }}>
+                {/* Render all time labels first */}
+                {timeSlots.map((time, hourIndex) => (
+                  <div
+                    key={`time-${hourIndex}`}
+                    className="p-4 bg-gray-50 border-r border-b text-sm text-gray-600 flex items-center"
+                    style={{ gridColumn: 1, gridRow: hourIndex + 1 }}
+                  >
+                    {time}
+                  </div>
+                ))}
 
-              {/* Render all day slots with proper grid positioning */}
-              {days.map((_, dayIndex) =>
-                timeSlots.map((_, hourIndex) => {
-                  const slot = renderTimeSlot(dayIndex, hourIndex)
-                  return slot ? (
-                    <div
-                      key={`${dayIndex}-${hourIndex}`}
-                      style={{
-                        gridColumn: dayIndex + 2,
-                        gridRow: slot.props?.style?.gridRow || hourIndex + 1,
-                      }}
-                      className="border-b border-gray-200"
-                    >
-                      {slot}
-                    </div>
-                  ) : null
-                }),
+                {/* Render all day slots with proper grid positioning */}
+                {days.map((_, dayIndex) =>
+                  timeSlots.map((_, hourIndex) => {
+                    const slot = renderTimeSlot(dayIndex, hourIndex)
+                    return slot ? (
+                      <div
+                        key={`${dayIndex}-${hourIndex}`}
+                        style={{
+                          gridColumn: dayIndex + 2,
+                          gridRow: slot.props?.style?.gridRow || hourIndex + 1,
+                        }}
+                        className="border-b border-gray-200"
+                      >
+                        {slot}
+                      </div>
+                    ) : null
+                  }),
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* List View */}
+        {selectedView === "list" && (
+          <Card className="overflow-hidden mb-6">
+            <CardContent className="p-0">
+              {Object.keys(eventsByDate).length > 0 ? (
+                <div className="divide-y divide-gray-200">
+                  {next7Days.map((dayIndex) => {
+                    const dayEvents = eventsByDate[dayIndex] || []
+                    const dateLabel = getDateLabel(dayIndex)
+
+                    return (
+                      <div key={dayIndex}>
+                        {/* Date Header */}
+                        <div className="sticky top-0 bg-gray-50 px-6 py-3 border-b border-gray-200 z-10">
+                          <h3 className="text-sm font-medium text-gray-900">{dateLabel}</h3>
+                          <p className="text-xs text-gray-500">May {19 + dayIndex}, 2025</p>
+                        </div>
+
+                        {/* Events for this day */}
+                        {dayEvents.length > 0 ? (
+                          <div className="divide-y divide-gray-100">
+                            {dayEvents.map((event) => {
+                              const instructor = getInstructor(event.instructor)
+                              const startTime = timeSlots[event.startHour]
+                              const endTime =
+                                timeSlots[event.startHour + event.duration] ||
+                                `${Number.parseInt(timeSlots[event.startHour].split(":")[0]) + event.duration}:${timeSlots[event.startHour].split(":")[1]}`
+
+                              // Find matching template for image
+                              const matchingTemplate = templates.find(
+                                (template) =>
+                                  template.japaneseTitle === event.title ||
+                                  template.englishTitle === event.titleEn ||
+                                  template.id === event.templateId,
+                              )
+
+                              // Calculate progress percentage and color
+                              const progressPercentage = (event.participants.current / event.participants.max) * 100
+                              const getProgressColor = () => {
+                                if (progressPercentage >= 100) return "bg-red-500"
+                                if (progressPercentage >= 80) return "bg-amber-500"
+                                return "bg-green-500"
+                              }
+
+                              return (
+                                <div
+                                  key={event.id}
+                                  className="p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200 border-b border-gray-100 last:border-b-0"
+                                  onClick={() => handleEventClick(event)}
+                                >
+                                  <div className="flex items-start gap-4">
+                                    {/* Event Image */}
+                                    <div className="flex-shrink-0">
+                                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                                        <img
+                                          src={
+                                            matchingTemplate?.image ||
+                                            `/placeholder.svg?height=80&width=80&query=${encodeURIComponent(event.titleEn || event.title)}`
+                                          }
+                                          alt={event.titleEn || event.title}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    {/* Event Details */}
+                                    <div className="flex-1 min-w-0">
+                                      {/* Title and Status Row */}
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div className="flex-1 min-w-0">
+                                          <div className="flex items-center gap-2 mb-1">
+                                            <h4 className="text-base font-semibold text-gray-900 truncate">
+                                              {event.title}
+                                            </h4>
+                                            {event.status === "Live" && (
+                                              <Badge className="text-xs px-2 py-1 bg-blue-500 text-white animate-pulse">
+                                                Live
+                                              </Badge>
+                                            )}
+                                          </div>
+                                          <p className="text-sm text-gray-600 truncate mb-2">{event.titleEn}</p>
+                                        </div>
+
+                                        {/* Instructor Avatar */}
+                                        <div className="flex-shrink-0 ml-4">
+                                          <TooltipProvider>
+                                            <Tooltip>
+                                              <TooltipTrigger asChild>
+                                                <Avatar className="h-10 w-10">
+                                                  <AvatarImage src={instructor?.avatar || "/placeholder.svg"} />
+                                                  <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                                                    {instructor?.initials}
+                                                  </AvatarFallback>
+                                                </Avatar>
+                                              </TooltipTrigger>
+                                              <TooltipContent>
+                                                <span className="text-sm">{instructor?.name}</span>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          </TooltipProvider>
+                                        </div>
+                                      </div>
+
+                                      {/* Progress Bar */}
+                                      <div className="mb-3">
+                                        <div className="flex items-center justify-between mb-1">
+                                          <span className="text-sm font-medium text-gray-700">
+                                            {event.participants.current}/{event.participants.max} participants
+                                          </span>
+                                          <span className="text-xs text-gray-500">
+                                            {Math.round(progressPercentage)}% full
+                                          </span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-2">
+                                          <div
+                                            className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
+                                            style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+                                          />
+                                        </div>
+                                      </div>
+
+                                      {/* Time and Location Info */}
+                                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                                        <div className="flex items-center gap-1">
+                                          <Clock className="h-4 w-4" />
+                                          <span>
+                                            {startTime} - {endTime}
+                                          </span>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                          <span>Artbar {event.location}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        ) : (
+                          <div className="p-8 text-center">
+                            <Calendar className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                            <p className="text-sm text-gray-500">No events scheduled</p>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-2">No events scheduled</p>
+                  <p className="text-sm text-gray-500 mb-4">Start by creating your first event</p>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">Schedule Event</Button>
+                </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Legend */}
         <div className="flex flex-wrap gap-6 text-sm">

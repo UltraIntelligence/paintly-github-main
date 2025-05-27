@@ -907,6 +907,36 @@ export function DataTable({
     },
   ]
 
+  // Update the sample event data to include templateId
+  const todayEvents = [
+    {
+      id: 1,
+      title: "モネ 睡蓮 Monet Water Lilies",
+      time: "6:00-8:00 PM",
+      location: "Artbar Ginza",
+      capacity: "8/12",
+      status: "Active",
+      instructor: "Yuki Tanaka",
+      date: "May 25",
+      section: "TODAY - May 25",
+      templateId: "monet-water-lilies",
+      image: "/placeholder.svg?height=80&width=80&query=monet water lilies painting",
+    },
+    {
+      id: 2,
+      title: "ゴッホ 星月夜 Van Gogh Starry Night",
+      time: "7:30-9:30 PM",
+      location: "Artbar Shibuya",
+      capacity: "12/15",
+      status: "Live",
+      instructor: "Hiroshi Sato",
+      date: "May 25",
+      section: "TODAY - May 25",
+      templateId: "van-gogh-starry-night",
+      image: "/placeholder.svg?height=80&width=80&query=van gogh starry night painting",
+    },
+  ]
+
   // Filter events based on current filter states
   const filteredEvents = React.useMemo(() => {
     return allEvents.filter((event) => {
@@ -1263,158 +1293,113 @@ export function DataTable({
       </div>
       <TabsContent value="today" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="space-y-4">
-          {/* Event Card 1 - Monet Water Lilies */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-card">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-              {/* Column 1: Thumbnail */}
-              <div className="flex items-start gap-1 md:basis-1/5">
-                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                  <img
-                    src="/placeholder.svg?height=96&width=96&query=monet water lilies painting"
-                    alt="Monet Water Lilies"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 md:hidden">
-                  <h3 className="font-medium text-sm mb-1">モネ 睡蓮 Monet Water Lilies</h3>
-                  <p className="text-xs text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
-                </div>
-              </div>
+          {todayEvents.map((event) => {
+            const { current, total } = parseCapacity(event.capacity)
+            const percentage = Math.round((current / total) * 100)
 
-              {/* Column 2: Event Details (Desktop only) */}
-              <div className="hidden md:block md:basis-1/4">
-                <h3 className="font-medium text-base mb-1">モネ 睡蓮 Monet Water Lilies</h3>
-                <p className="text-sm text-muted-foreground">6:00-8:00 PM • Artbar Ginza</p>
-              </div>
-
-              {/* Column 3: Capacity & Progress */}
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">8/12</span>
-                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className={`w-2/3 h-full ${getProgressBarColor(8, 12)} rounded-full`}></div>
-                  </div>
-                </div>
-                <Badge variant="outline" className="text-xs px-2 py-1">
-                  Starting in 2 hours
-                </Badge>
-              </div>
-
-              {/* Column 4: Status & Instructor */}
-              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-                <Badge variant="outline" className="flex gap-1 px-2 text-muted-foreground">
-                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                  Active
-                </Badge>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
+            return (
+              <div key={event.id} className="group hover:bg-muted/50 border rounded-lg p-4 bg-card transition-colors">
+                <div className="flex items-start gap-4">
+                  {/* Event Image */}
+                  <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                     <img
-                      src="/placeholder.svg?height=28&width=28&query=japanese woman instructor"
-                      alt="Yuki Tanaka"
+                      src={event.image || "/placeholder.svg"}
+                      alt={event.title}
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-sm">Yuki Tanaka</span>
-                </div>
-              </div>
 
-              {/* Column 5: Actions */}
-              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                <EventEditModal
-                  event={{
-                    title: "モネ 睡蓮 Monet Water Lilies",
-                    time: "6:00-8:00 PM",
-                    location: "Artbar Ginza",
-                    capacity: "8/12",
-                    status: "Active",
-                    instructor: "Yuki Tanaka",
-                  }}
-                  trigger={
-                    <Button variant="outline" size="default" className="flex-1 h-9">
-                      Edit
-                    </Button>
-                  }
-                />
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  View Bookings
-                </Button>
-              </div>
-            </div>
-          </div>
+                  {/* Event Details */}
+                  <div className="flex-1 min-w-0 space-y-3">
+                    {/* Title and Status Row */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-base leading-tight mb-1 text-foreground">{event.title}</h3>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <Badge
+                          variant={event.status === "Live" ? "default" : "outline"}
+                          className={`flex gap-1.5 px-2.5 py-1 ${
+                            event.status === "Live" ? "bg-blue-500 text-white animate-pulse" : "text-muted-foreground"
+                          }`}
+                        >
+                          {event.status !== "Live" && <div className="w-2 h-2 rounded-full bg-green-500"></div>}
+                          {event.status}
+                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-muted border overflow-hidden">
+                            <img
+                              src="/placeholder.svg?height=32&width=32&query=instructor"
+                              alt={event.instructor}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <span className="text-sm font-medium">{event.instructor}</span>
+                        </div>
+                      </div>
+                    </div>
 
-          {/* Event Card 2 - Van Gogh Starry Night */}
-          <div className="group hover:bg-muted/50 border rounded-lg p-4 bg-card">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-              <div className="flex items-start gap-2 md:basis-1/5">
-                <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                  <img
-                    src="/placeholder.svg?height=96&width=96&query=van gogh starry night painting"
-                    alt="Van Gogh Starry Night"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 md:hidden">
-                  <h3 className="font-medium text-sm mb-1">ゴッホ 星月夜 Van Gogh Starry Night</h3>
-                  <p className="text-xs text-muted-foreground">7:30-9:30 PM • Artbar Shibuya</p>
-                </div>
-              </div>
+                    {/* Progress Bar */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium text-foreground">
+                          {current}/{total} participants
+                        </span>
+                        <span className="text-muted-foreground">{percentage}% full</span>
+                      </div>
+                      <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-300 rounded-full ${
+                            percentage >= 100 ? "bg-red-500" : percentage >= 80 ? "bg-yellow-500" : "bg-green-500"
+                          }`}
+                          style={{ width: `${Math.min(percentage, 100)}%` }}
+                        />
+                      </div>
+                    </div>
 
-              <div className="hidden md:block md:basis-1/4">
-                <h3 className="font-medium text-base mb-1">ゴッホ 星月夜 Van Gogh Starry Night</h3>
-                <p className="text-sm text-muted-foreground">7:30-9:30 PM • Artbar Shibuya</p>
-              </div>
+                    {/* Time and Location */}
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center">
+                          <div className="w-2 h-2 rounded-full bg-muted-foreground/60" />
+                        </div>
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center">
+                          <div className="w-2 h-2 rounded-full bg-muted-foreground/60" />
+                        </div>
+                        <span>{event.location}</span>
+                      </div>
+                    </div>
 
-              <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">12/15</span>
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className={`w-4/5 h-full ${getProgressBarColor(12, 15)} rounded-full`}></div>
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-1">
+                      <EventEditModal
+                        event={event}
+                        trigger={
+                          <Button variant="outline" size="sm" className="h-8">
+                            Edit Event
+                          </Button>
+                        }
+                      />
+                      <Button variant="outline" size="sm" className="h-8">
+                        View Bookings
+                      </Button>
+                      {event.status === "Live" && (
+                        <Button variant="outline" size="sm" className="h-8">
+                          Join Live Session
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-700">
-                  In progress
-                </Badge>
               </div>
-
-              <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-                <Badge className="flex gap-1 px-2 bg-blue-500 text-white animate-pulse">Live</Badge>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
-                    <img
-                      src="/placeholder.svg?height=28&width=28&query=japanese man instructor"
-                      alt="Hiroshi Sato"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-sm">Hiroshi Sato</span>
-                </div>
-              </div>
-
-              <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                <EventEditModal
-                  event={{
-                    title: "ゴッホ 星月夜 Van Gogh Starry Night",
-                    time: "7:30-9:30 PM",
-                    location: "Artbar Shibuya",
-                    capacity: "12/15",
-                    status: "Live",
-                    instructor: "Hiroshi Sato",
-                  }}
-                  trigger={
-                    <Button variant="outline" size="default" className="flex-1 h-9">
-                      Edit
-                    </Button>
-                  }
-                />
-                <Button variant="outline" size="default" className="flex-1 h-9">
-                  View Bookings
-                </Button>
-              </div>
-            </div>
-          </div>
+            )
+          })}
         </div>
 
-        {/* Pagination */}
+        {/* Pagination - keep existing */}
         <div className="flex items-center justify-between px-4">
           <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">2 of 2 events today</div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
@@ -1466,108 +1451,132 @@ export function DataTable({
               <div key={section}>
                 <h3 className="text-sm font-medium text-muted-foreground mb-3 px-1">{section}</h3>
                 <div className="space-y-4">
-                  {events.map((event) => (
-                    <div key={event.id} className="group hover:bg-muted/50 border rounded-lg p-4 bg-card">
-                      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-                        <div className="flex items-start gap-1 md:basis-1/5">
-                          <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
+                  {events.map((event) => {
+                    const { current, total } = parseCapacity(event.capacity)
+                    const percentage = Math.round((current / total) * 100)
+
+                    return (
+                      <div
+                        key={event.id}
+                        className="group hover:bg-muted/50 border rounded-lg p-4 bg-card transition-colors"
+                      >
+                        <div className="flex items-start gap-4">
+                          {/* Event Image */}
+                          <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
                             <img
                               src={event.image || "/placeholder.svg"}
                               alt={event.title}
                               className="w-full h-full object-cover"
                             />
                           </div>
-                          <div className="flex-1 min-w-0 md:hidden">
-                            <h3 className="font-medium text-sm mb-1">{event.title}</h3>
-                            <p className="text-xs text-muted-foreground">
-                              {event.time} • {event.location}
-                            </p>
-                          </div>
-                        </div>
 
-                        <div className="hidden md:block md:basis-1/4">
-                          <h3 className="font-medium text-base mb-1">{event.title}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {event.time} • {event.location}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-3 md:flex-col md:items-start md:basis-1/5">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">{event.capacity}</span>
-                            <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                              {(() => {
-                                const { current, total } = parseCapacity(event.capacity)
-                                const percentage = (current / total) * 100
-                                return (
-                                  <div
-                                    className={`h-full ${getProgressBarColor(current, total)} rounded-full`}
-                                    style={{ width: `${percentage}%` }}
-                                  ></div>
-                                )
-                              })()}
+                          {/* Event Details */}
+                          <div className="flex-1 min-w-0 space-y-3">
+                            {/* Title and Status Row */}
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-semibold text-base leading-tight mb-1 text-foreground">
+                                  {event.title}
+                                </h3>
+                              </div>
+                              <div className="flex items-center gap-3 flex-shrink-0">
+                                <Badge
+                                  variant={
+                                    event.status === "Live"
+                                      ? "default"
+                                      : event.status === "Sold Out"
+                                        ? "destructive"
+                                        : "outline"
+                                  }
+                                  className={`flex gap-1.5 px-2.5 py-1 ${
+                                    event.status === "Live"
+                                      ? "bg-blue-500 text-white animate-pulse"
+                                      : event.status === "Sold Out"
+                                        ? ""
+                                        : "text-muted-foreground"
+                                  }`}
+                                >
+                                  {event.status !== "Live" && event.status !== "Sold Out" && (
+                                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                  )}
+                                  {event.status === "Sold Out" && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                                  {event.status}
+                                </Badge>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-8 h-8 rounded-full bg-muted border overflow-hidden">
+                                    <img
+                                      src="/placeholder.svg?height=32&width=32&query=instructor"
+                                      alt={event.instructor}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                  <span className="text-sm font-medium">{event.instructor}</span>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                          <Badge variant="outline" className="text-xs px-2 py-1">
-                            {event.date === "May 25"
-                              ? "Starting in 2 hours"
-                              : event.date === "May 26"
-                                ? "Tomorrow"
-                                : event.date}
-                          </Badge>
-                        </div>
 
-                        <div className="flex items-center justify-between md:flex-col md:items-start md:basis-1/4 md:gap-2">
-                          <Badge
-                            variant={
-                              event.status === "Live"
-                                ? "default"
-                                : event.status === "Sold Out"
-                                  ? "destructive"
-                                  : "outline"
-                            }
-                            className={`flex gap-1 px-2 ${
-                              event.status === "Live"
-                                ? "bg-blue-500 text-white animate-pulse"
-                                : event.status === "Sold Out"
-                                  ? ""
-                                  : "text-muted-foreground"
-                            }`}
-                          >
-                            {event.status !== "Live" && event.status !== "Sold Out" && (
-                              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                            )}
-                            {event.status === "Sold Out" && <div className="w-2 h-2 rounded-full bg-white"></div>}
-                            {event.status}
-                          </Badge>
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-full bg-muted border overflow-hidden">
-                              <img
-                                src="/placeholder.svg?height=28&width=28&query=instructor"
-                                alt={event.instructor}
-                                className="w-full h-full object-cover"
+                            {/* Progress Bar */}
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="font-medium text-foreground">
+                                  {current}/{total} participants
+                                </span>
+                                <span className="text-muted-foreground">{percentage}% full</span>
+                              </div>
+                              <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full transition-all duration-300 rounded-full ${
+                                    percentage >= 100
+                                      ? "bg-red-500"
+                                      : percentage >= 80
+                                        ? "bg-yellow-500"
+                                        : "bg-green-500"
+                                  }`}
+                                  style={{ width: `${Math.min(percentage, 100)}%` }}
+                                />
+                              </div>
+                            </div>
+
+                            {/* Time and Location */}
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center">
+                                  <div className="w-2 h-2 rounded-full bg-muted-foreground/60" />
+                                </div>
+                                <span>{event.time}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center">
+                                  <div className="w-2 h-2 rounded-full bg-muted-foreground/60" />
+                                </div>
+                                <span>{event.location}</span>
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-2 pt-1">
+                              <EventEditModal
+                                event={event}
+                                trigger={
+                                  <Button variant="outline" size="sm" className="h-8">
+                                    Edit Event
+                                  </Button>
+                                }
                               />
-                            </div>
-                            <span className="text-sm">{event.instructor}</span>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-row gap-2 md:flex-col md:gap-2 md:basis-1/6">
-                          <EventEditModal
-                            event={event}
-                            trigger={
-                              <Button variant="outline" size="default" className="flex-1 h-9">
-                                Edit
+                              <Button variant="outline" size="sm" className="h-8">
+                                View Bookings
                               </Button>
-                            }
-                          />
-                          <Button variant="outline" size="default" className="flex-1 h-9">
-                            View Bookings
-                          </Button>
+                              {event.status === "Live" && (
+                                <Button variant="outline" size="sm" className="h-8">
+                                  Join Live Session
+                                </Button>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             ))
