@@ -2,69 +2,92 @@
 
 import type * as React from "react"
 import {
-  Calendar,
-  LayoutDashboardIcon,
-  MapPin,
-  Palette,
-  SettingsIcon,
+  PaintbrushIcon,
+  PaletteIcon,
+  CalendarDaysIcon,
+  Users2Icon,
+  MapPinIcon,
+  Building2Icon,
+  GiftIcon,
+  LayoutTemplateIcon,
   HelpCircleIcon,
   SearchIcon,
-  UsersIcon,
+  SettingsIcon,
 } from "lucide-react"
-import Link from "next/link"
 
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
+import { NavDocuments } from "./nav-documents"
 
 const data = {
   user: {
-    name: "Cathy",
+    name: "Cathy Thompson",
     email: "tokyo@artbar.co.jp",
-    avatar: "/abstract-geometric-shapes.png",
+    avatar: "/images/cathy-avatar.png",
   },
   navMain: [
     {
-      title: "Home", // Updated title from "Dashboard" to "Home"
+      title: "Today",
       url: "/dashboard",
-      icon: LayoutDashboardIcon,
+      icon: PaletteIcon,
     },
     {
-      title: "Scheduling",
-      url: "/scheduling",
-      icon: Calendar,
+      title: "Schedule",
+      url: "/schedule",
+      icon: CalendarDaysIcon,
     },
     {
-      title: "Instructors",
-      url: "/instructors",
-      icon: UsersIcon,
+      title: "Templates",
+      url: "/templates",
+      icon: LayoutTemplateIcon,
+    },
+  ],
+  navDocuments: [
+    {
+      name: "Instructors",
+      url: "#",
+      icon: Users2Icon,
     },
     {
-      title: "Events",
-      url: "/events",
-      icon: Palette,
+      name: "Locations",
+      url: "#",
+      icon: MapPinIcon,
     },
     {
-      title: "Locations",
-      url: "/locations",
-      icon: MapPin,
+      name: "Gift Certificates",
+      url: "#",
+      icon: GiftIcon,
+    },
+    {
+      name: "Private Events",
+      url: "#",
+      icon: Building2Icon,
     },
   ],
   navSecondary: [
     {
       title: "Settings",
-      url: "/settings",
+      url: "#",
       icon: SettingsIcon,
     },
     {
       title: "Get Help",
-      url: "/help",
+      url: "#",
       icon: HelpCircleIcon,
     },
     {
       title: "Search",
-      url: "/search",
+      url: "#",
       icon: SearchIcon,
     },
   ],
@@ -73,27 +96,26 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="flex items-center justify-center p-4">
-        <Link href="/dashboard" className="flex w-full justify-center">
-          <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-black%20%285%29-7VlW8Vv28HicXieXSskv296fVjqw8S.png"
-            alt="Paintly Logo"
-            className="h-[60px] w-[60px] object-contain"
-            style={{
-              minWidth: "60px",
-              minHeight: "60px",
-            }}
-          />
-        </Link>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
+              <a href="#">
+                <PaintbrushIcon className="h-5 w-5" />
+                <span className="text-base font-semibold text-black">Artbar Tokyo</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavDocuments items={data.navDocuments} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }

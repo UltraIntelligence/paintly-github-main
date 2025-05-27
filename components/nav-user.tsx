@@ -24,7 +24,6 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const initials = user.name.charAt(0).toUpperCase()
 
   return (
     <SidebarMenu>
@@ -35,9 +34,9 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded-lg grayscale">
                 <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
-                <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">CT</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
@@ -56,7 +55,7 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">CT</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
@@ -67,21 +66,21 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <UserCircleIcon className="mr-2 h-4 w-4" />
+                <UserCircleIcon />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCardIcon className="mr-2 h-4 w-4" />
+                <CreditCardIcon />
                 Billing
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <BellIcon className="mr-2 h-4 w-4" />
+                <BellIcon />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogOutIcon className="mr-2 h-4 w-4" />
+              <LogOutIcon />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
