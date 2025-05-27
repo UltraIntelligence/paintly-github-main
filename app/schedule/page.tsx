@@ -1,17 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, ChevronRight, Plus, Users } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { motion, AnimatePresence } from "framer-motion"
+import { ChevronLeft, ChevronRight, Calendar, List, Grid3X3, Clock } from "lucide-react"
 import { ThemeProvider } from "../../components/theme-provider"
 import { AppSidebar } from "../../components/app-sidebar"
 import { SiteHeader } from "../../components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { motion, AnimatePresence } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -25,47 +28,18 @@ const pageTransition = {
 
 // Sample data
 const instructors = [
-  { id: 1, name: "Yuki Tanaka", initials: "YT", color: "bg-blue-500", specialty: "kids" },
-  { id: 2, name: "Naomi", initials: "N", color: "bg-purple-500", specialty: "master" },
-  { id: 3, name: "Luci", initials: "L", color: "bg-green-500", specialty: "pouring" },
-  { id: 4, name: "Daria", initials: "D", color: "bg-pink-500", specialty: "evening" },
-  { id: 5, name: "Hiroshi Sato", initials: "HS", color: "bg-indigo-500", specialty: "master" },
+  { id: 1, name: "Yuki Tanaka", avatar: "/placeholder.svg?height=32&width=32", specialty: "kids", initials: "YT" },
+  { id: 2, name: "Naomi", avatar: "/placeholder.svg?height=32&width=32", specialty: "master", initials: "N" },
+  { id: 3, name: "Luci", avatar: "/placeholder.svg?height=32&width=32", specialty: "pouring", initials: "L" },
+  { id: 4, name: "Daria", avatar: "/placeholder.svg?height=32&width=32", specialty: "evening", initials: "D" },
 ]
 
-const scheduledEvents = [
-  {
-    id: 1,
-    title: "モネ 睡蓮 Monet Water Lilies",
-    instructor: "Yuki Tanaka",
-    participants: "8/12",
-    status: "Starting in 2 hours",
-    day: 0, // Monday
-    startHour: 6, // 6 PM
-    duration: 2,
-    location: "Artbar Ginza",
-  },
-  {
-    id: 2,
-    title: "ゴッホ 星月夜 Van Gogh Starry Night",
-    instructor: "Naomi",
-    participants: "12/15",
-    status: "Live",
-    day: 1, // Tuesday
-    startHour: 7, // 7 PM
-    duration: 2,
-    location: "Artbar Daikanyama",
-  },
-  {
-    id: 3,
-    title: "F6 たらし込みポーリングアート Paint Pouring",
-    instructor: "Luci",
-    participants: "6/10",
-    status: "Active",
-    day: 2, // Wednesday
-    startHour: 6, // 6 PM
-    duration: 2,
-    location: "Artbar Cat Street",
-  },
+const locations = [
+  { id: "all", name: "All", count: 12 },
+  { id: "daikanyama", name: "Daikanyama", count: 3 },
+  { id: "catstreet", name: "Cat Street", count: 4 },
+  { id: "ginza", name: "Ginza", count: 2 },
+  { id: "yokohama", name: "Yokohama", count: 3 },
 ]
 
 const timeSlots = [
@@ -84,242 +58,242 @@ const timeSlots = [
 ]
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-const shortDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+const dates = ["20", "21", "22", "23", "24", "25", "26"]
 
-// Helper function to get availability for a time slot
-const getSlotAvailability = (day: number, hour: number) => {
-  // Check if there's a scheduled event
-  const hasEvent = scheduledEvents.some(
-    (event) => event.day === day && hour >= event.startHour && hour < event.startHour + event.duration,
-  )
+// Sample schedule data
+const scheduledEvents = [
+  {
+    id: 1,
+    day: 0, // Monday
+    time: 8, // 6:00 PM
+    duration: 2,
+    title: "モネ 睡蓮",
+    titleEn: "Monet Water Lilies",
+    instructor: instructors[0],
+    participants: { current: 8, max: 12 },
+    status: "Starting in 2 hours",
+    location: "ginza",
+  },
+  {
+    id: 2,
+    day: 1, // Tuesday
+    time: 9, // 7:00 PM
+    duration: 2,
+    title: "ゴッホ 星月夜",
+    titleEn: "Van Gogh Starry Night",
+    instructor: instructors[1],
+    participants: { current: 6, max: 10 },
+    status: "Active",
+    location: "daikanyama",
+  },
+  {
+    id: 3,
+    day: 2, // Wednesday
+    time: 8, // 6:00 PM
+    duration: 2,
+    title: "F6 たらし込みポーリングアート",
+    titleEn: "Paint Pouring",
+    instructor: instructors[2],
+    participants: { current: 4, max: 8 },
+    status: "Live",
+    location: "catstreet",
+  },
+]
 
-  if (hasEvent) return null
-
-  // Mock availability logic
-  if (hour < 2 || hour > 9) return "unavailable" // Before 2 PM or after 9 PM
-  if ((day === 0 && hour === 5) || (day === 1 && hour === 8)) return "constrained"
-  return "available"
+// Availability data
+const availability = {
+  // day, time -> { type: 'available' | 'constrained' | 'unavailable', instructors: [] }
+  "0-6": { type: "available", instructors: [instructors[0], instructors[1], instructors[2]] },
+  "0-7": { type: "available", instructors: [instructors[0], instructors[1]] },
+  "0-10": { type: "constrained", instructors: [instructors[0]] },
+  "1-5": { type: "available", instructors: [instructors[1], instructors[2]] },
+  "1-6": { type: "available", instructors: [instructors[0], instructors[1], instructors[2], instructors[3]] },
+  "2-4": { type: "available", instructors: [instructors[2]] },
+  "2-5": { type: "constrained", instructors: [instructors[2]] },
+  "3-7": { type: "available", instructors: [instructors[0], instructors[1]] },
+  "4-6": { type: "available", instructors: [instructors[1], instructors[3]] },
+  "5-8": { type: "available", instructors: [instructors[0], instructors[2]] },
+  "6-9": { type: "available", instructors: [instructors[1], instructors[3]] },
 }
 
-// Helper function to get available instructors for a slot
-const getAvailableInstructors = (day: number, hour: number) => {
-  const availability = getSlotAvailability(day, hour)
-  if (availability === "unavailable") return []
-  if (availability === "constrained") return [instructors[0]] // Only Yuki
-
-  // Return different instructors based on time
-  if (hour < 4) return instructors.slice(0, 2) // Morning: Yuki, Naomi
-  if (hour < 7) return instructors.slice(0, 4) // Afternoon: Most available
-  return instructors.slice(1, 4) // Evening: Naomi, Luci, Daria
-}
-
-function InstructorAvatar({ instructor, size = "sm" }: { instructor: (typeof instructors)[0]; size?: "sm" | "xs" }) {
-  const sizeClasses = size === "xs" ? "w-6 h-6 text-xs" : "w-8 h-8 text-sm"
-
+function ScheduleModal({ day, time, onClose }: { day: number; time: number; onClose: () => void }) {
   return (
-    <div
-      className={`${instructor.color} ${sizeClasses} rounded-full flex items-center justify-center text-white font-medium`}
-    >
-      {instructor.initials}
-    </div>
+    <DialogContent className="sm:max-w-md">
+      <DialogHeader>
+        <DialogTitle>Schedule Event</DialogTitle>
+        <DialogDescription>
+          {days[day]} at {timeSlots[time]}
+        </DialogDescription>
+      </DialogHeader>
+      <div className="space-y-4">
+        <div>
+          <label className="text-sm font-medium">Template</label>
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Select template" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="monet">モネ 睡蓮 Monet Water Lilies</SelectItem>
+              <SelectItem value="vangogh">ゴッホ 星月夜 Van Gogh Starry Night</SelectItem>
+              <SelectItem value="pouring">F6 Paint Pouring</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <label className="text-sm font-medium">Instructor</label>
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Select instructor" />
+            </SelectTrigger>
+            <SelectContent>
+              {instructors.map((instructor) => (
+                <SelectItem key={instructor.id} value={instructor.id.toString()}>
+                  {instructor.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex gap-2">
+          <Button onClick={onClose} variant="outline" className="flex-1">
+            Cancel
+          </Button>
+          <Button className="flex-1 bg-[#3b82f6] hover:bg-[#2563eb]">Schedule Event</Button>
+        </div>
+      </div>
+    </DialogContent>
   )
 }
 
 function TimeSlot({
   day,
-  hour,
+  time,
   availability,
-  availableInstructors,
+  scheduledEvent,
+  onSchedule,
 }: {
   day: number
-  hour: number
-  availability: string | null
-  availableInstructors: typeof instructors
+  time: number
+  availability?: { type: string; instructors: any[] }
+  scheduledEvent?: any
+  onSchedule: (day: number, time: number) => void
 }) {
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false)
+  const key = `${day}-${time}`
+  const slotAvailability = availability || { type: "unavailable", instructors: [] }
 
-  if (availability === null) return null // Slot has scheduled event
+  if (scheduledEvent) {
+    return (
+      <div className="relative h-16 border border-gray-200">
+        <Card className="h-full w-full rounded-none border-0 bg-white shadow-sm">
+          <CardContent className="p-2 h-full">
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <div className="text-xs font-medium text-gray-900 leading-tight">{scheduledEvent.title}</div>
+                <div className="text-xs text-gray-600 leading-tight">{scheduledEvent.titleEn}</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1">
+                  <Avatar className="h-4 w-4">
+                    <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                      {scheduledEvent.instructor.initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-xs text-gray-600">{scheduledEvent.instructor.name}</span>
+                </div>
+                <div className="text-xs text-gray-500">
+                  {scheduledEvent.participants.current}/{scheduledEvent.participants.max}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   const bgColor = {
-    available: "bg-green-50 hover:bg-green-100 border-green-200",
-    constrained: "bg-amber-50 hover:bg-amber-100 border-amber-200",
-    unavailable: "bg-gray-50 border-gray-200 cursor-not-allowed",
-  }[availability]
+    available: "bg-green-50 hover:bg-green-100",
+    constrained: "bg-amber-50 hover:bg-amber-100",
+    unavailable: "bg-gray-50",
+  }[slotAvailability.type]
 
-  const isClickable = availability !== "unavailable"
+  const borderColor = {
+    available: "border-green-200 hover:border-green-300",
+    constrained: "border-amber-200 hover:border-amber-300",
+    unavailable: "border-gray-200",
+  }[slotAvailability.type]
 
   return (
-    <Dialog open={isScheduleModalOpen} onOpenChange={setIsScheduleModalOpen}>
-      <DialogTrigger asChild disabled={!isClickable}>
-        <div
-          className={`${bgColor} border rounded-lg p-2 h-16 relative group transition-colors ${isClickable ? "cursor-pointer" : ""}`}
-        >
-          {availability === "unavailable" ? (
-            <div className="text-xs text-gray-400 text-center mt-2">No instructors</div>
-          ) : (
-            <div className="flex justify-end items-end h-full">
-              <div className="flex -space-x-1">
-                {availableInstructors.slice(0, 3).map((instructor) => (
-                  <InstructorAvatar key={instructor.id} instructor={instructor} />
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className={`relative h-16 border cursor-pointer transition-colors ${bgColor} ${borderColor} ${
+              slotAvailability.type === "unavailable" ? "cursor-not-allowed" : ""
+            }`}
+            onClick={() => slotAvailability.type !== "unavailable" && onSchedule(day, time)}
+          >
+            {slotAvailability.type === "available" && slotAvailability.instructors.length > 0 && (
+              <div className="absolute bottom-1 right-1 flex items-center gap-1">
+                {slotAvailability.instructors.slice(0, 3).map((instructor, idx) => (
+                  <Avatar key={instructor.id} className="h-6 w-6">
+                    <AvatarFallback className="text-xs bg-blue-100 text-blue-700">{instructor.initials}</AvatarFallback>
+                  </Avatar>
                 ))}
-                {availableInstructors.length > 3 && (
-                  <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white text-xs font-medium">
-                    +{availableInstructors.length - 3}
+                {slotAvailability.instructors.length > 3 && (
+                  <div className="h-6 w-6 rounded-full bg-gray-200 flex items-center justify-center">
+                    <span className="text-xs text-gray-600">+{slotAvailability.instructors.length - 3}</span>
                   </div>
                 )}
               </div>
+            )}
+            {slotAvailability.type === "constrained" && slotAvailability.instructors.length > 0 && (
+              <div className="absolute bottom-1 right-1">
+                <Avatar className="h-6 w-6">
+                  <AvatarFallback className="text-xs bg-amber-100 text-amber-700">
+                    {slotAvailability.instructors[0].initials}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+            )}
+            {slotAvailability.type === "unavailable" && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-xs text-gray-400">No instructors</span>
+              </div>
+            )}
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          {slotAvailability.type === "available" && (
+            <div>
+              <p className="font-medium">Available instructors:</p>
+              {slotAvailability.instructors.map((instructor) => (
+                <p key={instructor.id} className="text-sm">
+                  {instructor.name}
+                </p>
+              ))}
             </div>
           )}
-          {isClickable && (
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <Plus className="w-4 h-4 text-gray-600" />
+          {slotAvailability.type === "constrained" && (
+            <div>
+              <p className="font-medium text-amber-600">Constrained availability</p>
+              <p className="text-sm">{slotAvailability.instructors[0]?.name} available but back-to-back classes</p>
             </div>
           )}
-        </div>
-      </DialogTrigger>
-
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Schedule Event</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div className="text-sm text-gray-600">
-            {days[day]} at {timeSlots[hour]}
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Template</label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select template" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="monet">モネ 睡蓮 Monet Water Lilies</SelectItem>
-                <SelectItem value="vangogh">ゴッホ 星月夜 Van Gogh Starry Night</SelectItem>
-                <SelectItem value="pouring">F6 たらし込みポーリングアート Paint Pouring</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Instructor</label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select instructor" />
-              </SelectTrigger>
-              <SelectContent>
-                {availableInstructors.map((instructor) => (
-                  <SelectItem key={instructor.id} value={instructor.name}>
-                    {instructor.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Duration</label>
-            <Select defaultValue="2">
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1 hour</SelectItem>
-                <SelectItem value="2">2 hours</SelectItem>
-                <SelectItem value="3">3 hours</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <Button className="w-full bg-blue-600 hover:bg-blue-700">Schedule Event</Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function EventCard({ event }: { event: (typeof scheduledEvents)[0] }) {
-  const [isEventModalOpen, setIsEventModalOpen] = useState(false)
-  const instructor = instructors.find((i) => i.name === event.instructor)
-
-  const statusColors = {
-    Live: "bg-blue-500 text-white animate-pulse",
-    "Starting in 2 hours": "bg-green-100 text-green-700",
-    Active: "bg-gray-100 text-gray-700",
-  }
-
-  return (
-    <Dialog open={isEventModalOpen} onOpenChange={setIsEventModalOpen}>
-      <DialogTrigger asChild>
-        <div
-          className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer h-32"
-          style={{ gridRow: `span ${event.duration}` }}
-        >
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium line-clamp-2">{event.title}</h4>
-
-            <div className="flex items-center gap-2">
-              {instructor && <InstructorAvatar instructor={instructor} size="xs" />}
-              <span className="text-xs text-gray-600">{event.instructor}</span>
-            </div>
-
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <Users className="w-3 h-3" />
-              <span>{event.participants}</span>
-            </div>
-
-            <Badge className={`text-xs px-2 py-1 ${statusColors[event.status as keyof typeof statusColors]}`}>
-              {event.status}
-            </Badge>
-          </div>
-        </div>
-      </DialogTrigger>
-
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{event.title}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            {instructor && <InstructorAvatar instructor={instructor} />}
-            <div>
-              <div className="font-medium">{event.instructor}</div>
-              <div className="text-sm text-gray-500">{event.location}</div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <div className="text-gray-500">Participants</div>
-              <div className="font-medium">{event.participants}</div>
-            </div>
-            <div>
-              <div className="text-gray-500">Status</div>
-              <Badge className={statusColors[event.status as keyof typeof statusColors]}>{event.status}</Badge>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            <Button variant="outline" className="flex-1">
-              Edit Event
-            </Button>
-            <Button variant="outline" className="flex-1">
-              View Bookings
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+          {slotAvailability.type === "unavailable" && <p>No instructors available</p>}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
 export default function SchedulePage() {
-  const [activeLocation, setActiveLocation] = useState("All")
-  const [activeView, setActiveView] = useState("Week")
+  const [selectedLocation, setSelectedLocation] = useState("all")
+  const [selectedView, setSelectedView] = useState("week")
+  const [scheduleModal, setScheduleModal] = useState<{ day: number; time: number } | null>(null)
 
-  const getLocationCount = (location: string) => {
-    if (location === "All") return scheduledEvents.length
-    return scheduledEvents.filter((event) => event.location.includes(location)).length
+  const handleSchedule = (day: number, time: number) => {
+    setScheduleModal({ day, time })
   }
 
   return (
@@ -332,173 +306,127 @@ export default function SchedulePage() {
             <motion.div key="schedule" className="flex flex-1 flex-col" {...pageTransition}>
               <div className="@container/main flex flex-1 flex-col gap-2">
                 <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                  {/* Header Section */}
                   <div className="px-4 lg:px-6">
-                    {/* Header */}
-                    <div className="space-y-4 mb-8">
-                      <h1 className="text-2xl font-bold">Schedule</h1>
+                    <div className="flex flex-col gap-4">
+                      <div>
+                        <h1 className="text-2xl font-bold text-gray-900">Schedule</h1>
+                      </div>
 
-                      {/* Controls */}
-                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                        {/* Location Tabs */}
-                        <Tabs value={activeLocation} onValueChange={setActiveLocation} className="w-auto">
-                          <TabsList>
-                            <TabsTrigger value="All" className="gap-1">
-                              All{" "}
-                              <Badge
-                                variant="secondary"
-                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                              >
-                                {getLocationCount("All")}
-                              </Badge>
+                      {/* Location Tabs */}
+                      <Tabs value={selectedLocation} onValueChange={setSelectedLocation}>
+                        <TabsList className="grid w-full grid-cols-5">
+                          {locations.map((location) => (
+                            <TabsTrigger key={location.id} value={location.id} className="relative">
+                              {location.name}
+                              {location.count > 0 && (
+                                <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
+                                  {location.count}
+                                </Badge>
+                              )}
                             </TabsTrigger>
-                            <TabsTrigger value="Daikanyama" className="gap-1">
-                              Daikanyama{" "}
-                              <Badge
-                                variant="secondary"
-                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                              >
-                                {getLocationCount("Daikanyama")}
-                              </Badge>
-                            </TabsTrigger>
-                            <TabsTrigger value="Cat Street" className="gap-1">
-                              Cat Street{" "}
-                              <Badge
-                                variant="secondary"
-                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                              >
-                                {getLocationCount("Cat Street")}
-                              </Badge>
-                            </TabsTrigger>
-                            <TabsTrigger value="Ginza" className="gap-1">
-                              Ginza{" "}
-                              <Badge
-                                variant="secondary"
-                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                              >
-                                {getLocationCount("Ginza")}
-                              </Badge>
-                            </TabsTrigger>
-                            <TabsTrigger value="Yokohama" className="gap-1">
-                              Yokohama{" "}
-                              <Badge
-                                variant="secondary"
-                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                              >
-                                0
-                              </Badge>
-                            </TabsTrigger>
-                          </TabsList>
-                        </Tabs>
+                          ))}
+                        </TabsList>
+                      </Tabs>
 
-                        {/* View Toggle and Date Navigation */}
-                        <div className="flex items-center gap-4">
-                          <Tabs value={activeView} onValueChange={setActiveView}>
-                            <TabsList>
-                              <TabsTrigger value="Month">Month</TabsTrigger>
-                              <TabsTrigger value="Week">Week</TabsTrigger>
-                              <TabsTrigger value="List">List</TabsTrigger>
-                            </TabsList>
-                          </Tabs>
+                      {/* View Toggle and Date Navigation */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant={selectedView === "month" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setSelectedView("month")}
+                          >
+                            <Calendar className="h-4 w-4 mr-1" />
+                            Month
+                          </Button>
+                          <Button
+                            variant={selectedView === "week" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setSelectedView("week")}
+                            className={selectedView === "week" ? "bg-[#3b82f6] hover:bg-[#2563eb]" : ""}
+                          >
+                            <Grid3X3 className="h-4 w-4 mr-1" />
+                            Week
+                          </Button>
+                          <Button
+                            variant={selectedView === "list" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setSelectedView("list")}
+                          >
+                            <List className="h-4 w-4 mr-1" />
+                            List
+                          </Button>
+                        </div>
 
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <ChevronLeft className="w-4 h-4" />
-                            </Button>
-                            <span className="text-sm font-medium px-3">May 19-25, 2025</span>
-                            <Button variant="outline" size="sm">
-                              <ChevronRight className="w-4 h-4" />
-                            </Button>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <Button variant="outline" size="sm">
+                            <ChevronLeft className="h-4 w-4" />
+                          </Button>
+                          <span className="text-sm font-medium">May 19-25, 2025</span>
+                          <Button variant="outline" size="sm">
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Week View Calendar */}
-                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                      {/* Calendar Header */}
-                      <div className="grid grid-cols-8 border-b border-gray-200">
-                        <div className="p-3 text-sm font-medium text-gray-500">Time</div>
-                        {days.map((day, index) => (
-                          <div key={day} className="p-3 text-sm font-medium text-center border-l border-gray-200">
-                            <div className="hidden sm:block">{day}</div>
-                            <div className="sm:hidden">{shortDays[index]}</div>
-                            <div className="text-xs text-gray-400 mt-1">May {19 + index}</div>
+                  {/* Week View Calendar */}
+                  <div className="px-4 lg:px-6">
+                    <Card>
+                      <CardContent className="p-0">
+                        <div className="grid grid-cols-8 border-b">
+                          <div className="p-3 border-r bg-gray-50">
+                            <Clock className="h-4 w-4 text-gray-500" />
                           </div>
-                        ))}
-                      </div>
+                          {days.map((day, index) => (
+                            <div key={day} className="p-3 text-center border-r last:border-r-0 bg-gray-50">
+                              <div className="text-sm font-medium text-gray-900">{day}</div>
+                              <div className="text-xs text-gray-500">May {dates[index]}</div>
+                            </div>
+                          ))}
+                        </div>
 
-                      {/* Calendar Grid */}
-                      <div className="grid grid-cols-8">
-                        {timeSlots.map((time, hourIndex) => (
-                          <div key={time} className="contents">
-                            {/* Time Label */}
-                            <div className="p-3 text-sm text-gray-500 border-b border-gray-200 bg-gray-50">{time}</div>
-
-                            {/* Day Columns */}
-                            {days.map((_, dayIndex) => {
+                        {timeSlots.map((time, timeIndex) => (
+                          <div key={time} className="grid grid-cols-8 border-b last:border-b-0">
+                            <div className="p-3 border-r bg-gray-50 text-sm text-gray-600 font-medium">{time}</div>
+                            {days.map((day, dayIndex) => {
                               const scheduledEvent = scheduledEvents.find(
-                                (event) =>
-                                  event.day === dayIndex &&
-                                  hourIndex >= event.startHour &&
-                                  hourIndex < event.startHour + event.duration,
+                                (event) => event.day === dayIndex && event.time === timeIndex,
                               )
-
-                              const isEventStart = scheduledEvent && hourIndex === scheduledEvent.startHour
-                              const availability = getSlotAvailability(dayIndex, hourIndex)
-                              const availableInstructors = getAvailableInstructors(dayIndex, hourIndex)
+                              const availabilityKey = `${dayIndex}-${timeIndex}`
+                              const slotAvailability = availability[availabilityKey]
 
                               return (
-                                <div
-                                  key={`${dayIndex}-${hourIndex}`}
-                                  className="border-l border-b border-gray-200 relative"
-                                >
-                                  {isEventStart ? (
-                                    <div className="absolute inset-0 p-1">
-                                      <EventCard event={scheduledEvent} />
-                                    </div>
-                                  ) : !scheduledEvent ? (
-                                    <TimeSlot
-                                      day={dayIndex}
-                                      hour={hourIndex}
-                                      availability={availability}
-                                      availableInstructors={availableInstructors}
-                                    />
-                                  ) : (
-                                    <div className="h-16" /> // Empty space for multi-hour events
-                                  )}
+                                <div key={`${day}-${time}`} className="border-r last:border-r-0">
+                                  <TimeSlot
+                                    day={dayIndex}
+                                    time={timeIndex}
+                                    availability={slotAvailability}
+                                    scheduledEvent={scheduledEvent}
+                                    onSchedule={handleSchedule}
+                                  />
                                 </div>
                               )
                             })}
                           </div>
                         ))}
-                      </div>
-                    </div>
-
-                    {/* Legend */}
-                    <div className="mt-6 flex flex-wrap gap-4 text-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-green-50 border border-green-200 rounded"></div>
-                        <span>Available</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-amber-50 border border-amber-200 rounded"></div>
-                        <span>Constrained</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-gray-50 border border-gray-200 rounded"></div>
-                        <span>Unavailable</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-white border border-gray-200 rounded shadow-sm"></div>
-                        <span>Scheduled Event</span>
-                      </div>
-                    </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
         </SidebarInset>
+
+        {/* Schedule Modal */}
+        <Dialog open={!!scheduleModal} onOpenChange={() => setScheduleModal(null)}>
+          {scheduleModal && (
+            <ScheduleModal day={scheduleModal.day} time={scheduleModal.time} onClose={() => setScheduleModal(null)} />
+          )}
+        </Dialog>
       </SidebarProvider>
     </ThemeProvider>
   )
