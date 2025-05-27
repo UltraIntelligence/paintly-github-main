@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, ChevronRight, Calendar, List, Grid3X3, Clock, Users, AlertTriangle } from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar, List, Grid3X3, Clock, Users, AlertTriangle, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -359,36 +359,29 @@ function ScheduleContent() {
       (event) => event.day === dayIndex && hourIndex >= event.startHour && hourIndex < event.startHour + event.duration,
     )
 
-    // Render scheduled event
+    // Render scheduled event (only at start hour)
     if (scheduledEvent && hourIndex === scheduledEvent.startHour) {
       const instructor = getInstructor(scheduledEvent.instructor)
-      const statusColors = {
-        Live: "bg-blue-500 text-white animate-pulse",
-        Active: "bg-green-100 text-green-700",
-        "Starting in 2 hours": "bg-amber-100 text-amber-700",
-      }
 
       return (
         <div
           key={`${dayIndex}-${hourIndex}`}
           className="relative border-l border-gray-200 cursor-pointer"
-          style={{ height: `${scheduledEvent.duration * 64}px` }}
+          style={{
+            gridRow: `span ${scheduledEvent.duration}`,
+            height: `${scheduledEvent.duration * 80}px`,
+          }}
           onClick={() => handleEventClick(scheduledEvent)}
         >
-          <Card className="absolute inset-1 bg-white shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 cursor-pointer">
-            <CardContent className="p-3 h-full flex flex-col justify-between">
+          <Card className="absolute inset-1 bg-white shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 cursor-pointer h-[calc(100%-8px)]">
+            <CardContent className="p-3 h-full flex flex-col justify-between group">
               <div>
                 <div className="text-sm font-medium text-gray-900 mb-1 line-clamp-1">{scheduledEvent.title}</div>
                 <div className="text-xs text-gray-600 mb-2 line-clamp-1">{scheduledEvent.titleEn}</div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={instructor?.avatar || "/placeholder.svg"} />
-                    <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
-                      {instructor?.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-xs text-gray-700 truncate">{instructor?.name}</span>
-                </div>
+                {/* Only show Live status badge */}
+                {scheduledEvent.status === "Live" && (
+                  <Badge className="text-xs px-2 py-1 bg-blue-500 text-white animate-pulse">Live</Badge>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-xs text-gray-600">
@@ -397,11 +390,22 @@ function ScheduleContent() {
                     {scheduledEvent.participants.current}/{scheduledEvent.participants.max}
                   </span>
                 </div>
-                <Badge
-                  className={`text-xs px-2 py-1 ${statusColors[scheduledEvent.status as keyof typeof statusColors] || "bg-gray-100 text-gray-700"}`}
-                >
-                  {scheduledEvent.status}
-                </Badge>
+                {/* Instructor avatar with tooltip */}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={instructor?.avatar || "/placeholder.svg"} />
+                        <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                          {instructor?.initials}
+                        </AvatarFallback>
+                      </Avatar>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <span className="text-sm">{instructor?.name}</span>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </CardContent>
           </Card>
@@ -410,8 +414,12 @@ function ScheduleContent() {
     }
 
     // Skip rendering for continuation of multi-hour events
-    if (scheduledEvent && hourIndex > scheduledEvent.startHour) {
-      return <div key={`${dayIndex}-${hourIndex}`} className="h-16 border-l border-gray-200" />
+    if (
+      scheduledEvent &&
+      hourIndex > scheduledEvent.startHour &&
+      hourIndex < scheduledEvent.startHour + scheduledEvent.duration
+    ) {
+      return null // Don't render anything for spanned slots
     }
 
     // Render availability slots
@@ -431,7 +439,7 @@ function ScheduleContent() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="absolute bottom-1 right-1 flex items-center gap-1">
+              <div className="absolute bottom-1 right-1 flex items-center gap-1 z-10">
                 {availableInstructors.slice(0, 3).map((instructor) => (
                   <div key={instructor.id} className="relative">
                     <Avatar className="h-8 w-8">
@@ -477,7 +485,7 @@ function ScheduleContent() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="absolute bottom-1 right-1 flex items-center gap-1">
+              <div className="absolute bottom-1 right-1 flex items-center gap-1 z-10">
                 <div className="relative">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={constrainedInstructor?.avatar || "/placeholder.svg"} />
@@ -509,10 +517,10 @@ function ScheduleContent() {
     return (
       <div
         key={`${dayIndex}-${hourIndex}`}
-        className={`relative h-16 border-l ${borderColor} ${bgColor} ${cursor} transition-all duration-200 hover:shadow-sm hover:border-green-300`}
+        className={`relative border-l ${borderColor} ${cursor} transition-all duration-200 hover:shadow-sm hover:border-green-300 min-h-[80px]`}
         onClick={() => handleSlotClick(dayIndex, hourIndex)}
       >
-        {content}
+        <div className={`absolute inset-0 ${bgColor}`}>{content}</div>
       </div>
     )
   }
@@ -566,67 +574,119 @@ function ScheduleContent() {
     <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
       <div className="px-4 lg:px-6">
         {/* Header */}
-
-        {/* Controls */}
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-6">
-          {/* Location Tabs */}
-          <Tabs value={selectedLocation} onValueChange={setSelectedLocation} className="w-full lg:w-auto">
-            <TabsList className="grid w-full grid-cols-5 lg:w-auto">
-              {locations.map((location) => (
-                <TabsTrigger key={location.id} value={location.id} className="flex items-center gap-2">
-                  {location.name}
-                  {location.count > 0 && (
-                    <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
-                      {location.count}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-
-          <div className="flex items-center gap-4">
-            {/* View Toggle */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant={selectedView === "month" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedView("month")}
-                className="flex items-center gap-2"
-              >
-                <Calendar className="h-4 w-4" />
-                Month
-              </Button>
-              <Button
-                variant={selectedView === "week" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedView("week")}
-                className="flex items-center gap-2"
-                style={{ backgroundColor: selectedView === "week" ? "#3b82f6" : undefined }}
-              >
-                <Grid3X3 className="h-4 w-4" />
-                Week
-              </Button>
-              <Button
-                variant={selectedView === "list" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedView("list")}
-                className="flex items-center gap-2"
-              >
-                <List className="h-4 w-4" />
-                List
-              </Button>
+        <div className="flex flex-col gap-4 mb-6">
+          {/* Top row - Search and Location Dropdown */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+            {/* Search */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search events..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
             </div>
 
-            {/* Date Navigation */}
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="text-sm font-medium px-4">May 19-25, 2025</span>
-              <Button variant="outline" size="sm">
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+            {/* All Locations Dropdown - Mobile */}
+            <div className="sm:hidden">
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All Locations" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations.map((location) => (
+                    <SelectItem key={location.id} value={location.id}>
+                      {location.name} {location.count > 0 && `(${location.count})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* All Locations Dropdown - Desktop */}
+            <div className="hidden sm:block">
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="All Locations" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations.map((location) => (
+                    <SelectItem key={location.id} value={location.id}>
+                      {location.name} {location.count > 0 && `(${location.count})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Bottom row - Location Tabs and View Controls */}
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            {/* Location Tabs */}
+            <div className="hidden sm:block">
+              <Tabs value={selectedLocation} onValueChange={setSelectedLocation} className="w-full lg:w-auto">
+                <TabsList className="grid w-full grid-cols-5 lg:w-auto bg-gray-100">
+                  {locations.map((location) => (
+                    <TabsTrigger
+                      key={location.id}
+                      value={location.id}
+                      className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=inactive]:bg-transparent data-[state=inactive]:text-gray-600"
+                    >
+                      {location.name}
+                      {location.count > 0 && (
+                        <span className="ml-1 h-5 w-5 rounded-full bg-gray-600 text-white text-xs flex items-center justify-center">
+                          {location.count}
+                        </span>
+                      )}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
+
+            <div className="flex items-center gap-4">
+              {/* View Toggle */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={selectedView === "month" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedView("month")}
+                  className="flex items-center gap-2"
+                >
+                  <Calendar className="h-4 w-4" />
+                  Month
+                </Button>
+                <Button
+                  variant={selectedView === "week" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedView("week")}
+                  className="flex items-center gap-2"
+                  style={{ backgroundColor: selectedView === "week" ? "#3b82f6" : undefined }}
+                >
+                  <Grid3X3 className="h-4 w-4" />
+                  Week
+                </Button>
+                <Button
+                  variant={selectedView === "list" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedView("list")}
+                  className="flex items-center gap-2"
+                >
+                  <List className="h-4 w-4" />
+                  List
+                </Button>
+              </div>
+
+              {/* Date Navigation */}
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm font-medium px-4">May 19-25, 2025</span>
+                <Button variant="outline" size="sm">
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -647,15 +707,38 @@ function ScheduleContent() {
               ))}
             </div>
 
-            {/* Time slots */}
-            {timeSlots.map((time, hourIndex) => (
-              <div key={time} className="grid grid-cols-8 border-b last:border-b-0">
-                {/* Time label */}
-                <div className="p-4 bg-gray-50 border-r text-sm text-gray-600 flex items-center">{time}</div>
-                {/* Day slots */}
-                {days.map((_, dayIndex) => renderTimeSlot(dayIndex, hourIndex))}
-              </div>
-            ))}
+            {/* Time slots with proper grid structure for spanning */}
+            <div className="grid grid-cols-8" style={{ gridTemplateRows: `repeat(${timeSlots.length}, 80px)` }}>
+              {/* Render all time labels first */}
+              {timeSlots.map((time, hourIndex) => (
+                <div
+                  key={`time-${hourIndex}`}
+                  className="p-4 bg-gray-50 border-r border-b text-sm text-gray-600 flex items-center"
+                  style={{ gridColumn: 1, gridRow: hourIndex + 1 }}
+                >
+                  {time}
+                </div>
+              ))}
+
+              {/* Render all day slots with proper grid positioning */}
+              {days.map((_, dayIndex) =>
+                timeSlots.map((_, hourIndex) => {
+                  const slot = renderTimeSlot(dayIndex, hourIndex)
+                  return slot ? (
+                    <div
+                      key={`${dayIndex}-${hourIndex}`}
+                      style={{
+                        gridColumn: dayIndex + 2,
+                        gridRow: slot.props?.style?.gridRow || hourIndex + 1,
+                      }}
+                      className="border-b border-gray-200"
+                    >
+                      {slot}
+                    </div>
+                  ) : null
+                }),
+              )}
+            </div>
           </CardContent>
         </Card>
 
