@@ -1,121 +1,60 @@
-"use client"
+import type React from "react"
+import { BookOpen, Bot, SquareTerminal } from "lucide-react"
+import { NavItem } from "@/components/nav/nav-item"
 
-import type * as React from "react"
-import {
-  PaintbrushIcon,
-  PaletteIcon,
-  CalendarDaysIcon,
-  Users2Icon,
-  MapPinIcon,
-  Building2Icon,
-  GiftIcon,
-  LayoutTemplateIcon,
-  HelpCircleIcon,
-  SearchIcon,
-  SettingsIcon,
-} from "lucide-react"
-
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { NavDocuments } from "./nav-documents"
+interface AppSidebarProps {
+  className?: string
+}
 
 const data = {
-  user: {
-    name: "Cathy Thompson",
-    email: "tokyo@artbar.co.jp",
-    avatar: "/images/cathy-avatar.png",
-  },
   navMain: [
     {
       title: "Today",
-      url: "#",
-      icon: PaletteIcon,
+      url: "/dashboard",
+      icon: SquareTerminal,
     },
     {
       title: "Schedule",
-      url: "#",
-      icon: CalendarDaysIcon,
+      url: "/schedule",
+      icon: Bot,
     },
     {
       title: "Templates",
       url: "/templates",
-      icon: LayoutTemplateIcon,
+      icon: BookOpen,
     },
   ],
-  navDocuments: [
-    {
-      name: "Instructors",
-      url: "#",
-      icon: Users2Icon,
-    },
-    {
-      name: "Locations",
-      url: "#",
-      icon: MapPinIcon,
-    },
-    {
-      name: "Gift Certificates",
-      url: "#",
-      icon: GiftIcon,
-    },
-    {
-      name: "Private Events",
-      url: "#",
-      icon: Building2Icon,
-    },
-  ],
-  navSecondary: [
+  navAux: [
     {
       title: "Settings",
-      url: "#",
-      icon: SettingsIcon,
+      url: "/settings",
     },
     {
-      title: "Get Help",
-      url: "#",
-      icon: HelpCircleIcon,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: SearchIcon,
+      title: "Support",
+      url: "/support",
     },
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export const AppSidebar: React.FC<AppSidebarProps> = ({ className = "" }) => {
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <a href="#">
-                <PaintbrushIcon className="h-5 w-5" />
-                <span className="text-base font-semibold text-black">Artbar Tokyo</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.navDocuments} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-    </Sidebar>
+    <div
+      className={`flex flex-col gap-y-5 overflow-y-auto overflow-x-hidden rounded-lg border bg-secondary px-3 py-6 ${className}`}
+    >
+      <div>
+        <ul className="space-y-1">
+          {data.navMain.map((item) => (
+            <NavItem key={item.title} title={item.title} url={item.url} icon={item.icon} />
+          ))}
+        </ul>
+      </div>
+      <div className="mt-auto">
+        <ul className="space-y-1">
+          {data.navAux.map((item) => (
+            <NavItem key={item.title} title={item.title} url={item.url} />
+          ))}
+        </ul>
+      </div>
+    </div>
   )
 }
