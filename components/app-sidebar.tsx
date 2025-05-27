@@ -38,7 +38,7 @@ const data = {
   navMain: [
     {
       title: "Today",
-      url: "#",
+      url: "/dashboard",
       icon: PaletteIcon,
     },
     {
