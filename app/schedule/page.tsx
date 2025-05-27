@@ -1,12 +1,16 @@
 "use client"
 
+import { AvatarFallback } from "@/components/ui/avatar"
+
+import { AvatarImage } from "@/components/ui/avatar"
+
+import { Avatar } from "@/components/ui/avatar"
+
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, Calendar, List, Grid3X3, Clock, Users, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -434,20 +438,30 @@ function ScheduleContent() {
         {/* Controls */}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-6">
           {/* Location Tabs */}
-          <Tabs value={selectedLocation} onValueChange={setSelectedLocation} className="w-full lg:w-auto">
-            <TabsList className="grid w-full grid-cols-5 lg:w-auto">
-              {locations.map((location) => (
-                <TabsTrigger key={location.id} value={location.id} className="flex items-center gap-2">
-                  {location.name}
-                  {location.count > 0 && (
-                    <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
-                      {location.count}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+          <div className="flex space-x-1">
+            {locations.map((location) => (
+              <button
+                key={location.id}
+                onClick={() => setSelectedLocation(location.id)}
+                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  selectedLocation === location.id
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {location.name}
+                {location.count > 0 && (
+                  <span
+                    className={`text-xs px-1.5 py-0.5 rounded-full ${
+                      selectedLocation === location.id ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {location.count}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
 
           <div className="flex items-center gap-4">
             {/* View Toggle */}
