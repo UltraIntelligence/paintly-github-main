@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Plus, Download, Upload, Users, CheckCircle2, XCircle, AlertCircle, Phone, MapPin } from "lucide-react"
+import { Search, Plus, Download, Upload, Users, MoreHorizontal } from "lucide-react"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -15,6 +15,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -28,7 +30,7 @@ const instructorsData = [
     id: 1,
     name: { japanese: "キャシー・トンプソン", english: "Cathy Thompson" },
     photo: "/images/cathy-avatar.png",
-    artwork: "/placeholder.svg?height=120&width=240&query=golden textured business art",
+    artwork: "/placeholder.svg?height=240&width=320&query=golden textured business art",
     artStyle: "Leadership",
     role: "CEO & Founder",
     roleBadgeColor: "bg-yellow-100 text-yellow-800",
@@ -43,7 +45,7 @@ const instructorsData = [
     id: 2,
     name: { japanese: "ナオミ", english: "Naomi" },
     photo: "/placeholder.svg?height=60&width=60&query=japanese woman artist",
-    artwork: "/placeholder.svg?height=120&width=240&query=abstract paint pouring colorful",
+    artwork: "/placeholder.svg?height=240&width=320&query=abstract paint pouring colorful",
     artStyle: "Abstract",
     role: "Marketing Director",
     roleBadgeColor: "bg-blue-100 text-blue-800",
@@ -58,7 +60,7 @@ const instructorsData = [
     id: 3,
     name: { japanese: "ルーシー", english: "Luci" },
     photo: "/placeholder.svg?height=60&width=60&query=emily carr graduate artist",
-    artwork: "/placeholder.svg?height=120&width=240&query=fantasy landscape dreamy colors",
+    artwork: "/placeholder.svg?height=240&width=320&query=fantasy landscape dreamy colors",
     artStyle: "Fantasy",
     role: "Senior Instructor",
     roleBadgeColor: "bg-green-100 text-green-800",
@@ -73,7 +75,7 @@ const instructorsData = [
     id: 4,
     name: { japanese: "モモ", english: "Momo" },
     photo: "/placeholder.svg?height=60&width=60&query=musashino art university graduate",
-    artwork: "/placeholder.svg?height=120&width=240&query=abstract dot technique colorful patterns",
+    artwork: "/placeholder.svg?height=240&width=320&query=abstract dot technique colorful patterns",
     artStyle: "Abstract",
     role: "Art Instructor",
     roleBadgeColor: "bg-purple-100 text-purple-800",
@@ -88,7 +90,7 @@ const instructorsData = [
     id: 5,
     name: { japanese: "ナナコ", english: "Nanako" },
     photo: "/placeholder.svg?height=60&width=60&query=japanese painting specialist",
-    artwork: "/placeholder.svg?height=120&width=240&query=traditional japanese painting delicate",
+    artwork: "/placeholder.svg?height=240&width=320&query=traditional japanese painting delicate",
     artStyle: "Traditional",
     role: "Traditional Art Instructor",
     roleBadgeColor: "bg-green-100 text-green-800",
@@ -103,7 +105,7 @@ const instructorsData = [
     id: 6,
     name: { japanese: "アイカ", english: "Aika" },
     photo: "/placeholder.svg?height=60&width=60&query=oil painting artist soft colors",
-    artwork: "/placeholder.svg?height=120&width=240&query=soft natural elements oil painting",
+    artwork: "/placeholder.svg?height=240&width=320&query=soft natural elements oil painting",
     artStyle: "Natural",
     role: "Oil Painting Specialist",
     roleBadgeColor: "bg-purple-100 text-purple-800",
@@ -118,7 +120,7 @@ const instructorsData = [
     id: 7,
     name: { japanese: "キヨエ", english: "Kiyoe" },
     photo: "/placeholder.svg?height=60&width=60&query=pottery specialist temple university",
-    artwork: "/placeholder.svg?height=120&width=240&query=pottery ceramics handmade",
+    artwork: "/placeholder.svg?height=240&width=320&query=pottery ceramics handmade",
     artStyle: "Ceramics",
     role: "Pottery Instructor",
     roleBadgeColor: "bg-purple-100 text-purple-800",
@@ -133,7 +135,7 @@ const instructorsData = [
     id: 8,
     name: { japanese: "ミチ・キム", english: "Michi Kim" },
     photo: "/placeholder.svg?height=60&width=60&query=korean kids art specialist",
-    artwork: "/placeholder.svg?height=120&width=240&query=bright colorful kids art playful",
+    artwork: "/placeholder.svg?height=240&width=320&query=bright colorful kids art playful",
     artStyle: "Kids Art",
     role: "Kids Art Specialist",
     roleBadgeColor: "bg-purple-100 text-purple-800",
@@ -148,7 +150,7 @@ const instructorsData = [
     id: 9,
     name: { japanese: "ユウキ", english: "Yuki" },
     photo: "/placeholder.svg?height=60&width=60&query=watercolor artist",
-    artwork: "/placeholder.svg?height=120&width=240&query=delicate watercolor botanical",
+    artwork: "/placeholder.svg?height=240&width=320&query=delicate watercolor botanical",
     artStyle: "Watercolor",
     role: "Watercolor Instructor",
     roleBadgeColor: "bg-purple-100 text-purple-800",
@@ -163,7 +165,7 @@ const instructorsData = [
     id: 10,
     name: { japanese: "タケシ", english: "Takeshi" },
     photo: "/placeholder.svg?height=60&width=60&query=street art graffiti artist",
-    artwork: "/placeholder.svg?height=120&width=240&query=urban street art graffiti style",
+    artwork: "/placeholder.svg?height=240&width=320&query=urban street art graffiti style",
     artStyle: "Street Art",
     role: "Street Art Instructor",
     roleBadgeColor: "bg-purple-100 text-purple-800",
@@ -211,16 +213,16 @@ function InstructorsContent() {
     })
   }, [searchTerm, selectedLocation, selectedAvailability, activeTab])
 
-  const getAvailabilityIcon = (availability: string) => {
+  const getAvailabilityBadgeColor = (availability: string) => {
     switch (availability) {
       case "available":
-        return <CheckCircle2 className="h-3 w-3 text-green-500" />
+        return "bg-green-100 text-green-700"
       case "limited":
-        return <AlertCircle className="h-3 w-3 text-amber-500" />
+        return "bg-amber-100 text-amber-700"
       case "unavailable":
-        return <XCircle className="h-3 w-3 text-red-500" />
+        return "bg-red-100 text-red-700"
       default:
-        return <CheckCircle2 className="h-3 w-3 text-green-500" />
+        return "bg-gray-100 text-gray-700"
     }
   }
 
@@ -237,25 +239,18 @@ function InstructorsContent() {
     }
   }
 
-  const getLanguageBadgeColor = (language: string) => {
-    switch (language) {
-      case "English":
-        return "bg-blue-500"
-      case "Japanese":
-        return "bg-emerald-500"
-      case "Chinese":
-        return "bg-violet-500"
-      case "Korean":
-        return "bg-amber-500"
-      default:
-        return "bg-gray-500"
+  const getRoleBadgeColor = (role: string) => {
+    if (role.includes("CEO") || role.includes("Director")) {
+      return "bg-yellow-100 text-yellow-700"
+    } else if (role.includes("Senior")) {
+      return "bg-blue-100 text-blue-700"
+    } else {
+      return "bg-purple-100 text-purple-700"
     }
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
-      {/* Header */}
-
+    <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
       {/* Search and Filters */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
         <div className="relative flex-1 max-w-sm">
@@ -338,7 +333,7 @@ function InstructorsContent() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
               {filteredInstructors.map((instructor) => (
                 <motion.div
                   key={instructor.id}
@@ -346,96 +341,95 @@ function InstructorsContent() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="group cursor-pointer overflow-hidden border-0 bg-muted/50 hover:bg-background hover:shadow-md transition-all duration-200">
-                    <div className="aspect-[4/3] overflow-hidden">
-                      <img
-                        src={instructor.artwork || "/placeholder.svg?height=120&width=240&query=abstract art"}
-                        alt={`Artwork by ${instructor.name.english}`}
-                        className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-                      />
-                    </div>
-                    <CardContent className="p-4">
-                      {/* Header with photo and name */}
-                      <div className="flex items-start gap-3 mb-3">
-                        <Avatar className="h-12 w-12 border-2 border-background shadow-sm">
-                          <AvatarImage
-                            src={instructor.photo || "/placeholder.svg"}
-                            alt={`Profile photo of ${instructor.name.english}`}
+                  <Card className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full">
+                    {/* Image Section */}
+                    <div className="relative overflow-hidden">
+                      <AspectRatio ratio={4 / 3} className="w-full">
+                        <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
+                          <img
+                            src={instructor.artwork || "/placeholder.svg"}
+                            alt={`Artwork by ${instructor.name.english}`}
+                            className="h-full w-full object-cover"
                           />
-                          <AvatarFallback className="text-sm font-medium bg-muted">
+                        </div>
+                      </AspectRatio>
+                      <Badge
+                        className={`absolute top-2 right-2 text-xs px-2 py-1 ${getAvailabilityBadgeColor(
+                          instructor.availability,
+                        )}`}
+                      >
+                        {getAvailabilityText(instructor.availability)}
+                      </Badge>
+                    </div>
+
+                    {/* Content Section */}
+                    <CardContent className="flex-1 p-5 flex flex-col">
+                      <div className="flex items-center gap-3 mb-3">
+                        <Avatar className="h-10 w-10 border-2 border-background">
+                          <AvatarImage src={instructor.photo || "/placeholder.svg"} alt={instructor.name.english} />
+                          <AvatarFallback>
                             {instructor.name.english
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-sm leading-tight mb-1 truncate">
+                        <div className="space-y-1">
+                          <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
                             {instructor.name.japanese}
                           </h3>
-                          <p className="text-xs text-muted-foreground truncate">{instructor.name.english}</p>
-                          <Badge
-                            variant="secondary"
-                            className={`mt-1 text-xs px-2 py-0.5 ${instructor.roleBadgeColor}`}
-                          >
-                            {instructor.role}
-                          </Badge>
+                          <p className="text-sm text-gray-600 line-clamp-1">{instructor.name.english}</p>
                         </div>
                       </div>
 
-                      {/* Languages */}
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {instructor.languages.slice(0, 3).map((language) => (
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        <Badge
+                          variant="outline"
+                          className={`text-xs px-2 py-0.5 border ${getRoleBadgeColor(instructor.role)}`}
+                        >
+                          {instructor.role}
+                        </Badge>
+                        {instructor.languages.slice(0, 1).map((language) => (
                           <Badge
                             key={language}
-                            className={`text-xs px-2 py-0.5 text-white ${getLanguageBadgeColor(language)}`}
+                            variant="outline"
+                            className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
                           >
                             {language}
                           </Badge>
                         ))}
-                        {instructor.languages.length > 3 && (
-                          <Badge variant="outline" className="text-xs px-2 py-0.5">
-                            +{instructor.languages.length - 3}
-                          </Badge>
-                        )}
                       </div>
 
-                      {/* Specialties */}
-                      <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
-                        {instructor.specialties.join(", ")}
-                      </p>
+                      <p className="text-xs text-gray-500 mb-3 line-clamp-2">{instructor.bio}</p>
 
-                      {/* Bio */}
-                      <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{instructor.bio}</p>
-
-                      {/* Availability and Contact */}
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          {getAvailabilityIcon(instructor.availability)}
-                          <span className="text-xs font-medium">{getAvailabilityText(instructor.availability)}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Phone className="h-3 w-3" />
-                          <span className="truncate">{instructor.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <MapPin className="h-3 w-3" />
-                          <span className="truncate">
-                            {instructor.locations.filter((loc) => loc !== "All Locations").join(", ")}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex gap-2 mt-4">
-                        <Button size="sm" className="flex-1 h-8 text-xs">
-                          View
-                        </Button>
-                        <Button variant="outline" size="sm" className="flex-1 h-8 text-xs">
-                          Schedule
-                        </Button>
+                      <div className="text-xs text-gray-500 mt-auto">
+                        {instructor.locations
+                          .filter((loc) => loc !== "All Locations")
+                          .slice(0, 2)
+                          .join(", ")}
                       </div>
                     </CardContent>
+
+                    {/* Actions Section - Fixed at bottom */}
+                    <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="default" className="flex-1 text-xs">
+                          View Details
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button size="sm" variant="outline" className="px-2">
+                              <MoreHorizontal className="h-3.5 w-3.5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem className="text-sm">Schedule</DropdownMenuItem>
+                            <DropdownMenuItem className="text-sm">Edit Profile</DropdownMenuItem>
+                            <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
                   </Card>
                 </motion.div>
               ))}
@@ -451,7 +445,7 @@ export default function InstructorsPage() {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader />
           <AnimatePresence mode="wait">

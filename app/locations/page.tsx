@@ -2,19 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import {
-  Search,
-  Plus,
-  Download,
-  Upload,
-  MapPin,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Phone,
-  Globe,
-  Building,
-} from "lucide-react"
+import { Search, Plus, Download, Upload, MapPin, MoreHorizontal } from "lucide-react"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -26,6 +14,8 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -234,16 +224,16 @@ function LocationsContent() {
     })
   }, [searchTerm, selectedRegion, selectedStatus, activeTab])
 
-  const getStatusIcon = (status: string) => {
+  const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "active":
-        return <CheckCircle2 className="h-3 w-3 text-green-500" />
+        return "bg-green-100 text-green-700"
       case "under_construction":
-        return <AlertCircle className="h-3 w-3 text-amber-500" />
+        return "bg-amber-100 text-amber-700"
       case "coming_soon":
-        return <XCircle className="h-3 w-3 text-blue-500" />
+        return "bg-blue-100 text-blue-700"
       default:
-        return <CheckCircle2 className="h-3 w-3 text-green-500" />
+        return "bg-gray-100 text-gray-700"
     }
   }
 
@@ -260,27 +250,23 @@ function LocationsContent() {
     }
   }
 
-  const getFeatureBadgeColor = (feature: string) => {
-    switch (feature) {
-      case "Private Events":
-        return "bg-blue-100 text-blue-800"
-      case "Corporate Events":
-        return "bg-purple-100 text-purple-800"
-      case "Kids Classes":
-        return "bg-pink-100 text-pink-800"
-      case "Wheelchair Access":
-        return "bg-green-100 text-green-800"
-      case "Outdoor Space":
-        return "bg-emerald-100 text-emerald-800"
-      case "Ocean View":
-        return "bg-cyan-100 text-cyan-800"
+  const getTypeBadgeColor = (type: string) => {
+    switch (type) {
+      case "flagship":
+        return "bg-yellow-100 text-yellow-700"
+      case "premium":
+        return "bg-purple-100 text-purple-700"
+      case "standard":
+        return "bg-blue-100 text-blue-700"
+      case "franchise":
+        return "bg-green-100 text-green-700"
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-700"
     }
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
+    <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
       {/* Search and Filters */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
         <div className="relative flex-1 max-w-sm">
@@ -361,7 +347,7 @@ function LocationsContent() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
               {filteredLocations.map((location) => (
                 <motion.div
                   key={location.id}
@@ -369,83 +355,79 @@ function LocationsContent() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="group cursor-pointer overflow-hidden border-0 bg-muted/50 hover:bg-background hover:shadow-md transition-all duration-200">
-                    <div className="aspect-[4/3] overflow-hidden">
-                      <img
-                        src={location.photo || "/placeholder.svg?height=240&width=320&query=art studio"}
-                        alt={`${location.name.english} location`}
-                        className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-                      />
-                    </div>
-                    <CardContent className="p-4">
-                      {/* Header with name and type */}
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-sm leading-tight mb-1 truncate">{location.name.japanese}</h3>
-                          <p className="text-xs text-muted-foreground truncate">{location.name.english}</p>
+                  <Card className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full">
+                    {/* Image Section */}
+                    <div className="relative overflow-hidden">
+                      <AspectRatio ratio={4 / 3} className="w-full">
+                        <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
+                          <img
+                            src={location.photo || "/placeholder.svg"}
+                            alt={`${location.name.english} location`}
+                            className="h-full w-full object-cover"
+                          />
                         </div>
-                        <Badge variant="secondary" className={`ml-2 text-xs px-2 py-0.5 ${location.typeBadgeColor}`}>
+                      </AspectRatio>
+                      <Badge
+                        className={`absolute top-2 right-2 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}
+                      >
+                        {getStatusText(location.status)}
+                      </Badge>
+                    </div>
+
+                    {/* Content Section */}
+                    <CardContent className="flex-1 p-5 flex flex-col">
+                      <div className="space-y-1 mb-3">
+                        <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
+                          {location.name.japanese}
+                        </h3>
+                        <p className="text-sm text-gray-600 line-clamp-1">{location.name.english}</p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        <Badge
+                          variant="outline"
+                          className={`text-xs px-2 py-0.5 border ${getTypeBadgeColor(location.type)}`}
+                        >
                           {location.type.charAt(0).toUpperCase() + location.type.slice(1)}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
+                        >
+                          {location.capacity} capacity
                         </Badge>
                       </div>
 
-                      {/* Address */}
-                      <div className="mb-3">
-                        <p className="text-xs text-muted-foreground mb-1 line-clamp-2">{location.address.japanese}</p>
-                        <p className="text-xs text-muted-foreground line-clamp-2">{location.address.english}</p>
-                      </div>
+                      <p className="text-xs text-gray-500 mb-3 line-clamp-2">
+                        {location.address.english.split(",")[0]}
+                      </p>
 
-                      {/* Access */}
-                      <div className="mb-3">
-                        <p className="text-xs font-medium mb-1">Access:</p>
-                        <p className="text-xs text-muted-foreground mb-1 line-clamp-2">{location.access.japanese}</p>
-                        <p className="text-xs text-muted-foreground line-clamp-2">{location.access.english}</p>
-                      </div>
-
-                      {/* Features */}
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {location.features.slice(0, 3).map((feature) => (
-                          <Badge key={feature} className={`text-xs px-2 py-0.5 ${getFeatureBadgeColor(feature)}`}>
-                            {feature}
-                          </Badge>
-                        ))}
-                        {location.features.length > 3 && (
-                          <Badge variant="outline" className="text-xs px-2 py-0.5">
-                            +{location.features.length - 3}
-                          </Badge>
-                        )}
-                      </div>
-
-                      {/* Status and Details */}
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          {getStatusIcon(location.status)}
-                          <span className="text-xs font-medium">{getStatusText(location.status)}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Building className="h-3 w-3" />
-                          <span className="truncate">Capacity: {location.capacity} people</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Phone className="h-3 w-3" />
-                          <span className="truncate">{location.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Globe className="h-3 w-3" />
-                          <span className="truncate">{location.website}</span>
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex gap-2 mt-4">
-                        <Button size="sm" className="flex-1 h-8 text-xs">
-                          View
-                        </Button>
-                        <Button variant="outline" size="sm" className="flex-1 h-8 text-xs">
-                          Schedule
-                        </Button>
+                      <div className="text-xs text-gray-500 mt-auto">
+                        {location.features.slice(0, 2).join(", ")}
+                        {location.features.length > 2 && ` +${location.features.length - 2} more`}
                       </div>
                     </CardContent>
+
+                    {/* Actions Section - Fixed at bottom */}
+                    <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="default" className="flex-1 text-xs">
+                          View Details
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button size="sm" variant="outline" className="px-2">
+                              <MoreHorizontal className="h-3.5 w-3.5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem className="text-sm">Schedule Event</DropdownMenuItem>
+                            <DropdownMenuItem className="text-sm">Edit Location</DropdownMenuItem>
+                            <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
                   </Card>
                 </motion.div>
               ))}
@@ -461,7 +443,7 @@ export default function LocationsPage() {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader />
           <AnimatePresence mode="wait">

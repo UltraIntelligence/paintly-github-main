@@ -280,9 +280,11 @@ export default function TemplatesPage() {
                           <div className="relative overflow-hidden">
                             <AspectRatio ratio={4 / 3} className="w-full">
                               <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                                <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center">
-                                  <div className="text-gray-400 text-lg font-medium">{template.category}</div>
-                                </div>
+                                <img
+                                  src={`/placeholder.svg?height=240&width=320&query=${encodeURIComponent(template.englishTitle + " " + template.category + " art painting")}`}
+                                  alt={`${template.englishTitle} template`}
+                                  className="h-full w-full object-cover"
+                                />
                               </div>
                             </AspectRatio>
                             {template.popular && (
