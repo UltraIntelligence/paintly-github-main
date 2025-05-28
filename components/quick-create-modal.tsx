@@ -43,7 +43,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
             {/* New Template Card */}
             <Card className="flex flex-col min-h-[250px] sm:min-h-[280px] cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-gray-200 bg-white">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-semibold text-gray-900">New Template</CardTitle>
+                <CardTitle className="text-xl font-semibold text-gray-900">Event Template</CardTitle>
                 <CardDescription className="text-sm text-gray-600 leading-5 h-10">
                   Create a template now to schedule later in the calendar
                 </CardDescription>
@@ -69,7 +69,7 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
             {/* Schedule Event Card */}
             <Card className="flex flex-col min-h-[250px] sm:min-h-[280px] cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-gray-200 bg-white">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-semibold text-gray-900">Schedule Event</CardTitle>
+                <CardTitle className="text-xl font-semibold text-gray-900">Scheduled Event</CardTitle>
                 <CardDescription className="text-sm text-gray-600 leading-5 h-10">
                   Add an existing template to your event calendar
                 </CardDescription>

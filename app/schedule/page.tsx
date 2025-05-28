@@ -1,7 +1,19 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, ChevronRight, Calendar, List, Grid3X3, Clock, Users, AlertTriangle, Search } from "lucide-react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  Calendar,
+  List,
+  Grid3X3,
+  Clock,
+  Users,
+  AlertTriangle,
+  Search,
+  Plus,
+} from "lucide-react"
+import { TrendingUp, DollarSign, ClockIcon, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -296,6 +308,195 @@ const templates = [
   },
 ]
 
+// Location color mapping
+const locationColors = {
+  daikanyama: "#3B82F6",
+  ginza: "#10B981",
+  catstreet: "#F59E0B",
+  yokohama: "#8B5CF6",
+}
+
+// Intelligent scheduling suggestions data
+const schedulingSuggestions = [
+  {
+    id: "vangogh-fridays",
+    template: {
+      id: "vangogh",
+      japaneseTitle: "ゴッホ 星月夜",
+      englishTitle: "Van Gogh Starry Night",
+      image: "/placeholder.svg?height=120&width=120&query=van gogh starry night",
+      category: "Master Artists",
+    },
+    metrics: {
+      successRate: 95,
+      avgDaysToSell: 2.1,
+      avgRevenue: 2800,
+      demandLevel: "High",
+      trending: true,
+    },
+    suggestion: {
+      title: "Van Gogh Fridays at 7PM",
+      description: "Sold out 3 weeks running • Next 4 Fridays available",
+      suggestedDates: [
+        { date: "May 30", time: "7:00 PM", available: true },
+        { date: "Jun 6", time: "7:00 PM", available: true },
+        { date: "Jun 13", time: "7:00 PM", available: true },
+        { date: "Jun 20", time: "7:00 PM", available: true },
+      ],
+      instructor: "Naomi",
+      instructorAvailable: true,
+    },
+    smartPreview: "Schedule for: May 30, Jun 6, Jun 13, Jun 20\nInstructor: Naomi available all dates",
+  },
+  {
+    id: "monet-weekends",
+    template: {
+      id: "monet",
+      japaneseTitle: "モネ 睡蓮",
+      englishTitle: "Monet Water Lilies",
+      image: "/placeholder.svg?height=120&width=120&query=monet water lilies",
+      category: "Master Artists",
+    },
+    metrics: {
+      successRate: 88,
+      avgDaysToSell: 3.2,
+      avgRevenue: 2400,
+      demandLevel: "High",
+      trending: false,
+    },
+    suggestion: {
+      title: "Weekend Monet Sessions",
+      description: "Perfect for beginners • Saturday afternoons performing well",
+      suggestedDates: [
+        { date: "May 31", time: "2:00 PM", available: true },
+        { date: "Jun 7", time: "2:00 PM", available: true },
+        { date: "Jun 14", time: "2:00 PM", available: true },
+      ],
+      instructor: "Yuki Tanaka",
+      instructorAvailable: true,
+    },
+    smartPreview: "Schedule for: May 31, Jun 7, Jun 14\nInstructor: Yuki Tanaka available all dates",
+  },
+  {
+    id: "pouring-thursdays",
+    template: {
+      id: "pouring",
+      japaneseTitle: "F6 たらし込みポーリングアート",
+      englishTitle: "Paint Pouring",
+      image: "/placeholder.svg?height=120&width=120&query=paint pouring fluid art",
+      category: "Paint Pouring",
+    },
+    metrics: {
+      successRate: 92,
+      avgDaysToSell: 1.8,
+      avgRevenue: 2200,
+      demandLevel: "Very High",
+      trending: true,
+    },
+    suggestion: {
+      title: "Thursday Evening Pouring",
+      description: "Fastest selling class • Young professionals love this slot",
+      suggestedDates: [
+        { date: "May 29", time: "6:30 PM", available: true },
+        { date: "Jun 5", time: "6:30 PM", available: true },
+        { date: "Jun 12", time: "6:30 PM", available: true },
+        { date: "Jun 19", time: "6:30 PM", available: true },
+      ],
+      instructor: "Luci",
+      instructorAvailable: true,
+    },
+    smartPreview: "Schedule for: May 29, Jun 5, Jun 12, Jun 19\nInstructor: Luci available all dates",
+  },
+  // Add 3 more dummy cards
+  {
+    id: "kids-chameleon-tuesdays",
+    template: {
+      id: "kids-chameleon",
+      japaneseTitle: "キッズ カメレオン",
+      englishTitle: "Kids Chameleon",
+      image: "/placeholder.svg?height=120&width=120&query=kids chameleon painting",
+      category: "Kids Only",
+    },
+    metrics: {
+      successRate: 97,
+      avgDaysToSell: 1.5,
+      avgRevenue: 1800,
+      demandLevel: "Very High",
+      trending: true,
+    },
+    suggestion: {
+      title: "Tuesday Kids Chameleon",
+      description: "Perfect for after-school • Consistently sells out",
+      suggestedDates: [
+        { date: "May 27", time: "4:00 PM", available: true },
+        { date: "Jun 3", time: "4:00 PM", available: true },
+        { date: "Jun 10", time: "4:00 PM", available: true },
+      ],
+      instructor: "Yuki Tanaka",
+      instructorAvailable: true,
+    },
+    smartPreview: "Schedule for: May 27, Jun 3, Jun 10\nInstructor: Yuki Tanaka available all dates",
+  },
+  {
+    id: "sunflowers-weekends",
+    template: {
+      id: "sunflowers",
+      japaneseTitle: "花瓶のひまわり",
+      englishTitle: "Sunflowers Vase",
+      image: "/placeholder.svg?height=120&width=120&query=sunflowers vase painting",
+      category: "All",
+    },
+    metrics: {
+      successRate: 85,
+      avgDaysToSell: 3.5,
+      avgRevenue: 2100,
+      demandLevel: "Medium",
+      trending: false,
+    },
+    suggestion: {
+      title: "Sunday Sunflowers",
+      description: "Popular with families • Relaxed weekend atmosphere",
+      suggestedDates: [
+        { date: "Jun 1", time: "1:00 PM", available: true },
+        { date: "Jun 8", time: "1:00 PM", available: true },
+        { date: "Jun 15", time: "1:00 PM", available: true },
+      ],
+      instructor: "Naomi",
+      instructorAvailable: true,
+    },
+    smartPreview: "Schedule for: Jun 1, Jun 8, Jun 15\nInstructor: Naomi available all dates",
+  },
+  {
+    id: "evening-masterclass",
+    template: {
+      id: "vangogh",
+      japaneseTitle: "夜のマスタークラス",
+      englishTitle: "Evening Masterclass",
+      image: "/placeholder.svg?height=120&width=120&query=evening art masterclass",
+      category: "Master Artists",
+    },
+    metrics: {
+      successRate: 90,
+      avgDaysToSell: 2.8,
+      avgRevenue: 3200,
+      demandLevel: "High",
+      trending: true,
+    },
+    suggestion: {
+      title: "Wednesday Evening Masterclass",
+      description: "Premium experience • Wine included • High revenue",
+      suggestedDates: [
+        { date: "May 28", time: "7:30 PM", available: true },
+        { date: "Jun 4", time: "7:30 PM", available: true },
+        { date: "Jun 11", time: "7:30 PM", available: true },
+      ],
+      instructor: "Daria",
+      instructorAvailable: true,
+    },
+    smartPreview: "Schedule for: May 28, Jun 4, Jun 11\nInstructor: Daria available all dates",
+  },
+]
+
 function ScheduleContent() {
   const [selectedLocation, setSelectedLocation] = useState("all")
   const [selectedView, setSelectedView] = useState("week")
@@ -306,6 +507,11 @@ function ScheduleContent() {
   const [selectedTemplate, setSelectedTemplate] = useState("")
   const [selectedInstructor, setSelectedInstructor] = useState("")
   const [selectedDuration, setSelectedDuration] = useState("")
+  const [suggestions, setSuggestions] = useState(schedulingSuggestions)
+  const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [animationDirection, setAnimationDirection] = useState<"left" | "right" | null>(null)
+  const [isSuggestionsCollapsed, setIsSuggestionsCollapsed] = useState(false)
 
   const getSlotData = (dayIndex: number, hourIndex: number) => {
     return availability[dayIndex]?.[hourIndex] || { type: "unavailable" }
@@ -605,6 +811,58 @@ function ScheduleContent() {
   // Generate next 7 days for empty state
   const next7Days = Array.from({ length: 7 }, (_, i) => i)
 
+  const handleAcceptSuggestion = (suggestionId: string) => {
+    setAnimationDirection("left")
+    setIsAnimating(true)
+
+    // Simulate scheduling the suggested sessions
+    setTimeout(() => {
+      setSuggestions((prev) => prev.filter((s) => s.id !== suggestionId))
+      setCurrentSuggestionIndex((prev) => Math.max(0, prev - 1))
+      setIsAnimating(false)
+      setAnimationDirection(null)
+
+      // Show success message
+      alert("Sessions scheduled successfully!")
+    }, 350)
+  }
+
+  const handleDismissSuggestion = (suggestionId: string) => {
+    setAnimationDirection("right")
+    setIsAnimating(true)
+
+    setTimeout(() => {
+      setSuggestions((prev) => prev.filter((s) => s.id !== suggestionId))
+      setCurrentSuggestionIndex((prev) => Math.max(0, prev - 1))
+      setIsAnimating(false)
+      setAnimationDirection(null)
+    }, 350)
+  }
+
+  const handleDragEnd = (event, info, suggestionId: string) => {
+    const threshold = 100
+    const velocity = info.velocity.x
+    const offset = info.offset.x
+
+    if (Math.abs(velocity) > 500 || Math.abs(offset) > threshold) {
+      if (offset > 0) {
+        // Swiped right - accept
+        handleAcceptSuggestion(suggestionId)
+      } else {
+        // Swiped left - dismiss
+        handleDismissSuggestion(suggestionId)
+      }
+    }
+  }
+
+  const prevSuggestion = () => {
+    setCurrentSuggestionIndex((prevIndex) => Math.max(0, prevIndex - 1))
+  }
+
+  const nextSuggestion = () => {
+    setCurrentSuggestionIndex((prevIndex) => Math.min(suggestions.length - 1, prevIndex + 1))
+  }
+
   return (
     <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
       <div className="px-4 lg:px-6">
@@ -683,21 +941,444 @@ function ScheduleContent() {
             </div>
 
             {/* Right side - Date Navigation */}
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="text-sm font-medium px-4">May 19-25, 2025</span>
-              <Button variant="outline" size="sm">
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+            {selectedView !== "month" && (
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm font-medium px-4">May 19-25, 2025</span>
+                <Button variant="outline" size="sm">
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
+        {/* Intelligent Scheduling Suggestions - Always visible across all views */}
+        {suggestions.length > 0 ? (
+          <div className="space-y-4 mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsSuggestionsCollapsed(!isSuggestionsCollapsed)}
+                  className="h-7 px-3 text-xs font-medium border-blue-200 text-blue-700 hover:bg-blue-50"
+                >
+                  {isSuggestionsCollapsed ? "Show" : "Hide"}
+                </Button>
+                <h3 className="text-lg font-semibold text-gray-900">Scheduling Suggestions</h3>
+              </div>
+              {!isSuggestionsCollapsed && (
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span>
+                    {currentSuggestionIndex + 1} of {suggestions.length}
+                  </span>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={prevSuggestion}
+                      disabled={currentSuggestionIndex === 0}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={nextSuggestion}
+                      disabled={currentSuggestionIndex === suggestions.length - 1}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Suggestion Cards Stream - Only show when not collapsed */}
+            <AnimatePresence>
+              {!isSuggestionsCollapsed && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="relative overflow-hidden"
+                >
+                  <div className="flex gap-3">
+                    {suggestions.map((suggestion, index) => {
+                      const isActive = index === currentSuggestionIndex
+                      const isVisible = index >= currentSuggestionIndex && index < currentSuggestionIndex + 5
+
+                      if (!isVisible) return null
+
+                      return (
+                        <motion.div
+                          key={suggestion.id}
+                          initial={{ x: 300, opacity: 0, scale: 0.9 }}
+                          animate={{
+                            x: 0,
+                            opacity: isActive ? 1 : 0.5,
+                            scale: isActive ? 1 : 0.95,
+                            transition: { duration: 0.4, ease: [0.4, 0.0, 0.2, 1] },
+                          }}
+                          exit={{
+                            x: animationDirection === "left" ? -300 : animationDirection === "right" ? 300 : 0,
+                            opacity: 0,
+                            scale: 0.8,
+                            transition: { duration: 0.35, ease: [0.4, 0.0, 0.2, 1] },
+                          }}
+                          drag={isActive ? "x" : false}
+                          dragConstraints={{ left: -150, right: 150 }}
+                          dragElastic={0.2}
+                          onDragEnd={(event, info) => handleDragEnd(event, info, suggestion.id)}
+                          whileDrag={{
+                            scale: 1.05,
+                            rotate: (info) => info.offset.x * 0.1,
+                            transition: { duration: 0.1 },
+                          }}
+                          className={`flex-shrink-0 transition-all duration-300 ${
+                            isActive ? "w-80 cursor-grab active:cursor-grabbing" : "w-80 pointer-events-none"
+                          }`}
+                        >
+                          <Card
+                            className={`bg-white shadow-sm transition-all duration-200 border ${
+                              isActive ? "border-blue-200 hover:shadow-md" : "border-gray-200 bg-gray-50"
+                            }`}
+                          >
+                            <CardContent className="p-4">
+                              {/* Header with Accept/Dismiss buttons */}
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                                    <img
+                                      src={suggestion.template.image || "/placeholder.svg"}
+                                      alt={suggestion.template.englishTitle}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                  <div>
+                                    <div className="flex items-center gap-1 mb-1">
+                                      <Badge variant="outline" className="text-xs px-1 py-0.5">
+                                        {suggestion.metrics.successRate}%
+                                      </Badge>
+                                      {suggestion.metrics.trending && (
+                                        <Badge className="text-xs px-1 py-0.5 bg-blue-100 text-blue-700">
+                                          <TrendingUp className="h-2 w-2 mr-0.5" />
+                                          Hot
+                                        </Badge>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Main Content */}
+                              <div className="space-y-3">
+                                <div>
+                                  <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                                    {suggestion.suggestion.title}
+                                  </h4>
+                                  <p className="text-xs text-gray-600 line-clamp-2">
+                                    {suggestion.suggestion.description}
+                                  </p>
+                                </div>
+
+                                {/* Metrics Row */}
+                                <div className="flex items-center gap-2 text-xs">
+                                  <div className="flex items-center gap-0.5 text-green-600">
+                                    <Star className="h-3 w-3" />
+                                    <span>{suggestion.metrics.successRate}%</span>
+                                  </div>
+                                  <div className="flex items-center gap-0.5 text-blue-600">
+                                    <ClockIcon className="h-3 w-3" />
+                                    <span>{suggestion.metrics.avgDaysToSell}d</span>
+                                  </div>
+                                  <div className="flex items-center gap-0.5 text-purple-600">
+                                    <DollarSign className="h-3 w-3" />
+                                    <span>¥{(suggestion.metrics.avgRevenue / 1000).toFixed(1)}K</span>
+                                  </div>
+                                </div>
+
+                                {/* Smart Preview */}
+                                <div className="bg-gray-50 rounded p-2">
+                                  <div className="text-xs font-medium text-gray-700 mb-1">SMART PREVIEW:</div>
+                                  <div className="text-xs text-gray-600 line-clamp-2">{suggestion.smartPreview}</div>
+                                </div>
+
+                                {/* Action Buttons */}
+                                {isActive && (
+                                  <div className="flex gap-2 pt-1">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => handleDismissSuggestion(suggestion.id)}
+                                      className="flex-1 text-xs h-7"
+                                    >
+                                      Not Now
+                                    </Button>
+                                    <Button
+                                      onClick={() => handleAcceptSuggestion(suggestion.id)}
+                                      size="sm"
+                                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs h-7"
+                                    >
+                                      Schedule {suggestion.suggestion.suggestedDates.length}
+                                    </Button>
+                                  </div>
+                                )}
+
+                                {/* Swipe Hint for Mobile */}
+                                {isActive && (
+                                  <div className="text-center pt-2 md:hidden">
+                                    <p className="text-xs text-gray-400">← Swipe to dismiss • Swipe to accept →</p>
+                                  </div>
+                                )}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <AnimatePresence>
+            {suggestions.length === 0 && (
+              <motion.div
+                initial={{ height: "auto", opacity: 1 }}
+                animate={{ height: 0, opacity: 0 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="overflow-hidden"
+              >
+                <div className="h-0"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
+
+        {/* Calendar Grid - Month View */}
+        {selectedView === "month" && (
+          <div className="space-y-6">
+            {/* Standard Month Calendar */}
+            <Card className="overflow-hidden transition-all duration-700 ease-in-out">
+              <CardContent className="p-0">
+                {/* Month Header */}
+                <div className="flex items-center justify-between p-4 border-b bg-gray-50">
+                  <div className="flex items-center gap-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        // Handle previous month navigation
+                        console.log("Previous month")
+                      }}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <h2 className="text-lg font-semibold">May 2025</h2>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        // Handle next month navigation
+                        console.log("Next month")
+                      }}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm">
+                      Today
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Go to Date
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7">
+                  {/* Day Headers */}
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                    <div
+                      key={day}
+                      className="p-3 text-center text-sm font-medium text-gray-500 bg-gray-50 border-b border-r last:border-r-0"
+                    >
+                      {day}
+                    </div>
+                  ))}
+
+                  {/* Calendar Days */}
+                  {Array.from({ length: 35 }, (_, index) => {
+                    // Calculate the actual date for this cell
+                    const startDate = new Date(2025, 4, 1) // May 1, 2025
+                    const firstDayOfWeek = startDate.getDay() // 0 = Sunday
+                    const dayNumber = index - firstDayOfWeek + 1
+                    const currentDate = new Date(2025, 4, dayNumber)
+                    const isCurrentMonth = dayNumber > 0 && dayNumber <= 31
+                    const isCurrentDay = isCurrentMonth && dayNumber === 19 // May 19 as current day
+
+                    // Get events for this day
+                    const dayEvents = scheduledEvents.filter((event) => {
+                      const eventDate = 19 + event.day // Convert day index to actual date
+                      return isCurrentMonth && dayNumber === eventDate
+                    })
+
+                    // Get availability data for this day
+                    const dayIndex = (dayNumber - 19) % 7 // Convert to our 0-6 day system
+                    const hasAvailability = dayIndex >= 0 && dayIndex < 7 && availability[dayIndex]
+
+                    return (
+                      <div
+                        key={index}
+                        className={`${
+                          suggestions.length === 0 || isSuggestionsCollapsed
+                            ? "min-h-[180px] lg:min-h-[200px]"
+                            : "min-h-[120px]"
+                        } border-b border-r last:border-r-0 p-3 transition-all duration-700 ease-in-out ${
+                          !isCurrentMonth
+                            ? "bg-gray-50 text-gray-400"
+                            : isCurrentDay
+                              ? "bg-blue-50 border-blue-200"
+                              : "bg-white hover:bg-gray-50"
+                        } cursor-pointer`}
+                        onClick={() => {
+                          if (isCurrentMonth && hasAvailability) {
+                            // Handle day click for scheduling
+                            console.log(`Clicked on day ${dayNumber}`)
+                          }
+                        }}
+                      >
+                        {/* Date Number */}
+                        <div className="flex items-center justify-between mb-3">
+                          <span
+                            className={`text-sm font-medium ${
+                              isCurrentDay ? "text-blue-600" : isCurrentMonth ? "text-gray-900" : "text-gray-400"
+                            }`}
+                          >
+                            {isCurrentMonth ? dayNumber : ""}
+                          </span>
+
+                          {/* Availability Indicator */}
+                          {isCurrentMonth && hasAvailability && (
+                            <div className="flex items-center gap-1">
+                              {Object.values(availability[dayIndex] || {}).some(
+                                (slot: any) => slot.type === "available",
+                              ) && <div className="w-2 h-2 rounded-full bg-green-400" title="Available slots" />}
+                              {Object.values(availability[dayIndex] || {}).some(
+                                (slot: any) => slot.type === "constrained",
+                              ) && <div className="w-2 h-2 rounded-full bg-amber-400" title="Limited availability" />}
+                              {Object.values(availability[dayIndex] || {}).some(
+                                (slot: any) => slot.type === "scheduled",
+                              ) && <div className="w-2 h-2 rounded-full bg-blue-500" title="Scheduled events" />}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Events for this day - Location Color Bars */}
+                        {isCurrentMonth && dayEvents.length > 0 && (
+                          <div className="space-y-1">
+                            {dayEvents.slice(0, 3).map((event, index) => {
+                              const locationColor = locationColors[event.location] || "#6B7280"
+                              return (
+                                <div
+                                  key={event.id}
+                                  className="h-2 rounded-sm transition-opacity duration-200 hover:opacity-80 cursor-pointer"
+                                  style={{
+                                    backgroundColor: locationColor,
+                                    opacity: dayEvents.length > 1 ? 0.8 : 1,
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleEventClick(event)
+                                  }}
+                                  title={`${event.title} - ${event.location} - ${timeSlots[event.startHour]}`}
+                                />
+                              )
+                            })}
+
+                            {/* Show "more events" indicator */}
+                            {dayEvents.length > 3 && (
+                              <div className="text-xs text-gray-500 text-center py-0.5">
+                                +{dayEvents.length - 3} more
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Empty state for available days */}
+                        {isCurrentMonth && dayEvents.length === 0 && hasAvailability && (
+                          <div
+                            className={`flex flex-col items-center justify-center ${
+                              suggestions.length === 0 || isSuggestionsCollapsed ? "h-32" : "h-20"
+                            } text-gray-400 transition-all duration-700`}
+                          >
+                            <div
+                              className={`${
+                                suggestions.length === 0 || isSuggestionsCollapsed ? "w-8 h-8" : "w-6 h-6"
+                              } rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center mb-2`}
+                            >
+                              <Plus
+                                className={`${suggestions.length === 0 || isSuggestionsCollapsed ? "w-4 h-4" : "w-3 h-3"}`}
+                              />
+                            </div>
+                            <span
+                              className={`${suggestions.length === 0 || isSuggestionsCollapsed ? "text-sm" : "text-xs"}`}
+                            >
+                              Available
+                            </span>
+                            {suggestions.length === 0 ||
+                              (isSuggestionsCollapsed && (
+                                <span className="text-xs text-gray-400 mt-1">Click to schedule</span>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Month View Legend */}
+                <div className="p-4 border-t bg-gray-50">
+                  <div className="flex flex-wrap gap-4 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded bg-blue-50 border border-blue-200"></div>
+                      <span>Today</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                      <span>Available</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-amber-400"></div>
+                      <span>Limited</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                      <span>Scheduled</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                      <span>Live Event</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Calendar Grid - Week View */}
         {selectedView === "week" && (
-          <Card className="overflow-hidden mb-6">
+          <Card className="overflow-hidden mb-6 mt-2">
             <CardContent className="p-0">
               {/* Header */}
               <div className="grid grid-cols-8 border-b">
@@ -750,7 +1431,7 @@ function ScheduleContent() {
 
         {/* List View */}
         {selectedView === "list" && (
-          <Card className="overflow-hidden mb-6">
+          <Card className="overflow-hidden mb-6 mt-2">
             <CardContent className="p-0">
               {Object.keys(eventsByDate).length > 0 ? (
                 <div className="divide-y divide-gray-200">
@@ -908,26 +1589,6 @@ function ScheduleContent() {
             </CardContent>
           </Card>
         )}
-
-        {/* Legend */}
-        <div className="flex flex-wrap gap-6 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-green-50 border border-green-200 rounded"></div>
-            <span>Available</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-amber-50 border border-amber-200 rounded"></div>
-            <span>Constrained</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gray-50 border border-gray-200 rounded"></div>
-            <span>Unavailable</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-white border border-gray-200 rounded shadow-sm"></div>
-            <span>Scheduled Event</span>
-          </div>
-        </div>
       </div>
 
       {/* Schedule Event Modal */}

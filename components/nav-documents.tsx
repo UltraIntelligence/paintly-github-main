@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { MoreHorizontalIcon, type LucideIcon } from "lucide-react"
 
 import {
@@ -26,10 +27,10 @@ export function NavDocuments({
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link href={item.url}>
                 <item.icon />
-                <span>{item.name}</span>
-              </a>
+                <span>{item.name.toLowerCase().includes("certificate") ? "Gift Cards" : item.name}</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}

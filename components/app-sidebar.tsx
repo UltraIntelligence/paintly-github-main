@@ -55,12 +55,12 @@ const data = {
   navDocuments: [
     {
       name: "Instructors",
-      url: "#",
+      url: "/instructors",
       icon: Users2Icon,
     },
     {
       name: "Locations",
-      url: "#",
+      url: "/locations",
       icon: MapPinIcon,
     },
     {

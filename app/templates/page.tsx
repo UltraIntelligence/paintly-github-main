@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, MoreHorizontal } from "lucide-react"
+import { Search, MoreHorizontal, Clock, Square, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -183,9 +183,11 @@ export default function TemplatesPage() {
               <div className="@container/main flex flex-1 flex-col gap-2">
                 <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                   <div className="px-4 lg:px-6">
+                    {/* Header */}
+
                     {/* Filters */}
                     <div className="space-y-4 mb-8">
-                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
                         <div className="relative flex-1 max-w-sm">
                           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                           <Input
@@ -257,20 +259,31 @@ export default function TemplatesPage() {
                             </TabsTrigger>
                           </TabsList>
                         </Tabs>
+
+                        <div className="flex gap-2 ml-auto">
+                          <Button size="sm" variant="outline">
+                            Import
+                          </Button>
+                          <Button size="sm">Add Template</Button>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Template Cards Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                    {/* Template Cards Grid - Updated to match instructor card style */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                       {filteredTemplates.map((template) => (
                         <Card
                           key={template.id}
-                          className="group hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-gray-300 flex flex-col h-full"
+                          className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full"
                         >
                           {/* Image Section */}
-                          <div className="relative">
-                            <AspectRatio ratio={1} className="w-full">
-                              <div className="bg-gray-200 w-full h-full rounded-t-lg"></div>
+                          <div className="relative overflow-hidden">
+                            <AspectRatio ratio={4 / 3} className="w-full">
+                              <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
+                                <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center">
+                                  <div className="text-gray-400 text-lg font-medium">{template.category}</div>
+                                </div>
+                              </div>
                             </AspectRatio>
                             {template.popular && (
                               <Badge className="absolute top-2 right-2 bg-orange-100 text-orange-700 text-xs px-2 py-1">
@@ -280,50 +293,55 @@ export default function TemplatesPage() {
                           </div>
 
                           {/* Content Section */}
-                          <CardContent className="flex-1 p-3 sm:p-4 flex flex-col">
-                            <div className="space-y-1">
-                              <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1">
+                          <CardContent className="flex-1 p-5 flex flex-col">
+                            <div className="space-y-1 mb-3">
+                              <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
                                 {template.japaneseTitle}
                               </h3>
-                              <p className="text-xs text-gray-600 line-clamp-1">{template.englishTitle}</p>
+                              <p className="text-sm text-gray-600 line-clamp-1">{template.englishTitle}</p>
                             </div>
 
-                            <p className="text-xs text-gray-500 mt-2">Used {template.scheduled}</p>
+                            <div className="flex items-center text-xs text-gray-500 mb-3">
+                              <Clock className="h-3.5 w-3.5 mr-1.5" />
+                              {template.duration}
+                              <Square className="h-3.5 w-3.5 ml-3 mr-1.5" />
+                              {template.canvas}
+                            </div>
 
-                            <div className="flex flex-wrap gap-1 mt-2 sm:mt-3">
+                            <div className="flex flex-wrap gap-1.5 mb-3">
                               <Badge
                                 variant="outline"
-                                className="text-xs px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                              >
-                                {template.duration}
-                              </Badge>
-                              <Badge
-                                variant="outline"
-                                className="text-xs px-1.5 sm:px-2 py-0.5 bg-green-50 text-green-700 border-green-200"
-                              >
-                                {template.canvas}
-                              </Badge>
-                              <Badge
-                                variant="outline"
-                                className={`text-xs px-1.5 sm:px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}
+                                className={`text-xs px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}
                               >
                                 {template.difficulty}
                               </Badge>
+                              <Badge
+                                variant="outline"
+                                className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
+                              >
+                                {template.category}
+                              </Badge>
+                            </div>
+
+                            <div className="flex items-center text-xs text-gray-500 mt-auto">
+                              <Award className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
+                              Used {template.scheduled}
                             </div>
                           </CardContent>
+
                           {/* Actions Section - Fixed at bottom */}
-                          <div className="mt-auto p-3 sm:p-4 pt-0 border-t border-gray-100">
-                            <div className="flex gap-1.5 sm:gap-2">
-                              <Button size="sm" variant="outline" className="flex-1 text-xs px-2 sm:px-3">
+                          <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="default" className="flex-1 text-xs">
                                 Schedule
                               </Button>
-                              <Button size="sm" variant="outline" className="text-xs px-2 sm:px-3">
+                              <Button size="sm" variant="outline" className="flex-1 text-xs">
                                 Edit
                               </Button>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button size="sm" variant="outline" className="px-1.5 sm:px-2">
-                                    <MoreHorizontal className="h-3 w-3" />
+                                  <Button size="sm" variant="outline" className="px-2">
+                                    <MoreHorizontal className="h-3.5 w-3.5" />
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
