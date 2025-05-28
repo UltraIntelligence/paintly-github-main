@@ -1292,112 +1292,115 @@ export function DataTable({
         </Tabs>
       </div>
       <TabsContent value="today" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-        <div className="space-y-4">
-          {todayEvents.map((event) => {
-            const { current, total } = parseCapacity(event.capacity)
-            const percentage = Math.round((current / total) * 100)
-
-            return (
-              <div key={event.id} className="group hover:bg-muted/50 border rounded-lg p-4 bg-card transition-colors">
-                <div className="flex items-start gap-4">
-                  {/* Event Image */}
-                  <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                    <img
-                      src={event.image || "/placeholder.svg"}
-                      alt={event.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* Event Details */}
-                  <div className="flex-1 min-w-0 space-y-3">
-                    {/* Title and Status Row */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-base leading-tight mb-1 text-foreground">{event.title}</h3>
-                      </div>
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <Badge
-                          variant={event.status === "Live" ? "default" : "outline"}
-                          className={`flex gap-1.5 px-2.5 py-1 ${
-                            event.status === "Live" ? "bg-blue-500 text-white animate-pulse" : "text-muted-foreground"
-                          }`}
-                        >
-                          {event.status !== "Live" && <div className="w-2 h-2 rounded-full bg-green-500"></div>}
-                          {event.status}
-                        </Badge>
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-full bg-muted border overflow-hidden">
-                            <img
-                              src="/placeholder.svg?height=32&width=32&query=instructor"
-                              alt={event.instructor}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <span className="text-sm font-medium">{event.instructor}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium text-foreground">
-                          {current}/{total} participants
-                        </span>
-                        <span className="text-muted-foreground">{percentage}% full</span>
-                      </div>
-                      <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className={`h-full transition-all duration-300 rounded-full ${
-                            percentage >= 100 ? "bg-red-500" : percentage >= 80 ? "bg-yellow-500" : "bg-green-500"
-                          }`}
-                          style={{ width: `${Math.min(percentage, 100)}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Time and Location */}
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center">
-                          <div className="w-2 h-2 rounded-full bg-muted-foreground/60" />
-                        </div>
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center">
-                          <div className="w-2 h-2 rounded-full bg-muted-foreground/60" />
-                        </div>
-                        <span>{event.location}</span>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-2 pt-1">
-                      <EventEditModal
-                        event={event}
-                        trigger={
-                          <Button variant="outline" size="sm" className="h-8">
-                            Edit Event
-                          </Button>
-                        }
-                      />
-                      <Button variant="outline" size="sm" className="h-8">
-                        View Bookings
-                      </Button>
-                      {event.status === "Live" && (
-                        <Button variant="outline" size="sm" className="h-8">
-                          Join Live Session
-                        </Button>
-                      )}
-                    </div>
-                  </div>
+        <Card className="overflow-hidden">
+          <CardContent className="p-0">
+            <div className="divide-y divide-gray-200">
+              {/* Today Section */}
+              <div>
+                <div className="sticky top-0 bg-gray-50 px-6 py-3 border-b border-gray-200 z-10">
+                  <h3 className="text-sm font-medium text-gray-900">Today</h3>
+                  <p className="text-xs text-gray-500">May 19, 2025</p>
                 </div>
+
+                {todayEvents.length > 0 ? (
+                  <div className="divide-y divide-gray-100">
+                    {todayEvents.map((event) => {
+                      const { current, total } = parseCapacity(event.capacity)
+                      const progressPercentage = (current / total) * 100
+                      const getProgressColor = () => {
+                        if (progressPercentage >= 100) return "bg-red-500"
+                        if (progressPercentage >= 80) return "bg-amber-500"
+                        return "bg-green-500"
+                      }
+
+                      return (
+                        <div
+                          key={event.id}
+                          className="p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                        >
+                          <div className="flex items-start gap-4">
+                            {/* Event Image */}
+                            <div className="flex-shrink-0">
+                              <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                                <img
+                                  src={
+                                    event.image ||
+                                    "/placeholder.svg?height=80&width=80&query=monet water lilies painting" ||
+                                    "/placeholder.svg"
+                                  }
+                                  alt={event.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Event Details */}
+                            <div className="flex-1 min-w-0">
+                              {/* Title and Status Row */}
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h4 className="text-base font-semibold text-gray-900 truncate">{event.title}</h4>
+                                    {event.status === "Live" && (
+                                      <Badge className="text-xs px-2 py-1 bg-blue-500 text-white animate-pulse">
+                                        Live
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  <p className="text-sm text-gray-600 truncate mb-2">Monet Water Lilies</p>
+                                </div>
+
+                                {/* Percentage indicator */}
+                                <div className="flex-shrink-0 ml-4">
+                                  <span className="text-xs text-gray-500">{Math.round(progressPercentage)}% full</span>
+                                </div>
+                              </div>
+
+                              {/* Participants count */}
+                              <div className="mb-3">
+                                <span className="text-sm font-medium text-gray-700">
+                                  {current}/{total} participants
+                                </span>
+                              </div>
+
+                              {/* Progress Bar */}
+                              <div className="mb-3">
+                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                  <div
+                                    className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
+                                    style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Time and Location Info */}
+                              <div className="flex items-center gap-4 text-sm text-gray-600">
+                                <div className="flex items-center gap-1">
+                                  <div className="w-4 h-4 rounded-full bg-gray-300 flex items-center justify-center">
+                                    <div className="w-2 h-2 rounded-full bg-gray-600" />
+                                  </div>
+                                  <span>{event.time}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span>{event.location}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className="p-8 text-center">
+                    <CalendarIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-500">No events scheduled</p>
+                  </div>
+                )}
               </div>
-            )
-          })}
-        </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Pagination - keep existing */}
         <div className="flex items-center justify-between px-4">
@@ -1437,151 +1440,147 @@ export function DataTable({
         </div>
       </TabsContent>
       <TabsContent value="scheduled" className="relative flex flex-col gap-2 overflow-auto px-4 lg:px-6">
-        {/* Events List - Dynamic based on filters */}
-        <div className="space-y-6">
-          {Object.keys(groupedEvents).length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No events found matching your filters.</p>
-              <Button variant="outline" onClick={clearFilters} className="mt-4">
-                Clear Filters
-              </Button>
-            </div>
-          ) : (
-            Object.entries(groupedEvents).map(([section, events]) => (
-              <div key={section}>
-                <h3 className="text-sm font-medium text-muted-foreground mb-3 px-1">{section}</h3>
-                <div className="space-y-4">
-                  {events.map((event) => {
-                    const { current, total } = parseCapacity(event.capacity)
-                    const percentage = Math.round((current / total) * 100)
+        <Card className="overflow-hidden">
+          <CardContent className="p-0">
+            {/* Events List - Dynamic based on filters */}
+            <div className="space-y-6">
+              {Object.keys(groupedEvents).length === 0 ? (
+                <div className="text-center py-12">
+                  <CalendarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-2">No events found matching your filters.</p>
+                  <Button variant="outline" onClick={clearFilters} className="mt-4">
+                    Clear Filters
+                  </Button>
+                </div>
+              ) : (
+                Object.entries(groupedEvents).map(([section, events]) => (
+                  <div key={section}>
+                    <div className="sticky top-0 bg-gray-50 px-6 py-3 border-b border-gray-200 z-10">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        {section.includes("TODAY")
+                          ? "Today"
+                          : section.includes("TOMORROW")
+                            ? "Tomorrow"
+                            : section.includes("MAY 27")
+                              ? "May 27"
+                              : section.split(" - ")[0]}
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        {section.includes("TODAY")
+                          ? "May 25, 2025"
+                          : section.includes("TOMORROW")
+                            ? "May 26, 2025"
+                            : section.includes("MAY 27")
+                              ? "May 27, 2025"
+                              : section.split(" - ")[1] || ""}
+                      </p>
+                    </div>
+                    <div className="divide-y divide-gray-100">
+                      {events.map((event) => {
+                        const { current, total } = parseCapacity(event.capacity)
+                        const progressPercentage = (current / total) * 100
+                        const getProgressColor = () => {
+                          if (progressPercentage >= 100) return "bg-red-500"
+                          if (progressPercentage >= 80) return "bg-amber-500"
+                          return "bg-green-500"
+                        }
 
-                    return (
-                      <div
-                        key={event.id}
-                        className="group hover:bg-muted/50 border rounded-lg p-4 bg-card transition-colors"
-                      >
-                        <div className="flex items-start gap-4">
-                          {/* Event Image */}
-                          <div className="relative w-20 h-20 rounded-lg overflow-hidden border bg-muted flex-shrink-0">
-                            <img
-                              src={event.image || "/placeholder.svg"}
-                              alt={event.title}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-
-                          {/* Event Details */}
-                          <div className="flex-1 min-w-0 space-y-3">
-                            {/* Title and Status Row */}
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-base leading-tight mb-1 text-foreground">
-                                  {event.title}
-                                </h3>
+                        return (
+                          <div
+                            key={event.id}
+                            className="p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                          >
+                            <div className="flex items-start gap-4">
+                              {/* Event Image */}
+                              <div className="flex-shrink-0">
+                                <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                                  <img
+                                    src={
+                                      event.image ||
+                                      `/placeholder.svg?height=80&width=80&query=${encodeURIComponent(event.title) || "/placeholder.svg"}`
+                                    }
+                                    alt={event.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
                               </div>
-                              <div className="flex items-center gap-3 flex-shrink-0">
-                                <Badge
-                                  variant={
-                                    event.status === "Live"
-                                      ? "default"
-                                      : event.status === "Sold Out"
-                                        ? "destructive"
-                                        : "outline"
-                                  }
-                                  className={`flex gap-1.5 px-2.5 py-1 ${
-                                    event.status === "Live"
-                                      ? "bg-blue-500 text-white animate-pulse"
-                                      : event.status === "Sold Out"
-                                        ? ""
-                                        : "text-muted-foreground"
-                                  }`}
-                                >
-                                  {event.status !== "Live" && event.status !== "Sold Out" && (
-                                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                                  )}
-                                  {event.status === "Sold Out" && <div className="w-2 h-2 rounded-full bg-white"></div>}
-                                  {event.status}
-                                </Badge>
-                                <div className="flex items-center gap-2">
-                                  <div className="w-8 h-8 rounded-full bg-muted border overflow-hidden">
-                                    <img
-                                      src="/placeholder.svg?height=32&width=32&query=instructor"
-                                      alt={event.instructor}
-                                      className="w-full h-full object-cover"
+
+                              {/* Event Details */}
+                              <div className="flex-1 min-w-0">
+                                {/* Title and Status Row */}
+                                <div className="flex items-start justify-between mb-2">
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <h4 className="text-base font-semibold text-gray-900 truncate">{event.title}</h4>
+                                      {event.status === "Live" && (
+                                        <Badge className="text-xs px-2 py-1 bg-blue-500 text-white animate-pulse">
+                                          Live
+                                        </Badge>
+                                      )}
+                                      {event.status === "Sold Out" && (
+                                        <Badge className="text-xs px-2 py-1 bg-red-500 text-white">Sold Out</Badge>
+                                      )}
+                                    </div>
+                                    <p className="text-sm text-gray-600 truncate mb-2">
+                                      {event.title.includes("Van Gogh")
+                                        ? "Van Gogh Starry Night"
+                                        : event.title.includes("モネ")
+                                          ? "Monet Water Lilies"
+                                          : event.title.includes("ポーリング")
+                                            ? "Paint Pouring"
+                                            : "Art Class"}
+                                    </p>
+                                  </div>
+
+                                  {/* Percentage indicator */}
+                                  <div className="flex-shrink-0 ml-4">
+                                    <span className="text-xs text-gray-500">
+                                      {Math.round(progressPercentage)}% full
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* Participants count */}
+                                <div className="mb-3">
+                                  <span className="text-sm font-medium text-gray-700">
+                                    {current}/{total} participants
+                                  </span>
+                                </div>
+
+                                {/* Progress Bar */}
+                                <div className="mb-3">
+                                  <div className="w-full bg-gray-200 rounded-full h-2">
+                                    <div
+                                      className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
+                                      style={{ width: `${Math.min(progressPercentage, 100)}%` }}
                                     />
                                   </div>
-                                  <span className="text-sm font-medium">{event.instructor}</span>
+                                </div>
+
+                                {/* Time and Location Info */}
+                                <div className="flex items-center gap-4 text-sm text-gray-600">
+                                  <div className="flex items-center gap-1">
+                                    <div className="w-4 h-4 rounded-full bg-gray-300 flex items-center justify-center">
+                                      <div className="w-2 h-2 rounded-full bg-gray-600" />
+                                    </div>
+                                    <span>{event.time}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <span>{event.location}</span>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-
-                            {/* Progress Bar */}
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between text-sm">
-                                <span className="font-medium text-foreground">
-                                  {current}/{total} participants
-                                </span>
-                                <span className="text-muted-foreground">{percentage}% full</span>
-                              </div>
-                              <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                                <div
-                                  className={`h-full transition-all duration-300 rounded-full ${
-                                    percentage >= 100
-                                      ? "bg-red-500"
-                                      : percentage >= 80
-                                        ? "bg-yellow-500"
-                                        : "bg-green-500"
-                                  }`}
-                                  style={{ width: `${Math.min(percentage, 100)}%` }}
-                                />
-                              </div>
-                            </div>
-
-                            {/* Time and Location */}
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <div className="flex items-center gap-1.5">
-                                <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center">
-                                  <div className="w-2 h-2 rounded-full bg-muted-foreground/60" />
-                                </div>
-                                <span>{event.time}</span>
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center">
-                                  <div className="w-2 h-2 rounded-full bg-muted-foreground/60" />
-                                </div>
-                                <span>{event.location}</span>
-                              </div>
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex gap-2 pt-1">
-                              <EventEditModal
-                                event={event}
-                                trigger={
-                                  <Button variant="outline" size="sm" className="h-8">
-                                    Edit Event
-                                  </Button>
-                                }
-                              />
-                              <Button variant="outline" size="sm" className="h-8">
-                                View Bookings
-                              </Button>
-                              {event.status === "Live" && (
-                                <Button variant="outline" size="sm" className="h-8">
-                                  Join Live Session
-                                </Button>
-                              )}
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-4">

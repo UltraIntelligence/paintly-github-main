@@ -15,6 +15,7 @@ import { ThemeProvider } from "../../components/theme-provider"
 import { AppSidebar } from "../../components/app-sidebar"
 import { SiteHeader } from "../../components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { Input } from "@/components/ui/input"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -609,118 +610,87 @@ function ScheduleContent() {
       <div className="px-4 lg:px-6">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-6">
-          {/* Top row - Search and Location Dropdown */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search events..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+          {/* Top row - Search, Location Dropdown, and Location Tabs */}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input placeholder="Search events..." className="pl-10" />
             </div>
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="All Locations" />
+              </SelectTrigger>
+              <SelectContent>
+                {locations.map((location) => (
+                  <SelectItem key={location.id} value={location.id}>
+                    {location.name} {location.count > 0 && `(${location.count})`}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-            {/* All Locations Dropdown - Mobile */}
-            <div className="sm:hidden">
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="All Locations" />
-                </SelectTrigger>
-                <SelectContent>
-                  {locations.map((location) => (
-                    <SelectItem key={location.id} value={location.id}>
-                      {location.name} {location.count > 0 && `(${location.count})`}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* All Locations Dropdown - Desktop */}
-            <div className="hidden sm:block">
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="All Locations" />
-                </SelectTrigger>
-                <SelectContent>
-                  {locations.map((location) => (
-                    <SelectItem key={location.id} value={location.id}>
-                      {location.name} {location.count > 0 && `(${location.count})`}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Tabs value={selectedLocation} onValueChange={setSelectedLocation} className="w-auto">
+              <TabsList>
+                {locations.map((location) => (
+                  <TabsTrigger value={location.id} key={location.id} className="gap-1">
+                    {location.name}{" "}
+                    {location.count > 0 && (
+                      <Badge
+                        variant="secondary"
+                        className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                      >
+                        {location.count}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
           </div>
 
-          {/* Bottom row - Location Tabs and View Controls */}
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            {/* Location Tabs */}
-            <div className="hidden sm:block">
-              <Tabs value={selectedLocation} onValueChange={setSelectedLocation} className="w-full lg:w-auto">
-                <TabsList className="grid w-full grid-cols-5 lg:w-auto bg-gray-100">
-                  {locations.map((location) => (
-                    <TabsTrigger
-                      key={location.id}
-                      value={location.id}
-                      className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=inactive]:bg-transparent data-[state=inactive]:text-gray-600"
-                    >
-                      {location.name}
-                      {location.count > 0 && (
-                        <span className="ml-1 h-5 w-5 rounded-full bg-gray-600 text-white text-xs flex items-center justify-center">
-                          {location.count}
-                        </span>
-                      )}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
+          {/* Bottom row - View Controls and Date Navigation */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+            {/* Left side - View Toggle */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant={selectedView === "month" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedView("month")}
+                className="flex items-center gap-2"
+              >
+                <Calendar className="h-4 w-4" />
+                Month
+              </Button>
+              <Button
+                variant={selectedView === "week" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedView("week")}
+                className="flex items-center gap-2"
+                style={{ backgroundColor: selectedView === "week" ? "#3b82f6" : undefined }}
+              >
+                <Grid3X3 className="h-4 w-4" />
+                Week
+              </Button>
+              <Button
+                variant={selectedView === "list" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedView("list")}
+                className="flex items-center gap-2"
+              >
+                <List className="h-4 w-4" />
+                List
+              </Button>
             </div>
 
-            <div className="flex items-center gap-4">
-              {/* View Toggle */}
-              <div className="flex items-center gap-2">
-                <Button
-                  variant={selectedView === "month" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedView("month")}
-                  className="flex items-center gap-2"
-                >
-                  <Calendar className="h-4 w-4" />
-                  Month
-                </Button>
-                <Button
-                  variant={selectedView === "week" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedView("week")}
-                  className="flex items-center gap-2"
-                  style={{ backgroundColor: selectedView === "week" ? "#3b82f6" : undefined }}
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                  Week
-                </Button>
-                <Button
-                  variant={selectedView === "list" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedView("list")}
-                  className="flex items-center gap-2"
-                >
-                  <List className="h-4 w-4" />
-                  List
-                </Button>
-              </div>
-
-              {/* Date Navigation */}
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-sm font-medium px-4">May 19-25, 2025</span>
-                <Button variant="outline" size="sm">
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
+            {/* Right side - Date Navigation */}
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm">
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <span className="text-sm font-medium px-4">May 19-25, 2025</span>
+              <Button variant="outline" size="sm">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>
