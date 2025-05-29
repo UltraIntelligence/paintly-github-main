@@ -3,6 +3,18 @@
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Search, Plus, Download, Upload, Users, MoreHorizontal } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import {
+  Calendar,
+  Clock,
+  BarChart3,
+  Award,
+  FileText,
+  MessageSquare,
+  CalendarClock,
+  Users2,
+  Briefcase,
+} from "lucide-react"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -186,6 +198,7 @@ function InstructorsContent() {
   const [selectedLocation, setSelectedLocation] = useState("All Locations")
   const [selectedAvailability, setSelectedAvailability] = useState("All Status")
   const [activeTab, setActiveTab] = useState("all")
+  const [selectedInstructor, setSelectedInstructor] = useState<(typeof instructorsData)[0] | null>(null)
 
   const filteredInstructors = useMemo(() => {
     return instructorsData.filter((instructor) => {
@@ -413,7 +426,12 @@ function InstructorsContent() {
                     {/* Actions Section - Fixed at bottom */}
                     <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
                       <div className="flex gap-2">
-                        <Button size="sm" variant="default" className="flex-1 text-xs">
+                        <Button
+                          size="sm"
+                          variant="default"
+                          className="flex-1 text-xs"
+                          onClick={() => setSelectedInstructor(instructor)}
+                        >
                           View Details
                         </Button>
                         <DropdownMenu>
@@ -437,6 +455,210 @@ function InstructorsContent() {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Instructor Detail Modal */}
+      <Dialog open={selectedInstructor !== null} onOpenChange={(open) => !open && setSelectedInstructor(null)}>
+        {selectedInstructor && (
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-12 w-12 border-2 border-background">
+                  <AvatarImage
+                    src={selectedInstructor.photo || "/placeholder.svg"}
+                    alt={selectedInstructor.name.english}
+                  />
+                  <AvatarFallback>
+                    {selectedInstructor.name.english
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <DialogTitle className="text-xl">{selectedInstructor.name.english}</DialogTitle>
+                  <DialogDescription className="text-sm">
+                    {selectedInstructor.role} • {selectedInstructor.languages.join(", ")}
+                  </DialogDescription>
+                </div>
+                <Badge className={`ml-auto ${getAvailabilityBadgeColor(selectedInstructor.availability)}`}>
+                  {getAvailabilityText(selectedInstructor.availability)}
+                </Badge>
+              </div>
+            </DialogHeader>
+
+            {/* Dashboard Content */}
+            <div className="mt-6 space-y-6">
+              {/* Today's Status */}
+              <div>
+                <h3 className="text-lg font-medium mb-3">Today's Status</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center">
+                        <Clock className="h-5 w-5 text-blue-500 mr-2" />
+                        <h4 className="font-medium">Next Class</h4>
+                      </div>
+                      <p className="text-2xl font-bold mt-2">2:30 PM</p>
+                      <p className="text-sm text-muted-foreground">Abstract Painting - Ginza</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center">
+                        <Users2 className="h-5 w-5 text-green-500 mr-2" />
+                        <h4 className="font-medium">Students Today</h4>
+                      </div>
+                      <p className="text-2xl font-bold mt-2">12</p>
+                      <p className="text-sm text-muted-foreground">3 classes scheduled</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center">
+                        <Briefcase className="h-5 w-5 text-purple-500 mr-2" />
+                        <h4 className="font-medium">Hours Today</h4>
+                      </div>
+                      <p className="text-2xl font-bold mt-2">4.5</p>
+                      <p className="text-sm text-muted-foreground">9:00 AM - 6:00 PM</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* Schedule */}
+              <div>
+                <h3 className="text-lg font-medium mb-3">Upcoming Schedule</h3>
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="space-y-4">
+                      {[
+                        {
+                          time: "2:30 PM - 4:00 PM",
+                          title: "Abstract Painting Basics",
+                          location: "Ginza Studio",
+                          students: 8,
+                          status: "Confirmed",
+                        },
+                        {
+                          time: "5:00 PM - 6:30 PM",
+                          title: "Color Theory Workshop",
+                          location: "Daikanyama Studio",
+                          students: 4,
+                          status: "Confirmed",
+                        },
+                        {
+                          time: "Tomorrow, 10:00 AM",
+                          title: "Marketing Team Meeting",
+                          location: "Online",
+                          students: 0,
+                          status: "Internal",
+                        },
+                      ].map((event, i) => (
+                        <div key={i} className="flex items-center p-2 hover:bg-muted rounded-md">
+                          <div className="mr-4 flex-shrink-0">
+                            <CalendarClock className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm">{event.title}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {event.time} • {event.location}
+                            </p>
+                          </div>
+                          <Badge variant={event.status === "Internal" ? "outline" : "default"} className="ml-2">
+                            {event.status === "Internal" ? "Internal" : `${event.students} Students`}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                    <Button variant="outline" className="w-full mt-4" size="sm">
+                      View Full Schedule
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Performance & Insights */}
+              <div>
+                <h3 className="text-lg font-medium mb-3">Performance & Insights</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center mb-4">
+                        <BarChart3 className="h-5 w-5 text-amber-500 mr-2" />
+                        <h4 className="font-medium">Class Attendance</h4>
+                      </div>
+                      <div className="h-[120px] flex items-end gap-2">
+                        {[85, 92, 78, 95, 88, 76, 90].map((value, i) => (
+                          <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                            <div className="w-full bg-amber-100 rounded-sm" style={{ height: `${value}%` }} />
+                            <span className="text-xs text-muted-foreground">
+                              {["M", "T", "W", "T", "F", "S", "S"][i]}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-sm text-center mt-4 text-muted-foreground">
+                        Average attendance: <span className="font-medium text-foreground">86%</span>
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center mb-4">
+                        <Award className="h-5 w-5 text-blue-500 mr-2" />
+                        <h4 className="font-medium">Student Feedback</h4>
+                      </div>
+                      <div className="space-y-2">
+                        {[
+                          { rating: 5, percent: 75 },
+                          { rating: 4, percent: 20 },
+                          { rating: 3, percent: 5 },
+                          { rating: 2, percent: 0 },
+                          { rating: 1, percent: 0 },
+                        ].map((item) => (
+                          <div key={item.rating} className="flex items-center gap-2">
+                            <div className="text-sm w-3">{item.rating}</div>
+                            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                              <div className="h-full bg-blue-500 rounded-full" style={{ width: `${item.percent}%` }} />
+                            </div>
+                            <div className="text-xs text-muted-foreground w-8">{item.percent}%</div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-sm text-center mt-4 text-muted-foreground">
+                        Average rating: <span className="font-medium text-foreground">4.7/5</span>
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div>
+                <h3 className="text-lg font-medium mb-3">Quick Actions</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <Button variant="outline" className="h-auto flex-col py-4 px-2">
+                    <Calendar className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Schedule Class</span>
+                  </Button>
+                  <Button variant="outline" className="h-auto flex-col py-4 px-2">
+                    <MessageSquare className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Send Message</span>
+                  </Button>
+                  <Button variant="outline" className="h-auto flex-col py-4 px-2">
+                    <FileText className="h-5 w-5 mb-1" />
+                    <span className="text-xs">View Reports</span>
+                  </Button>
+                  <Button variant="outline" className="h-auto flex-col py-4 px-2">
+                    <Users2 className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Student List</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        )}
+      </Dialog>
     </div>
   )
 }

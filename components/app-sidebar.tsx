@@ -9,7 +9,7 @@ import {
   MapPinIcon,
   Building2Icon,
   GiftIcon,
-  LayoutTemplateIcon,
+  ImageIcon,
   HelpCircleIcon,
   SearchIcon,
   SettingsIcon,
@@ -49,7 +49,7 @@ const data = {
     {
       title: "Templates",
       url: "/templates",
-      icon: LayoutTemplateIcon,
+      icon: ImageIcon,
     },
   ],
   navDocuments: [
