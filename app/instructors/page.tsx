@@ -7,13 +7,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import {
   Calendar,
   Clock,
-  BarChart3,
   CalendarClock,
   Users2,
   Briefcase,
   CheckCircle2,
   CalendarDays,
-  Star,
   SearchIcon,
   DownloadIcon,
 } from "lucide-react"
@@ -1026,67 +1024,6 @@ function InstructorsContent() {
                 </Card>
               </div>
 
-              {/* Performance & Insights */}
-              <div>
-                <h3 className="text-lg font-medium mb-3">Performance Insights</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center mb-4">
-                        <BarChart3 className="h-5 w-5 text-amber-500 mr-2" />
-                        <h4 className="font-medium">Performance Overview</h4>
-                      </div>
-
-                      <div className="grid grid-cols-1 gap-6">
-                        {/* Average Capacity */}
-                        <div className="text-center">
-                          <div className="text-3xl font-bold text-amber-600 mb-1">86%</div>
-                          <div className="text-sm text-muted-foreground mb-2">Average Capacity</div>
-                          <Progress value={86} className="h-2" />
-                        </div>
-
-                        {/* Sellout Rate */}
-                        <div className="text-center">
-                          <div className="text-3xl font-bold text-green-600 mb-1">65%</div>
-                          <div className="text-sm text-muted-foreground mb-2">Sellout Rate</div>
-                          <Progress value={65} className="h-2" />
-                        </div>
-
-                        {/* Peak Time */}
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-blue-600 mb-1">6-8 PM</div>
-                          <div className="text-sm text-muted-foreground">Peak Time Slot</div>
-                          <div className="text-xs text-muted-foreground mt-1">94% avg booking rate</div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center mb-4">
-                        <Star className="h-5 w-5 text-blue-500 mr-2" />
-                        <h4 className="font-medium">Top Classes</h4>
-                      </div>
-                      <div className="space-y-3">
-                        {selectedInstructor.topClasses.map((classItem, i) => (
-                          <div key={i} className="space-y-1">
-                            <div className="flex justify-between items-center">
-                              <p className="text-sm font-medium">{classItem.name}</p>
-                              <span className="text-xs text-muted-foreground">{classItem.bookingRate}% booked</span>
-                            </div>
-                            <Progress value={classItem.bookingRate} className="h-2" />
-                            <p className="text-xs text-muted-foreground">{classItem.selloutFrequency}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <p className="text-sm text-center mt-4 text-muted-foreground">
-                        Overall booking rate: <span className="font-medium text-foreground">88%</span>
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-
               {/* Quick Actions */}
               <div>
                 <h3 className="text-lg font-medium mb-3">Quick Actions</h3>
@@ -1135,70 +1072,62 @@ function InstructorsContent() {
       <Dialog open={showCheckInDialog} onOpenChange={setShowCheckInDialog}>
         {selectedInstructor && selectedInstructor.todaysClasses && (
           <DialogContent
-            className={`w-full max-w-5xl flex flex-col transition-all duration-300 mx-4 sm:mx-auto`}
+            className="max-w-4xl"
             style={{
-              height: "90vh",
-              maxHeight: "90vh",
-              minHeight: "50vh",
-              boxShadow: "0 20px 40px -12px rgba(0, 0, 0, 0.2)",
-              borderRadius: "16px",
-              backdropFilter: "blur(8px)",
+              maxHeight: "85vh",
+              height: `${Math.min(85, Math.max(40, 25 + filteredStudents.length * 5.5 + 15))}vh`,
+              boxShadow: "0 22px 45px -10px rgba(0, 0, 0, 0.22)",
+              borderRadius: "13px",
+              backdropFilter: "blur(5px)",
             }}
           >
-            <DialogHeader className="flex-shrink-0">
+            <DialogHeader>
               <DialogTitle>Class Check-In: {selectedInstructor.todaysClasses[0].title}</DialogTitle>
               <DialogDescription>
                 {selectedInstructor.todaysClasses[0].time} • {selectedInstructor.todaysClasses[0].location}
               </DialogDescription>
             </DialogHeader>
 
-            <div className="flex-1 flex flex-col min-h-0 space-y-4">
-              {/* Progress - Mobile Optimized */}
-              <div className="space-y-3 sm:space-y-2 flex-shrink-0">
-                <div className="flex justify-between text-base sm:text-sm font-medium">
+            <div className="space-y-4 flex-1 flex flex-col">
+              {/* Progress */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm font-medium">
                   <span>Check-in progress</span>
                   <span className="text-green-600">
                     {checkedInCount} of {totalStudents} checked in
                   </span>
                 </div>
-                <Progress value={checkedInPercentage} className="h-3 sm:h-2" />
+                <Progress value={checkedInPercentage} className="h-2" />
               </div>
 
-              {/* Search - Mobile Optimized */}
-              <div className="relative flex-shrink-0">
-                <SearchIcon className="absolute left-4 top-1/2 h-5 w-5 sm:h-4 sm:w-4 -translate-y-1/2 text-muted-foreground" />
+              {/* Search */}
+              <div className="relative">
+                <SearchIcon className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search attendees..."
                   value={checkInSearchTerm}
                   onChange={(e) => setCheckInSearchTerm(e.target.value)}
-                  className="pl-12 sm:pl-9 h-12 sm:h-10 text-base sm:text-sm rounded-lg"
+                  className="pl-10 h-10 text-sm rounded-lg"
                   style={{
                     fontSize: "16px", // Prevents zoom on iOS
                   }}
                 />
               </div>
 
-              {/* Attendee List - Mobile Optimized Scrollable */}
-              <div className="flex-1 min-h-0 overflow-hidden rounded-lg border bg-white">
-                <div
-                  className="h-full overflow-y-auto overscroll-contain"
-                  style={{
-                    scrollBehavior: "smooth",
-                    WebkitOverflowScrolling: "touch",
-                    scrollbarWidth: "thin",
-                  }}
-                >
+              {/* Attendee List */}
+              <Card className="flex-1 overflow-hidden">
+                <ScrollArea className="h-full" style={{ scrollBehavior: "smooth" }}>
                   <div className="divide-y divide-gray-100">
                     {filteredStudents.map((student, i) => (
                       <div
                         key={i}
                         className={`
-        relative min-h-[64px] p-3 cursor-pointer 
-        transition-all duration-200 ease-out
-        active:scale-[0.98] active:bg-gray-100
-        hover:bg-gray-50
-        ${student.checked ? "bg-green-50 border-l-4 border-l-green-500" : "bg-white hover:bg-gray-50"}
-      `}
+                relative min-h-[64px] p-3 cursor-pointer 
+                transition-all duration-200 ease-out
+                active:scale-[0.98] active:bg-gray-100
+                hover:bg-gray-50
+                ${student.checked ? "bg-green-50 border-l-4 border-l-green-500" : "bg-white hover:bg-gray-50"}
+              `}
                         onClick={() => handleCheckInStudent(0, i)}
                         style={{
                           touchAction: "manipulation",
@@ -1263,28 +1192,28 @@ function InstructorsContent() {
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            </div>
+                </ScrollArea>
+              </Card>
 
-            {/* Footer - Mobile Optimized */}
-            <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-2 pt-4 border-t flex-shrink-0">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowCheckInDialog(false)}
-                className="min-h-[44px] sm:min-h-auto order-2 sm:order-1"
-              >
-                Close
-              </Button>
-              <div className="flex gap-2 order-1 sm:order-2">
-                <Button variant="outline" size="sm" className="flex-1 sm:flex-none min-h-[44px] sm:min-h-auto">
-                  <DownloadIcon className="h-4 w-4 mr-1" />
-                  Export
+              {/* Footer */}
+              <div className="flex flex-col sm:flex-row justify-between gap-2 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowCheckInDialog(false)}
+                  className="min-h-[44px] sm:min-h-auto order-2 sm:order-1"
+                >
+                  Close
                 </Button>
-                <Button size="sm" className="flex-1 sm:flex-none min-h-[44px] sm:min-h-auto">
-                  Save Data
-                </Button>
+                <div className="flex gap-2 order-1 sm:order-2">
+                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none min-h-[44px] sm:min-h-auto">
+                    <DownloadIcon className="h-4 w-4 mr-1" />
+                    Export
+                  </Button>
+                  <Button size="sm" className="flex-1 sm:flex-none min-h-[44px] sm:min-h-auto">
+                    Save Data
+                  </Button>
+                </div>
               </div>
             </div>
           </DialogContent>
