@@ -5,8 +5,10 @@ import "./globals.css"
 
 const manrope = Manrope({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
-  fallback: ["system-ui", "arial"],
+  variable: "--font-manrope",
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
 })
 
 export const metadata: Metadata = {
@@ -22,7 +24,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${manrope.className} min-h-screen bg-background font-sans antialiased`}>{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body className={`${manrope.variable} font-sans min-h-screen bg-background antialiased`}>{children}</body>
     </html>
   )
 }
