@@ -55,6 +55,7 @@ const instructorsData = [
     availability: "available",
     bio: "Passionate visionary who founded Artbar Tokyo to make art accessible to everyone.",
     phone: "+81 90-1234-5678",
+    email: "cathy@artbar.co.jp",
     hasClassesToday: false,
     topClasses: [
       { name: "Executive Leadership", bookingRate: 92, selloutFrequency: "7/10 times" },
@@ -62,6 +63,23 @@ const instructorsData = [
     ],
     bookingPerformance: [90, 85, 92, 88, 95, 80, 87],
     availabilityStatus: "Approved for December",
+    todaysClasses: [],
+    upcomingSchedule: [
+      {
+        time: "Tomorrow, 9:00 AM",
+        title: "Executive Team Meeting",
+        location: "Main Office",
+        students: 0,
+        status: "Internal",
+      },
+      {
+        time: "Tomorrow, 2:00 PM",
+        title: "Studio Operations Review",
+        location: "All Locations",
+        students: 0,
+        status: "Internal",
+      },
+    ],
   },
   {
     id: 2,
@@ -77,6 +95,7 @@ const instructorsData = [
     availability: "available",
     bio: "Creative marketing professional with an eye for trends and abstract expression.",
     phone: "+81 90-2345-6789",
+    email: "naomi@artbar.co.jp",
     hasClassesToday: true,
     topClasses: [
       { name: "Abstract Painting Basics", bookingRate: 95, selloutFrequency: "9/10 times" },
@@ -245,6 +264,29 @@ const instructorsData = [
         ],
       },
     ],
+    upcomingSchedule: [
+      {
+        time: "2:30 PM - 4:00 PM",
+        title: "Abstract Painting Basics",
+        location: "Ginza Studio",
+        students: 4,
+        status: "Confirmed",
+      },
+      {
+        time: "5:00 PM - 6:30 PM",
+        title: "Color Theory Workshop",
+        location: "Daikanyama Studio",
+        students: 12,
+        status: "Confirmed",
+      },
+      {
+        time: "Tomorrow, 10:00 AM",
+        title: "Marketing Team Meeting",
+        location: "Online",
+        students: 0,
+        status: "Internal",
+      },
+    ],
   },
   {
     id: 3,
@@ -260,6 +302,7 @@ const instructorsData = [
     availability: "available",
     bio: "Brings soft, dreamy fantasy style that transports you to colorful worlds.",
     phone: "+81 90-3456-7890",
+    email: "luci@artbar.co.jp",
     hasClassesToday: true,
     topClasses: [
       { name: "Fantasy Landscapes", bookingRate: 90, selloutFrequency: "8/10 times" },
@@ -267,6 +310,49 @@ const instructorsData = [
     ],
     bookingPerformance: [80, 85, 90, 88, 92, 78, 85],
     availabilityStatus: "Approved for December",
+    todaysClasses: [
+      {
+        time: "1:00 PM - 3:00 PM",
+        title: "Fantasy Landscapes",
+        location: "Cat Street Studio",
+        students: [
+          {
+            name: "Sakura Yamada",
+            checked: false,
+            paymentStatus: "Paid",
+            groupSize: 1,
+            notes: "First fantasy class",
+            ticketNumber: "789123",
+            ticketVerified: false,
+          },
+          {
+            name: "Alex Chen",
+            checked: false,
+            paymentStatus: "Paid",
+            groupSize: 2,
+            notes: "",
+            ticketNumber: "789124",
+            ticketVerified: false,
+          },
+        ],
+      },
+    ],
+    upcomingSchedule: [
+      {
+        time: "1:00 PM - 3:00 PM",
+        title: "Fantasy Landscapes",
+        location: "Cat Street Studio",
+        students: 2,
+        status: "Confirmed",
+      },
+      {
+        time: "Tomorrow, 11:00 AM",
+        title: "Character Design Workshop",
+        location: "Yokohama Studio",
+        students: 6,
+        status: "Confirmed",
+      },
+    ],
   },
   {
     id: 4,
@@ -282,6 +368,24 @@ const instructorsData = [
     availability: "limited",
     bio: "Musashino Art University graduate with expertise in mesmerizing dot techniques.",
     phone: "+81 90-4567-8901",
+    email: "momo@artbar.co.jp",
+    hasClassesToday: false,
+    topClasses: [
+      { name: "Dot Art Technique", bookingRate: 88, selloutFrequency: "7/10 times" },
+      { name: "Advanced Color Theory", bookingRate: 82, selloutFrequency: "5/10 times" },
+    ],
+    bookingPerformance: [75, 80, 85, 88, 82, 79, 84],
+    availabilityStatus: "Limited availability",
+    todaysClasses: [],
+    upcomingSchedule: [
+      {
+        time: "Tomorrow, 3:00 PM",
+        title: "Dot Art Technique",
+        location: "Daikanyama Studio",
+        students: 8,
+        status: "Confirmed",
+      },
+    ],
   },
   {
     id: 5,
@@ -297,6 +401,31 @@ const instructorsData = [
     availability: "available",
     bio: "Specializes in calming Japanese painting techniques with delicate color work.",
     phone: "+81 90-5678-9012",
+    email: "nanako@artbar.co.jp",
+    hasClassesToday: false,
+    topClasses: [
+      { name: "Traditional Japanese Painting", bookingRate: 93, selloutFrequency: "8/10 times" },
+      { name: "Calligraphy Basics", bookingRate: 87, selloutFrequency: "6/10 times" },
+    ],
+    bookingPerformance: [88, 90, 93, 87, 91, 85, 89],
+    availabilityStatus: "Approved for December",
+    todaysClasses: [],
+    upcomingSchedule: [
+      {
+        time: "Tomorrow, 10:00 AM",
+        title: "Traditional Japanese Painting",
+        location: "Ginza Studio",
+        students: 5,
+        status: "Confirmed",
+      },
+      {
+        time: "Tomorrow, 2:00 PM",
+        title: "Calligraphy Workshop",
+        location: "Daikanyama Studio",
+        students: 4,
+        status: "Confirmed",
+      },
+    ],
   },
   {
     id: 6,
@@ -312,6 +441,24 @@ const instructorsData = [
     availability: "available",
     bio: "Gentle soul who creates soft, natural elements that bring peace and tranquility.",
     phone: "+81 90-6789-0123",
+    email: "aika@artbar.co.jp",
+    hasClassesToday: false,
+    topClasses: [
+      { name: "Oil Painting Fundamentals", bookingRate: 91, selloutFrequency: "7/10 times" },
+      { name: "Portrait Painting", bookingRate: 89, selloutFrequency: "6/10 times" },
+    ],
+    bookingPerformance: [85, 88, 91, 89, 87, 83, 90],
+    availabilityStatus: "Approved for December",
+    todaysClasses: [],
+    upcomingSchedule: [
+      {
+        time: "Tomorrow, 1:00 PM",
+        title: "Oil Painting Fundamentals",
+        location: "Cat Street Studio",
+        students: 6,
+        status: "Confirmed",
+      },
+    ],
   },
   {
     id: 7,
@@ -327,6 +474,31 @@ const instructorsData = [
     availability: "available",
     bio: "Calming soul who finds peace in working with clay and sharing that tranquility.",
     phone: "+81 90-7890-1234",
+    email: "kiyoe@artbar.co.jp",
+    hasClassesToday: false,
+    topClasses: [
+      { name: "Pottery Basics", bookingRate: 94, selloutFrequency: "9/10 times" },
+      { name: "Kids Pottery Fun", bookingRate: 96, selloutFrequency: "10/10 times" },
+    ],
+    bookingPerformance: [90, 92, 94, 96, 93, 91, 95],
+    availabilityStatus: "Approved for December",
+    todaysClasses: [],
+    upcomingSchedule: [
+      {
+        time: "Tomorrow, 9:00 AM",
+        title: "Kids Pottery Fun",
+        location: "Daikanyama Studio",
+        students: 8,
+        status: "Confirmed",
+      },
+      {
+        time: "Tomorrow, 3:00 PM",
+        title: "Pottery Basics",
+        location: "Ginza Studio",
+        students: 6,
+        status: "Confirmed",
+      },
+    ],
   },
   {
     id: 8,
@@ -342,6 +514,24 @@ const instructorsData = [
     availability: "available",
     bio: "Energetic and playful instructor who brings joy and laughter to every class.",
     phone: "+81 90-8901-2345",
+    email: "michi@artbar.co.jp",
+    hasClassesToday: false,
+    topClasses: [
+      { name: "Kids Creative Art", bookingRate: 98, selloutFrequency: "10/10 times" },
+      { name: "Art Therapy Session", bookingRate: 92, selloutFrequency: "8/10 times" },
+    ],
+    bookingPerformance: [95, 96, 98, 92, 94, 97, 96],
+    availabilityStatus: "Approved for December",
+    todaysClasses: [],
+    upcomingSchedule: [
+      {
+        time: "Tomorrow, 10:00 AM",
+        title: "Kids Creative Art",
+        location: "Cat Street Studio",
+        students: 10,
+        status: "Confirmed",
+      },
+    ],
   },
   {
     id: 9,
@@ -357,6 +547,16 @@ const instructorsData = [
     availability: "unavailable",
     bio: "Delicate watercolor specialist focusing on botanical and landscape subjects.",
     phone: "+81 90-9012-3456",
+    email: "yuki@artbar.co.jp",
+    hasClassesToday: false,
+    topClasses: [
+      { name: "Watercolor Basics", bookingRate: 86, selloutFrequency: "6/10 times" },
+      { name: "Botanical Watercolor", bookingRate: 89, selloutFrequency: "7/10 times" },
+    ],
+    bookingPerformance: [82, 84, 86, 89, 85, 81, 87],
+    availabilityStatus: "On leave",
+    todaysClasses: [],
+    upcomingSchedule: [],
   },
   {
     id: 10,
@@ -372,6 +572,24 @@ const instructorsData = [
     availability: "limited",
     bio: "Contemporary street artist bringing urban culture into the studio.",
     phone: "+81 90-0123-4567",
+    email: "takeshi@artbar.co.jp",
+    hasClassesToday: false,
+    topClasses: [
+      { name: "Street Art Basics", bookingRate: 84, selloutFrequency: "6/10 times" },
+      { name: "Urban Culture Workshop", bookingRate: 81, selloutFrequency: "5/10 times" },
+    ],
+    bookingPerformance: [78, 80, 84, 81, 79, 76, 82],
+    availabilityStatus: "Limited availability",
+    todaysClasses: [],
+    upcomingSchedule: [
+      {
+        time: "Tomorrow, 4:00 PM",
+        title: "Street Art Basics",
+        location: "Cat Street Studio",
+        students: 7,
+        status: "Confirmed",
+      },
+    ],
   },
 ]
 
@@ -901,15 +1119,27 @@ function InstructorsContent() {
                         <Clock className="h-5 w-5 text-blue-500 mr-2" />
                         <h4 className="font-medium">Next Class</h4>
                       </div>
-                      {selectedInstructor.hasClassesToday ? (
+                      {selectedInstructor.hasClassesToday &&
+                      selectedInstructor.todaysClasses &&
+                      selectedInstructor.todaysClasses.length > 0 &&
+                      selectedInstructor.todaysClasses[0] ? (
                         <>
-                          <p className="text-2xl font-bold mt-2">2:30 PM</p>
-                          <p className="text-sm text-muted-foreground">Abstract Painting - Ginza</p>
+                          <p className="text-2xl font-bold mt-2">
+                            {selectedInstructor.todaysClasses[0].time?.split(" - ")[0] || "TBD"}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedInstructor.todaysClasses[0].title || "Class"} -{" "}
+                            {selectedInstructor.todaysClasses[0].location || "Location TBD"}
+                          </p>
                         </>
                       ) : (
                         <>
                           <p className="text-lg font-medium mt-2">No classes today</p>
-                          <p className="text-sm text-muted-foreground">Next class: Tomorrow, 10:00 AM</p>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedInstructor.upcomingSchedule && selectedInstructor.upcomingSchedule.length > 0
+                              ? `Next class: ${selectedInstructor.upcomingSchedule[0]?.time || "TBD"}`
+                              : "No upcoming classes scheduled"}
+                          </p>
                         </>
                       )}
                     </CardContent>
@@ -945,8 +1175,12 @@ function InstructorsContent() {
                       </div>
                       {selectedInstructor.hasClassesToday ? (
                         <>
-                          <p className="text-2xl font-bold mt-2">4.5</p>
-                          <p className="text-sm text-muted-foreground">9:00 AM - 6:00 PM</p>
+                          <p className="text-2xl font-bold mt-2">
+                            {selectedInstructor.todaysClasses?.length
+                              ? (selectedInstructor.todaysClasses.length * 1.5).toFixed(1)
+                              : "0"}
+                          </p>
+                          <p className="text-sm text-muted-foreground">Teaching hours</p>
                         </>
                       ) : (
                         <>
@@ -965,30 +1199,8 @@ function InstructorsContent() {
                 <Card>
                   <CardContent className="pt-6">
                     <div className="space-y-4">
-                      {selectedInstructor.hasClassesToday ? (
-                        [
-                          {
-                            time: "2:30 PM - 4:00 PM",
-                            title: "Abstract Painting Basics",
-                            location: "Ginza Studio",
-                            students: 8,
-                            status: "Confirmed",
-                          },
-                          {
-                            time: "5:00 PM - 6:30 PM",
-                            title: "Color Theory Workshop",
-                            location: "Daikanyama Studio",
-                            students: 4,
-                            status: "Confirmed",
-                          },
-                          {
-                            time: "Tomorrow, 10:00 AM",
-                            title: "Marketing Team Meeting",
-                            location: "Online",
-                            students: 0,
-                            status: "Internal",
-                          },
-                        ].map((event, i) => (
+                      {selectedInstructor.upcomingSchedule && selectedInstructor.upcomingSchedule.length > 0 ? (
+                        selectedInstructor.upcomingSchedule.map((event, i) => (
                           <div key={i} className="flex items-center p-2 hover:bg-muted rounded-md">
                             <div className="mr-4 flex-shrink-0">
                               <CalendarClock className="h-5 w-5 text-muted-foreground" />
@@ -1008,10 +1220,16 @@ function InstructorsContent() {
                         <div className="flex items-center justify-center py-6">
                           <div className="text-center">
                             <Calendar className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                            <p className="font-medium">No classes scheduled today</p>
-                            <p className="text-sm text-muted-foreground mt-1">Next class is tomorrow at 10:00 AM</p>
+                            <p className="font-medium">No upcoming classes scheduled</p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {selectedInstructor.availability === "unavailable"
+                                ? "Currently on leave"
+                                : "Available for scheduling"}
+                            </p>
                             <Button variant="outline" className="mt-4" size="sm">
-                              Request Classes
+                              {selectedInstructor.availability === "unavailable"
+                                ? "View Leave Status"
+                                : "Schedule Classes"}
                             </Button>
                           </div>
                         </div>
@@ -1052,11 +1270,7 @@ function InstructorsContent() {
                   <Button
                     variant="outline"
                     className="h-auto flex-col py-4 px-2"
-                    onClick={() =>
-                      window.open(
-                        `mailto:${selectedInstructor.name.english.toLowerCase().replace(" ", "")}@artbar.co.jp`,
-                      )
-                    }
+                    onClick={() => window.open(`mailto:${selectedInstructor.email}`)}
                   >
                     <Mail className="h-5 w-5 mb-1" />
                     <span className="text-xs">Email</span>
@@ -1082,9 +1296,10 @@ function InstructorsContent() {
             }}
           >
             <DialogHeader>
-              <DialogTitle>Class Check-In: {selectedInstructor.todaysClasses[0].title}</DialogTitle>
+              <DialogTitle>Class Check-In: {selectedInstructor.todaysClasses?.[0]?.title || "Class"}</DialogTitle>
               <DialogDescription>
-                {selectedInstructor.todaysClasses[0].time} • {selectedInstructor.todaysClasses[0].location}
+                {selectedInstructor.todaysClasses?.[0]?.time || "Time TBD"} •{" "}
+                {selectedInstructor.todaysClasses?.[0]?.location || "Location TBD"}
               </DialogDescription>
             </DialogHeader>
 
