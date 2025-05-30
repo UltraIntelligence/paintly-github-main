@@ -82,20 +82,7 @@ import { Progress } from "@/components/ui/progress"
 import { CopyIcon, Globe, Users, Palette } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-// Helper function to get progress bar color based on capacity percentage
-function getProgressBarColor(current: number, total: number): string {
-  const percentage = (current / total) * 100
-  if (percentage <= 50) return "bg-red-500"
-  if (percentage <= 75) return "bg-yellow-500"
-  return "bg-yellow-500"
-  return "bg-green-500"
-}
-
-// Helper function to parse capacity string like "8/12"
-function parseCapacity(capacityString: string): { current: number; total: number } {
-  const [current, total] = capacityString.split("/").map(Number)
-  return { current, total }
-}
+import { EventCard } from "@/components/event-card"
 
 export const schema = z.object({
   id: z.number(),
@@ -831,7 +818,7 @@ export function DataTable({
       instructor: "Yuki Tanaka",
       date: "May 25",
       section: "TODAY - May 25",
-      image: "/placeholder.svg?height=96&width=96&query=monet water lilies painting",
+      image: "/placeholder.svg?height=96&width=96",
     },
     {
       id: 2,
@@ -843,7 +830,7 @@ export function DataTable({
       instructor: "Hiroshi Sato",
       date: "May 25",
       section: "TODAY - May 25",
-      image: "/placeholder.svg?height=96&width=96&query=van gogh starry night painting",
+      image: "/placeholder.svg?height=96&width=96",
     },
     {
       id: 3,
@@ -855,7 +842,7 @@ export function DataTable({
       instructor: "Akiko Yamada",
       date: "May 26",
       section: "TOMORROW - May 26",
-      image: "/placeholder.svg?height=96&width=96&query=hokusai great wave painting",
+      image: "/placeholder.svg?height=96&width=96",
     },
     {
       id: 4,
@@ -867,7 +854,7 @@ export function DataTable({
       instructor: "Nanako",
       date: "May 26",
       section: "TOMORROW - May 26",
-      image: "/placeholder.svg?height=96&width=96&query=manet roses tulips painting",
+      image: "/placeholder.svg?height=96&width=96",
     },
     {
       id: 5,
@@ -879,7 +866,7 @@ export function DataTable({
       instructor: "Naomi",
       date: "May 27",
       section: "MAY 27",
-      image: "/placeholder.svg?height=96&width=96&query=fluid art paint pouring colorful",
+      image: "/placeholder.svg?height=96&width=96",
     },
     {
       id: 6,
@@ -891,7 +878,7 @@ export function DataTable({
       instructor: "Luci",
       date: "May 27",
       section: "MAY 27",
-      image: "/placeholder.svg?height=96&width=96&query=morocco blue stairs painting",
+      image: "/placeholder.svg?height=96&width=96",
     },
     {
       id: 7,
@@ -903,7 +890,7 @@ export function DataTable({
       instructor: "Jenna",
       date: "May 27",
       section: "MAY 27",
-      image: "/placeholder.svg?height=96&width=96&query=pop art pet painting colorful",
+      image: "/placeholder.svg?height=96&width=96",
     },
   ]
 
@@ -920,7 +907,7 @@ export function DataTable({
       date: "May 25",
       section: "TODAY - May 25",
       templateId: "monet-water-lilies",
-      image: "/placeholder.svg?height=80&width=80&query=monet water lilies painting",
+      image: "/placeholder.svg?height=80&width=80",
     },
     {
       id: 2,
@@ -933,7 +920,7 @@ export function DataTable({
       date: "May 25",
       section: "TODAY - May 25",
       templateId: "van-gogh-starry-night",
-      image: "/placeholder.svg?height=80&width=80&query=van gogh starry night painting",
+      image: "/placeholder.svg?height=80&width=80",
     },
   ]
 
@@ -1302,94 +1289,22 @@ export function DataTable({
                   <p className="text-xs text-gray-500">May 19, 2025</p>
                 </div>
 
+                {/* Today Events */}
                 {todayEvents.length > 0 ? (
                   <div className="divide-y divide-gray-100">
-                    {todayEvents.map((event) => {
-                      const { current, total } = parseCapacity(event.capacity)
-                      const progressPercentage = (current / total) * 100
-                      const getProgressColor = () => {
-                        if (progressPercentage >= 100) return "bg-red-500"
-                        if (progressPercentage >= 80) return "bg-amber-500"
-                        return "bg-green-500"
-                      }
-
-                      return (
-                        <div
-                          key={event.id}
-                          className="p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200"
-                        >
-                          <div className="flex items-start gap-4">
-                            {/* Event Image */}
-                            <div className="flex-shrink-0">
-                              <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-                                <img
-                                  src={
-                                    event.image ||
-                                    "/placeholder.svg?height=80&width=80&query=monet water lilies painting" ||
-                                    "/placeholder.svg"
-                                  }
-                                  alt={event.title}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            </div>
-
-                            {/* Event Details */}
-                            <div className="flex-1 min-w-0">
-                              {/* Title and Status Row */}
-                              <div className="flex items-start justify-between mb-2">
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <h4 className="text-base font-semibold text-gray-900 truncate">{event.title}</h4>
-                                    {event.status === "Live" && (
-                                      <Badge className="text-xs px-2 py-1 bg-blue-500 text-white animate-pulse">
-                                        Live
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  <p className="text-sm text-gray-600 truncate mb-2">Monet Water Lilies</p>
-                                </div>
-
-                                {/* Percentage indicator */}
-                                <div className="flex-shrink-0 ml-4">
-                                  <span className="text-xs text-gray-500">{Math.round(progressPercentage)}% full</span>
-                                </div>
-                              </div>
-
-                              {/* Participants count */}
-                              <div className="mb-3">
-                                <span className="text-sm font-medium text-gray-700">
-                                  {current}/{total} participants
-                                </span>
-                              </div>
-
-                              {/* Progress Bar */}
-                              <div className="mb-3">
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                  <div
-                                    className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
-                                    style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                                  />
-                                </div>
-                              </div>
-
-                              {/* Time and Location Info */}
-                              <div className="flex items-center gap-4 text-sm text-gray-600">
-                                <div className="flex items-center gap-1">
-                                  <div className="w-4 h-4 rounded-full bg-gray-300 flex items-center justify-center">
-                                    <div className="w-2 h-2 rounded-full bg-gray-600" />
-                                  </div>
-                                  <span>{event.time}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <span>{event.location}</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
+                    {todayEvents.map((event) => (
+                      <EventCard
+                        key={event.id}
+                        event={{
+                          ...event,
+                          subtitle: event.title.includes("Van Gogh")
+                            ? "Van Gogh Starry Night"
+                            : event.title.includes("モネ")
+                              ? "Monet Water Lilies"
+                              : "Art Class",
+                        }}
+                      />
+                    ))}
                   </div>
                 ) : (
                   <div className="p-8 text-center">
@@ -1476,104 +1391,9 @@ export function DataTable({
                       </p>
                     </div>
                     <div className="divide-y divide-gray-100">
-                      {events.map((event) => {
-                        const { current, total } = parseCapacity(event.capacity)
-                        const progressPercentage = (current / total) * 100
-                        const getProgressColor = () => {
-                          if (progressPercentage >= 100) return "bg-red-500"
-                          if (progressPercentage >= 80) return "bg-amber-500"
-                          return "bg-green-500"
-                        }
-
-                        return (
-                          <div
-                            key={event.id}
-                            className="p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200"
-                          >
-                            <div className="flex items-start gap-4">
-                              {/* Event Image */}
-                              <div className="flex-shrink-0">
-                                <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-                                  <img
-                                    src={
-                                      event.image ||
-                                      `/placeholder.svg?height=80&width=80&query=${encodeURIComponent(event.title) || "/placeholder.svg"}`
-                                    }
-                                    alt={event.title}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              </div>
-
-                              {/* Event Details */}
-                              <div className="flex-1 min-w-0">
-                                {/* Title and Status Row */}
-                                <div className="flex items-start justify-between mb-2">
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      <h4 className="text-base font-semibold text-gray-900 truncate">{event.title}</h4>
-                                      {event.status === "Live" && (
-                                        <Badge className="text-xs px-2 py-1 bg-blue-500 text-white animate-pulse">
-                                          Live
-                                        </Badge>
-                                      )}
-                                      {event.status === "Sold Out" && (
-                                        <Badge className="text-xs px-2 py-1 bg-red-500 text-white">Sold Out</Badge>
-                                      )}
-                                    </div>
-                                    <p className="text-sm text-gray-600 truncate mb-2">
-                                      {event.title.includes("Van Gogh")
-                                        ? "Van Gogh Starry Night"
-                                        : event.title.includes("モネ")
-                                          ? "Monet Water Lilies"
-                                          : event.title.includes("ポーリング")
-                                            ? "Paint Pouring"
-                                            : "Art Class"}
-                                    </p>
-                                  </div>
-
-                                  {/* Percentage indicator */}
-                                  <div className="flex-shrink-0 ml-4">
-                                    <span className="text-xs text-gray-500">
-                                      {Math.round(progressPercentage)}% full
-                                    </span>
-                                  </div>
-                                </div>
-
-                                {/* Participants count */}
-                                <div className="mb-3">
-                                  <span className="text-sm font-medium text-gray-700">
-                                    {current}/{total} participants
-                                  </span>
-                                </div>
-
-                                {/* Progress Bar */}
-                                <div className="mb-3">
-                                  <div className="w-full bg-gray-200 rounded-full h-2">
-                                    <div
-                                      className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
-                                      style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                                    />
-                                  </div>
-                                </div>
-
-                                {/* Time and Location Info */}
-                                <div className="flex items-center gap-4 text-sm text-gray-600">
-                                  <div className="flex items-center gap-1">
-                                    <div className="w-4 h-4 rounded-full bg-gray-300 flex items-center justify-center">
-                                      <div className="w-2 h-2 rounded-full bg-gray-600" />
-                                    </div>
-                                    <span>{event.time}</span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <span>{event.location}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      })}
+                      {events.map((event) => (
+                        <EventCard key={event.id} event={event} />
+                      ))}
                     </div>
                   </div>
                 ))

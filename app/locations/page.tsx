@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Search, Plus, Download, Upload, MapPin, MoreHorizontal } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -16,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { LocationDetailModal } from "@/components/location-detail-modal"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -28,7 +30,7 @@ const locationsData = [
   {
     id: 1,
     name: { japanese: "アートバー代官山", english: "Artbar Daikanyama" },
-    photo: "/placeholder.svg?height=240&width=320&query=modern art studio in daikanyama",
+    photo: "/placeholder.svg?height=240&width=320",
     address: {
       japanese: "〒150-0034 東京都渋谷区代官山町 7-2",
       english: "7-2 Daikanyamachō, Shibuya, Tōkyō 150-0034",
@@ -49,7 +51,7 @@ const locationsData = [
   {
     id: 2,
     name: { japanese: "アートバー キャットストリート原宿", english: "Artbar Cat Street Harajuku" },
-    photo: "/placeholder.svg?height=240&width=320&query=trendy art studio in harajuku",
+    photo: "/placeholder.svg?height=240&width=320",
     address: {
       japanese: "〒150-0001東京都渋谷区神宮前5−30−2 Takaraビル 201",
       english: "5-30-2 Jingumae, Shibuya-ku, Tokyo – 201 Takara Building 150-0001",
@@ -70,7 +72,7 @@ const locationsData = [
   {
     id: 3,
     name: { japanese: "アートバー銀座", english: "Artbar Ginza" },
-    photo: "/placeholder.svg?height=240&width=320&query=upscale art studio in ginza tokyo",
+    photo: "/placeholder.svg?height=240&width=320",
     address: {
       japanese: "〒104-0061 東京都中央区銀座3-3-12 銀座ビル3階",
       english: "Ginza, Chuo-ku, 3-3-12 3rd Floor Ginza Building",
@@ -93,7 +95,7 @@ const locationsData = [
   {
     id: 4,
     name: { japanese: "アートバー横浜元町", english: "Artbar Yokohama Motomachi" },
-    photo: "/placeholder.svg?height=240&width=320&query=art studio in yokohama motomachi",
+    photo: "/placeholder.svg?height=240&width=320",
     address: {
       japanese: "231-0861 神奈川県横浜市中区元町1-27-2 エンセント横濱元町ビル 2F",
       english: "231-0861 Kanagawa-ken, Yokohama-shi, Naka-ku Motomachi 1-27-2 Enscent Yokohama Motomachi Bld 2nd floor",
@@ -114,7 +116,7 @@ const locationsData = [
   {
     id: 5,
     name: { japanese: "アートバー大阪", english: "Artbar Osaka" },
-    photo: "/placeholder.svg?height=240&width=320&query=art studio in osaka japan",
+    photo: "/placeholder.svg?height=240&width=320",
     address: {
       japanese: "〒542-0076 大阪府大阪市中央区難波５丁目１−60 なんばスカイオ17Ｆ",
       english: "Namba Skio 17F, 5-1-60 Namba, Chuo-ku, Osaka 542-0076",
@@ -135,7 +137,7 @@ const locationsData = [
   {
     id: 6,
     name: { japanese: "アートバー沖縄", english: "Artbar Okinawa" },
-    photo: "/placeholder.svg?height=240&width=320&query=art studio in okinawa japan",
+    photo: "/placeholder.svg?height=240&width=320",
     address: {
       japanese: "〒901-1515 沖縄県南城市知念字山里137-3 MSYビル3F",
       english: "MSY Building 3F, 137-3 Yamanzato, Chinen, Nanjo City, Okinawa 901-1515",
@@ -156,7 +158,7 @@ const locationsData = [
   {
     id: 7,
     name: { japanese: "アートバー福岡", english: "Artbar Fukuoka" },
-    photo: "/placeholder.svg?height=240&width=320&query=art studio in fukuoka japan",
+    photo: "/placeholder.svg?height=240&width=320",
     address: {
       japanese: "〒810-0001 福岡県福岡市中央区天神2-8-34",
       english: "2-8-34 Tenjin, Chuo-ku, Fukuoka 810-0001",
@@ -180,10 +182,14 @@ const regions = ["All Regions", "Tokyo", "Kanagawa", "Osaka", "Okinawa", "Fukuok
 const statusOptions = ["All Status", "Active", "Under Construction", "Coming Soon"]
 
 function LocationsContent() {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedRegion, setSelectedRegion] = useState("All Regions")
   const [selectedStatus, setSelectedStatus] = useState("All Status")
   const [activeTab, setActiveTab] = useState("all")
+
+  const [selectedLocation, setSelectedLocation] = useState<(typeof locationsData)[0] | null>(null)
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false)
 
   const filteredLocations = useMemo(() => {
     return locationsData.filter((location) => {
@@ -411,7 +417,15 @@ function LocationsContent() {
                     {/* Actions Section - Fixed at bottom */}
                     <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
                       <div className="flex gap-2">
-                        <Button size="sm" variant="default" className="flex-1 text-xs">
+                        <Button
+                          size="sm"
+                          variant="default"
+                          className="flex-1 text-xs"
+                          onClick={() => {
+                            setSelectedLocation(location)
+                            setIsLocationModalOpen(true)
+                          }}
+                        >
                           View Details
                         </Button>
                         <DropdownMenu>
@@ -435,6 +449,13 @@ function LocationsContent() {
           )}
         </TabsContent>
       </Tabs>
+      {selectedLocation && (
+        <LocationDetailModal
+          open={isLocationModalOpen}
+          onOpenChange={setIsLocationModalOpen}
+          location={selectedLocation}
+        />
+      )}
     </div>
   )
 }
