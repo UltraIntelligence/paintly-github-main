@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   ChevronLeft,
   ChevronRight,
@@ -260,7 +260,7 @@ const templates = [
     difficulty: "Beginner",
     category: "Master Artists",
     specialization: ["master", "general"],
-    image: "/placeholder.svg?height=80&width=80&query=monet water lilies",
+    image: "/placeholder.svg?height=80&width=80",
   },
   {
     id: "vangogh",
@@ -271,7 +271,7 @@ const templates = [
     difficulty: "Advanced",
     category: "Master Artists",
     specialization: ["master"],
-    image: "/placeholder.svg?height=80&width=80&query=van gogh starry night",
+    image: "/placeholder.svg?height=80&width=80",
   },
   {
     id: "pouring",
@@ -282,7 +282,7 @@ const templates = [
     difficulty: "Beginner",
     category: "Paint Pouring",
     specialization: ["pouring"],
-    image: "/placeholder.svg?height=80&width=80&query=paint pouring fluid art",
+    image: "/placeholder.svg?height=80&width=80",
   },
   {
     id: "kids-chameleon",
@@ -293,7 +293,7 @@ const templates = [
     difficulty: "Kids",
     category: "Kids Only",
     specialization: ["kids"],
-    image: "/placeholder.svg?height=80&width=80&query=kids chameleon painting",
+    image: "/placeholder.svg?height=80&width=80",
   },
   {
     id: "sunflowers",
@@ -304,7 +304,7 @@ const templates = [
     difficulty: "Intermediate",
     category: "All",
     specialization: ["general", "master"],
-    image: "/placeholder.svg?height=80&width=80&query=sunflowers vase painting",
+    image: "/placeholder.svg?height=80&width=80",
   },
 ]
 
@@ -324,7 +324,7 @@ const schedulingSuggestions = [
       id: "vangogh",
       japaneseTitle: "ゴッホ 星月夜",
       englishTitle: "Van Gogh Starry Night",
-      image: "/placeholder.svg?height=120&width=120&query=van gogh starry night",
+      image: "/placeholder.svg?height=120&width=120",
       category: "Master Artists",
     },
     metrics: {
@@ -354,7 +354,7 @@ const schedulingSuggestions = [
       id: "monet",
       japaneseTitle: "モネ 睡蓮",
       englishTitle: "Monet Water Lilies",
-      image: "/placeholder.svg?height=120&width=120&query=monet water lilies",
+      image: "/placeholder.svg?height=120&width=120",
       category: "Master Artists",
     },
     metrics: {
@@ -383,7 +383,7 @@ const schedulingSuggestions = [
       id: "pouring",
       japaneseTitle: "F6 たらし込みポーリングアート",
       englishTitle: "Paint Pouring",
-      image: "/placeholder.svg?height=120&width=120&query=paint pouring fluid art",
+      image: "/placeholder.svg?height=120&width=120",
       category: "Paint Pouring",
     },
     metrics: {
@@ -414,7 +414,7 @@ const schedulingSuggestions = [
       id: "kids-chameleon",
       japaneseTitle: "キッズ カメレオン",
       englishTitle: "Kids Chameleon",
-      image: "/placeholder.svg?height=120&width=120&query=kids chameleon painting",
+      image: "/placeholder.svg?height=120&width=120",
       category: "Kids Only",
     },
     metrics: {
@@ -443,7 +443,7 @@ const schedulingSuggestions = [
       id: "sunflowers",
       japaneseTitle: "花瓶のひまわり",
       englishTitle: "Sunflowers Vase",
-      image: "/placeholder.svg?height=120&width=120&query=sunflowers vase painting",
+      image: "/placeholder.svg?height=120&width=120",
       category: "All",
     },
     metrics: {
@@ -472,7 +472,7 @@ const schedulingSuggestions = [
       id: "vangogh",
       japaneseTitle: "夜のマスタークラス",
       englishTitle: "Evening Masterclass",
-      image: "/placeholder.svg?height=120&width=120&query=evening art masterclass",
+      image: "/placeholder.svg?height=120&width=120",
       category: "Master Artists",
     },
     metrics: {
@@ -512,6 +512,21 @@ function ScheduleContent() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [animationDirection, setAnimationDirection] = useState<"left" | "right" | null>(null)
   const [isSuggestionsCollapsed, setIsSuggestionsCollapsed] = useState(false)
+
+  // Force list view on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      if (window.innerWidth < 768) {
+        // md breakpoint
+        setSelectedView("list")
+      }
+    }
+
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   const getSlotData = (dayIndex: number, hourIndex: number) => {
     return availability[dayIndex]?.[hourIndex] || { type: "unavailable" }
@@ -908,8 +923,8 @@ function ScheduleContent() {
 
           {/* Bottom row - View Controls and Date Navigation */}
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-            {/* Left side - View Toggle */}
-            <div className="flex items-center gap-2">
+            {/* Left side - View Toggle - Hidden on mobile */}
+            <div className="hidden md:flex items-center gap-2">
               <Button
                 variant={selectedView === "month" ? "default" : "outline"}
                 size="sm"
@@ -940,7 +955,7 @@ function ScheduleContent() {
               </Button>
             </div>
 
-            {/* Right side - Date Navigation */}
+            {/* Right side - Date Navigation - Hidden on mobile when in list view */}
             {selectedView !== "month" && (
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm">
@@ -1162,271 +1177,275 @@ function ScheduleContent() {
           </AnimatePresence>
         )}
 
-        {/* Calendar Grid - Month View */}
+        {/* Calendar Grid - Month View - Hidden on mobile */}
         {selectedView === "month" && (
-          <div className="space-y-6">
-            {/* Standard Month Calendar */}
-            <Card className="overflow-hidden transition-all duration-700 ease-in-out">
-              <CardContent className="p-0">
-                {/* Month Header */}
-                <div className="flex items-center justify-between p-4 border-b bg-gray-50">
-                  <div className="flex items-center gap-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        // Handle previous month navigation
-                        console.log("Previous month")
-                      }}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <h2 className="text-lg font-semibold">May 2025</h2>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        // Handle next month navigation
-                        console.log("Next month")
-                      }}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm">
-                      Today
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Go to Date
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Calendar Grid */}
-                <div className="grid grid-cols-7">
-                  {/* Day Headers */}
-                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                    <div
-                      key={day}
-                      className="p-3 text-center text-sm font-medium text-gray-500 bg-gray-50 border-b border-r last:border-r-0"
-                    >
-                      {day}
-                    </div>
-                  ))}
-
-                  {/* Calendar Days */}
-                  {Array.from({ length: 35 }, (_, index) => {
-                    // Calculate the actual date for this cell
-                    const startDate = new Date(2025, 4, 1) // May 1, 2025
-                    const firstDayOfWeek = startDate.getDay() // 0 = Sunday
-                    const dayNumber = index - firstDayOfWeek + 1
-                    const currentDate = new Date(2025, 4, dayNumber)
-                    const isCurrentMonth = dayNumber > 0 && dayNumber <= 31
-                    const isCurrentDay = isCurrentMonth && dayNumber === 19 // May 19 as current day
-
-                    // Get events for this day
-                    const dayEvents = scheduledEvents.filter((event) => {
-                      const eventDate = 19 + event.day // Convert day index to actual date
-                      return isCurrentMonth && dayNumber === eventDate
-                    })
-
-                    // Get availability data for this day
-                    const dayIndex = (dayNumber - 19) % 7 // Convert to our 0-6 day system
-                    const hasAvailability = dayIndex >= 0 && dayIndex < 7 && availability[dayIndex]
-
-                    return (
-                      <div
-                        key={index}
-                        className={`${
-                          suggestions.length === 0 || isSuggestionsCollapsed
-                            ? "min-h-[180px] lg:min-h-[200px]"
-                            : "min-h-[120px]"
-                        } border-b border-r last:border-r-0 p-3 transition-all duration-700 ease-in-out ${
-                          !isCurrentMonth
-                            ? "bg-gray-50 text-gray-400"
-                            : isCurrentDay
-                              ? "bg-blue-50 border-blue-200"
-                              : "bg-white hover:bg-gray-50"
-                        } cursor-pointer`}
+          <div className="hidden md:block">
+            <div className="space-y-6">
+              {/* Standard Month Calendar */}
+              <Card className="overflow-hidden transition-all duration-700 ease-in-out">
+                <CardContent className="p-0">
+                  {/* Month Header */}
+                  <div className="flex items-center justify-between p-4 border-b bg-gray-50">
+                    <div className="flex items-center gap-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => {
-                          if (isCurrentMonth && hasAvailability) {
-                            // Handle day click for scheduling
-                            console.log(`Clicked on day ${dayNumber}`)
-                          }
+                          // Handle previous month navigation
+                          console.log("Previous month")
                         }}
                       >
-                        {/* Date Number */}
-                        <div className="flex items-center justify-between mb-3">
-                          <span
-                            className={`text-sm font-medium ${
-                              isCurrentDay ? "text-blue-600" : isCurrentMonth ? "text-gray-900" : "text-gray-400"
-                            }`}
-                          >
-                            {isCurrentMonth ? dayNumber : ""}
-                          </span>
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <h2 className="text-lg font-semibold">May 2025</h2>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          // Handle next month navigation
+                          console.log("Next month")
+                        }}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="sm">
+                        Today
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Go to Date
+                      </Button>
+                    </div>
+                  </div>
 
-                          {/* Availability Indicator */}
-                          {isCurrentMonth && hasAvailability && (
-                            <div className="flex items-center gap-1">
-                              {Object.values(availability[dayIndex] || {}).some(
-                                (slot: any) => slot.type === "available",
-                              ) && <div className="w-2 h-2 rounded-full bg-green-400" title="Available slots" />}
-                              {Object.values(availability[dayIndex] || {}).some(
-                                (slot: any) => slot.type === "constrained",
-                              ) && <div className="w-2 h-2 rounded-full bg-amber-400" title="Limited availability" />}
-                              {Object.values(availability[dayIndex] || {}).some(
-                                (slot: any) => slot.type === "scheduled",
-                              ) && <div className="w-2 h-2 rounded-full bg-blue-500" title="Scheduled events" />}
-                            </div>
-                          )}
-                        </div>
+                  {/* Calendar Grid */}
+                  <div className="grid grid-cols-7">
+                    {/* Day Headers */}
+                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                      <div
+                        key={day}
+                        className="p-3 text-center text-sm font-medium text-gray-500 bg-gray-50 border-b border-r last:border-r-0"
+                      >
+                        {day}
+                      </div>
+                    ))}
 
-                        {/* Events for this day - Location Color Bars */}
-                        {isCurrentMonth && dayEvents.length > 0 && (
-                          <div className="space-y-1">
-                            {dayEvents.slice(0, 3).map((event, index) => {
-                              const locationColor = locationColors[event.location] || "#6B7280"
-                              return (
-                                <div
-                                  key={event.id}
-                                  className="h-2 rounded-sm transition-opacity duration-200 hover:opacity-80 cursor-pointer"
-                                  style={{
-                                    backgroundColor: locationColor,
-                                    opacity: dayEvents.length > 1 ? 0.8 : 1,
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleEventClick(event)
-                                  }}
-                                  title={`${event.title} - ${event.location} - ${timeSlots[event.startHour]}`}
-                                />
-                              )
-                            })}
+                    {/* Calendar Days */}
+                    {Array.from({ length: 35 }, (_, index) => {
+                      // Calculate the actual date for this cell
+                      const startDate = new Date(2025, 4, 1) // May 1, 2025
+                      const firstDayOfWeek = startDate.getDay() // 0 = Sunday
+                      const dayNumber = index - firstDayOfWeek + 1
+                      const currentDate = new Date(2025, 4, dayNumber)
+                      const isCurrentMonth = dayNumber > 0 && dayNumber <= 31
+                      const isCurrentDay = isCurrentMonth && dayNumber === 19 // May 19 as current day
 
-                            {/* Show "more events" indicator */}
-                            {dayEvents.length > 3 && (
-                              <div className="text-xs text-gray-500 text-center py-0.5">
-                                +{dayEvents.length - 3} more
+                      // Get events for this day
+                      const dayEvents = scheduledEvents.filter((event) => {
+                        const eventDate = 19 + event.day // Convert day index to actual date
+                        return isCurrentMonth && dayNumber === eventDate
+                      })
+
+                      // Get availability data for this day
+                      const dayIndex = (dayNumber - 19) % 7 // Convert to our 0-6 day system
+                      const hasAvailability = dayIndex >= 0 && dayIndex < 7 && availability[dayIndex]
+
+                      return (
+                        <div
+                          key={index}
+                          className={`${
+                            suggestions.length === 0 || isSuggestionsCollapsed
+                              ? "min-h-[180px] lg:min-h-[200px]"
+                              : "min-h-[120px]"
+                          } border-b border-r last:border-r-0 p-3 transition-all duration-700 ease-in-out ${
+                            !isCurrentMonth
+                              ? "bg-gray-50 text-gray-400"
+                              : isCurrentDay
+                                ? "bg-blue-50 border-blue-200"
+                                : "bg-white hover:bg-gray-50"
+                          } cursor-pointer`}
+                          onClick={() => {
+                            if (isCurrentMonth && hasAvailability) {
+                              // Handle day click for scheduling
+                              console.log(`Clicked on day ${dayNumber}`)
+                            }
+                          }}
+                        >
+                          {/* Date Number */}
+                          <div className="flex items-center justify-between mb-3">
+                            <span
+                              className={`text-sm font-medium ${
+                                isCurrentDay ? "text-blue-600" : isCurrentMonth ? "text-gray-900" : "text-gray-400"
+                              }`}
+                            >
+                              {isCurrentMonth ? dayNumber : ""}
+                            </span>
+
+                            {/* Availability Indicator */}
+                            {isCurrentMonth && hasAvailability && (
+                              <div className="flex items-center gap-1">
+                                {Object.values(availability[dayIndex] || {}).some(
+                                  (slot: any) => slot.type === "available",
+                                ) && <div className="w-2 h-2 rounded-full bg-green-400" title="Available slots" />}
+                                {Object.values(availability[dayIndex] || {}).some(
+                                  (slot: any) => slot.type === "constrained",
+                                ) && <div className="w-2 h-2 rounded-full bg-amber-400" title="Limited availability" />}
+                                {Object.values(availability[dayIndex] || {}).some(
+                                  (slot: any) => slot.type === "scheduled",
+                                ) && <div className="w-2 h-2 rounded-full bg-blue-500" title="Scheduled events" />}
                               </div>
                             )}
                           </div>
-                        )}
 
-                        {/* Empty state for available days */}
-                        {isCurrentMonth && dayEvents.length === 0 && hasAvailability && (
-                          <div
-                            className={`flex flex-col items-center justify-center ${
-                              suggestions.length === 0 || isSuggestionsCollapsed ? "h-32" : "h-20"
-                            } text-gray-400 transition-all duration-700`}
-                          >
-                            <div
-                              className={`${
-                                suggestions.length === 0 || isSuggestionsCollapsed ? "w-8 h-8" : "w-6 h-6"
-                              } rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center mb-2`}
-                            >
-                              <Plus
-                                className={`${suggestions.length === 0 || isSuggestionsCollapsed ? "w-4 h-4" : "w-3 h-3"}`}
-                              />
+                          {/* Events for this day - Location Color Bars */}
+                          {isCurrentMonth && dayEvents.length > 0 && (
+                            <div className="space-y-1">
+                              {dayEvents.slice(0, 3).map((event, index) => {
+                                const locationColor = locationColors[event.location] || "#6B7280"
+                                return (
+                                  <div
+                                    key={event.id}
+                                    className="h-2 rounded-sm transition-opacity duration-200 hover:opacity-80 cursor-pointer"
+                                    style={{
+                                      backgroundColor: locationColor,
+                                      opacity: dayEvents.length > 1 ? 0.8 : 1,
+                                    }}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleEventClick(event)
+                                    }}
+                                    title={`${event.title} - ${event.location} - ${timeSlots[event.startHour]}`}
+                                  />
+                                )
+                              })}
+
+                              {/* Show "more events" indicator */}
+                              {dayEvents.length > 3 && (
+                                <div className="text-xs text-gray-500 text-center py-0.5">
+                                  +{dayEvents.length - 3} more
+                                </div>
+                              )}
                             </div>
-                            <span
-                              className={`${suggestions.length === 0 || isSuggestionsCollapsed ? "text-sm" : "text-xs"}`}
-                            >
-                              Available
-                            </span>
-                            {suggestions.length === 0 ||
-                              (isSuggestionsCollapsed && (
-                                <span className="text-xs text-gray-400 mt-1">Click to schedule</span>
-                              ))}
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
+                          )}
 
-                {/* Month View Legend */}
-                <div className="p-4 border-t bg-gray-50">
-                  <div className="flex flex-wrap gap-4 text-xs">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded bg-blue-50 border border-blue-200"></div>
-                      <span>Today</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                      <span>Available</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-amber-400"></div>
-                      <span>Limited</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                      <span>Scheduled</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                      <span>Live Event</span>
+                          {/* Empty state for available days */}
+                          {isCurrentMonth && dayEvents.length === 0 && hasAvailability && (
+                            <div
+                              className={`flex flex-col items-center justify-center ${
+                                suggestions.length === 0 || isSuggestionsCollapsed ? "h-32" : "h-20"
+                              } text-gray-400 transition-all duration-700`}
+                            >
+                              <div
+                                className={`${
+                                  suggestions.length === 0 || isSuggestionsCollapsed ? "w-8 h-8" : "w-6 h-6"
+                                } rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center mb-2`}
+                              >
+                                <Plus
+                                  className={`${suggestions.length === 0 || isSuggestionsCollapsed ? "w-4 h-4" : "w-3 h-3"}`}
+                                />
+                              </div>
+                              <span
+                                className={`${suggestions.length === 0 || isSuggestionsCollapsed ? "text-sm" : "text-xs"}`}
+                              >
+                                Available
+                              </span>
+                              {suggestions.length === 0 ||
+                                (isSuggestionsCollapsed && (
+                                  <span className="text-xs text-gray-400 mt-1">Click to schedule</span>
+                                ))}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* Month View Legend */}
+                  <div className="p-4 border-t bg-gray-50">
+                    <div className="flex flex-wrap gap-4 text-xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded bg-blue-50 border border-blue-200"></div>
+                        <span>Today</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                        <span>Available</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-amber-400"></div>
+                        <span>Limited</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <span>Scheduled</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                        <span>Live Event</span>
+                      </div>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {/* Calendar Grid - Week View - Hidden on mobile */}
+        {selectedView === "week" && (
+          <div className="hidden md:block">
+            <Card className="overflow-hidden mb-6 mt-2">
+              <CardContent className="p-0">
+                {/* Header */}
+                <div className="grid grid-cols-8 border-b">
+                  <div className="p-4 bg-gray-50 border-r flex items-center justify-center">
+                    <Clock className="h-4 w-4 text-gray-500" />
+                  </div>
+                  {days.map((day, index) => (
+                    <div key={day} className="p-4 bg-gray-50 text-center border-r last:border-r-0">
+                      <div className="font-medium text-gray-900">{shortDays[index]}</div>
+                      <div className="text-sm text-gray-500">May {19 + index}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Time slots with proper grid structure for spanning */}
+                <div className="grid grid-cols-8" style={{ gridTemplateRows: `repeat(${timeSlots.length}, 80px)` }}>
+                  {/* Render all time labels first */}
+                  {timeSlots.map((time, hourIndex) => (
+                    <div
+                      key={`time-${hourIndex}`}
+                      className="p-4 bg-gray-50 border-r border-b text-sm text-gray-600 flex items-center"
+                      style={{ gridColumn: 1, gridRow: hourIndex + 1 }}
+                    >
+                      {time}
+                    </div>
+                  ))}
+
+                  {/* Render all day slots with proper grid positioning */}
+                  {days.map((_, dayIndex) =>
+                    timeSlots.map((_, hourIndex) => {
+                      const slot = renderTimeSlot(dayIndex, hourIndex)
+                      return slot ? (
+                        <div
+                          key={`${dayIndex}-${hourIndex}`}
+                          style={{
+                            gridColumn: dayIndex + 2,
+                            gridRow: slot.props?.style?.gridRow || hourIndex + 1,
+                          }}
+                          className="border-b border-gray-200"
+                        >
+                          {slot}
+                        </div>
+                      ) : null
+                    }),
+                  )}
                 </div>
               </CardContent>
             </Card>
           </div>
-        )}
-
-        {/* Calendar Grid - Week View */}
-        {selectedView === "week" && (
-          <Card className="overflow-hidden mb-6 mt-2">
-            <CardContent className="p-0">
-              {/* Header */}
-              <div className="grid grid-cols-8 border-b">
-                <div className="p-4 bg-gray-50 border-r flex items-center justify-center">
-                  <Clock className="h-4 w-4 text-gray-500" />
-                </div>
-                {days.map((day, index) => (
-                  <div key={day} className="p-4 bg-gray-50 text-center border-r last:border-r-0">
-                    <div className="font-medium text-gray-900">{shortDays[index]}</div>
-                    <div className="text-sm text-gray-500">May {19 + index}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Time slots with proper grid structure for spanning */}
-              <div className="grid grid-cols-8" style={{ gridTemplateRows: `repeat(${timeSlots.length}, 80px)` }}>
-                {/* Render all time labels first */}
-                {timeSlots.map((time, hourIndex) => (
-                  <div
-                    key={`time-${hourIndex}`}
-                    className="p-4 bg-gray-50 border-r border-b text-sm text-gray-600 flex items-center"
-                    style={{ gridColumn: 1, gridRow: hourIndex + 1 }}
-                  >
-                    {time}
-                  </div>
-                ))}
-
-                {/* Render all day slots with proper grid positioning */}
-                {days.map((_, dayIndex) =>
-                  timeSlots.map((_, hourIndex) => {
-                    const slot = renderTimeSlot(dayIndex, hourIndex)
-                    return slot ? (
-                      <div
-                        key={`${dayIndex}-${hourIndex}`}
-                        style={{
-                          gridColumn: dayIndex + 2,
-                          gridRow: slot.props?.style?.gridRow || hourIndex + 1,
-                        }}
-                        className="border-b border-gray-200"
-                      >
-                        {slot}
-                      </div>
-                    ) : null
-                  }),
-                )}
-              </div>
-            </CardContent>
-          </Card>
         )}
 
         {/* List View */}

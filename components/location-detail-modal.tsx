@@ -1,16 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, TrendingUp, Package, Tag, Phone, Calendar } from "lucide-react"
+import { ArrowLeft, TrendingUp, Package, Tag, Phone, Calendar, Users, Target, DollarSign } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { EventCard } from "@/components/event-card"
+import { StatusCard } from "@/components/status-card"
 
 interface LocationDetailModalProps {
   open: boolean
@@ -145,8 +145,8 @@ export function LocationDetailModal({ open, onOpenChange, location }: LocationDe
         <div className="overflow-y-auto" style={{ maxHeight: "calc(95vh - 120px)" }}>
           {/* Header Section */}
           <div className="px-6 pb-4">
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              <div className="w-full md:w-64 h-48 rounded-lg overflow-hidden">
+            <div className="flex items-start gap-4">
+              <div className="w-32 h-32 rounded-lg overflow-hidden">
                 <img
                   src={location.photo || "/placeholder.svg"}
                   alt={location.name.english}
@@ -184,65 +184,32 @@ export function LocationDetailModal({ open, onOpenChange, location }: LocationDe
             </div>
           </div>
 
-          {/* PRIMARY FOCUS - Today's Revenue Card */}
+          {/* Today's Status */}
           <div className="px-6 mb-6">
-            <Card className="border-2 border-gray-200 shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div>
-                    <h2 className="text-lg font-medium text-gray-500 mb-1">Today's Revenue</h2>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-bold">¥{locationData.currentRevenue.toLocaleString()}</span>
-                      <span
-                        className={`text-lg ${getRevenueStatusColor(
-                          locationData.currentRevenue,
-                          locationData.dailyTarget,
-                        )}`}
-                      >
-                        {Math.round((locationData.currentRevenue / locationData.dailyTarget) * 100)}% of target
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 mt-1 text-sm">
-                      <TrendingUp className="h-4 w-4 text-green-600" />
-                      <span className="text-green-600">
-                        +
-                        {Math.round(
-                          ((locationData.currentRevenue - locationData.yesterdayRevenue) /
-                            locationData.yesterdayRevenue) *
-                            100,
-                        )}
-                        % vs yesterday
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-4 md:gap-8">
-                    <div>
-                      <p className="text-sm text-gray-500">Events Today</p>
-                      <p className="text-2xl font-semibold">{locationData.eventsToday}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Tickets Sold</p>
-                      <p className="text-2xl font-semibold">
-                        {locationData.ticketsSold}/{locationData.ticketsSold + locationData.ticketsRemaining}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Active Staff</p>
-                      <p className="text-2xl font-semibold">{locationData.activeInstructors}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Daily Target: ¥{locationData.dailyTarget.toLocaleString()}</span>
-                    <span>{Math.round((locationData.currentRevenue / locationData.dailyTarget) * 100)}%</span>
-                  </div>
-                  <Progress value={(locationData.currentRevenue / locationData.dailyTarget) * 100} className="h-2" />
-                </div>
-              </CardContent>
-            </Card>
+            <h3 className="text-lg font-medium mb-3">Today's Status</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <StatusCard
+                icon={DollarSign}
+                iconColor="text-blue-500"
+                title="Today's Revenue"
+                value={`¥${locationData.currentRevenue.toLocaleString()}`}
+                subtitle={`${Math.round((locationData.currentRevenue / locationData.dailyTarget) * 100)}% of target`}
+              />
+              <StatusCard
+                icon={Target}
+                iconColor="text-green-500"
+                title="Events Today"
+                value={locationData.eventsToday.toString()}
+                subtitle={`${locationData.ticketsSold}/${locationData.ticketsSold + locationData.ticketsRemaining} tickets sold`}
+              />
+              <StatusCard
+                icon={Users}
+                iconColor="text-purple-500"
+                title="Active Staff"
+                value={locationData.activeInstructors.toString()}
+                subtitle={`${locationData.standbyInstructors} on standby`}
+              />
+            </div>
           </div>
 
           {/* Today's Events Section - Using EventCard Component */}
@@ -336,40 +303,25 @@ export function LocationDetailModal({ open, onOpenChange, location }: LocationDe
             </Card>
           </div>
 
-          {/* CONTEXTUAL RECOMMENDATIONS */}
+          {/* Quick Actions - Four Button Approach */}
           <div className="px-6 mb-8">
-            <h2 className="text-lg font-semibold mb-3">Recommended Actions</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Button variant="outline" className="justify-start h-auto py-2.5 px-4">
-                <Tag className="mr-2 h-4 w-4 text-amber-600" />
-                <div className="text-left">
-                  <p className="font-medium">Send 15% discount for Night Scene Painting</p>
-                  <p className="text-xs text-muted-foreground">Target: 24 customers who booked similar classes</p>
-                </div>
+            <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <Button variant="outline" className="h-auto flex-col py-4 px-2">
+                <Tag className="h-5 w-5 mb-1" />
+                <span className="text-xs">Send Promotion</span>
               </Button>
-
-              <Button variant="outline" className="justify-start h-auto py-2.5 px-4">
-                <Package className="mr-2 h-4 w-4 text-red-600" />
-                <div className="text-left">
-                  <p className="font-medium">Restock canvas inventory</p>
-                  <p className="text-xs text-muted-foreground">Current: 15 remaining, Need: 30 for weekend</p>
-                </div>
+              <Button variant="outline" className="h-auto flex-col py-4 px-2">
+                <Package className="h-5 w-5 mb-1" />
+                <span className="text-xs">Manage Inventory</span>
               </Button>
-
-              <Button variant="outline" className="justify-start h-auto py-2.5 px-4">
-                <Calendar className="mr-2 h-4 w-4 text-blue-600" />
-                <div className="text-left">
-                  <p className="font-medium">Schedule extra class with Naomi</p>
-                  <p className="text-xs text-muted-foreground">High demand slot: Thursday 6-8PM</p>
-                </div>
+              <Button variant="outline" className="h-auto flex-col py-4 px-2">
+                <Calendar className="h-5 w-5 mb-1" />
+                <span className="text-xs">Schedule Class</span>
               </Button>
-
-              <Button variant="outline" className="justify-start h-auto py-2.5 px-4">
-                <Phone className="mr-2 h-4 w-4 text-green-600" />
-                <div className="text-left">
-                  <p className="font-medium">Contact customers on waitlist</p>
-                  <p className="text-xs text-muted-foreground">8 customers waiting for Abstract Art class</p>
-                </div>
+              <Button variant="outline" className="h-auto flex-col py-4 px-2">
+                <Phone className="h-5 w-5 mb-1" />
+                <span className="text-xs">Contact Waitlist</span>
               </Button>
             </div>
           </div>

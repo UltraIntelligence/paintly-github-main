@@ -4,17 +4,7 @@ import { useState, useMemo, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Search, Plus, Download, Upload, Users, MoreHorizontal, Check, Mail } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import {
-  Calendar,
-  Clock,
-  CalendarClock,
-  Users2,
-  Briefcase,
-  CheckCircle2,
-  CalendarDays,
-  SearchIcon,
-  DownloadIcon,
-} from "lucide-react"
+import { Calendar, Clock, Users2, Briefcase, CheckCircle2, CalendarDays, SearchIcon, DownloadIcon } from "lucide-react"
 import ReactConfetti from "react-confetti"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -32,6 +22,8 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { EventCard } from "@/components/event-card"
+import { StatusCard } from "@/components/status-card"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -1113,83 +1105,59 @@ function InstructorsContent() {
               <div>
                 <h3 className="text-lg font-medium mb-3">Today's Status</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center">
-                        <Clock className="h-5 w-5 text-blue-500 mr-2" />
-                        <h4 className="font-medium">Next Class</h4>
-                      </div>
-                      {selectedInstructor.hasClassesToday &&
+                  <StatusCard
+                    icon={Clock}
+                    iconColor="text-blue-500"
+                    title="Next Class"
+                    value={
+                      selectedInstructor.hasClassesToday &&
                       selectedInstructor.todaysClasses &&
                       selectedInstructor.todaysClasses.length > 0 &&
-                      selectedInstructor.todaysClasses[0] ? (
-                        <>
-                          <p className="text-2xl font-bold mt-2">
-                            {selectedInstructor.todaysClasses[0].time?.split(" - ")[0] || "TBD"}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {selectedInstructor.todaysClasses[0].title || "Class"} -{" "}
-                            {selectedInstructor.todaysClasses[0].location || "Location TBD"}
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-lg font-medium mt-2">No classes today</p>
-                          <p className="text-sm text-muted-foreground">
-                            {selectedInstructor.upcomingSchedule && selectedInstructor.upcomingSchedule.length > 0
-                              ? `Next class: ${selectedInstructor.upcomingSchedule[0]?.time || "TBD"}`
-                              : "No upcoming classes scheduled"}
-                          </p>
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center">
-                        <Users2 className="h-5 w-5 text-green-500 mr-2" />
-                        <h4 className="font-medium">Students Today</h4>
-                      </div>
-                      {selectedInstructor.hasClassesToday ? (
-                        <>
-                          <p className="text-2xl font-bold mt-2">
-                            {selectedInstructor.todaysClasses?.reduce((acc, cls) => acc + cls.students.length, 0) || 0}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {selectedInstructor.todaysClasses?.length || 0} classes scheduled
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-lg font-medium mt-2">0</p>
-                          <p className="text-sm text-muted-foreground">No classes scheduled</p>
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center">
-                        <Briefcase className="h-5 w-5 text-purple-500 mr-2" />
-                        <h4 className="font-medium">Hours Today</h4>
-                      </div>
-                      {selectedInstructor.hasClassesToday ? (
-                        <>
-                          <p className="text-2xl font-bold mt-2">
-                            {selectedInstructor.todaysClasses?.length
-                              ? (selectedInstructor.todaysClasses.length * 1.5).toFixed(1)
-                              : "0"}
-                          </p>
-                          <p className="text-sm text-muted-foreground">Teaching hours</p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-lg font-medium mt-2">0</p>
-                          <p className="text-sm text-muted-foreground">Off today</p>
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
+                      selectedInstructor.todaysClasses[0]
+                        ? selectedInstructor.todaysClasses[0].time?.split(" - ")[0] || "TBD"
+                        : "No classes today"
+                    }
+                    subtitle={
+                      selectedInstructor.hasClassesToday &&
+                      selectedInstructor.todaysClasses &&
+                      selectedInstructor.todaysClasses.length > 0 &&
+                      selectedInstructor.todaysClasses[0]
+                        ? `${selectedInstructor.todaysClasses[0].title || "Class"} - ${selectedInstructor.todaysClasses[0].location || "Location TBD"}`
+                        : selectedInstructor.upcomingSchedule && selectedInstructor.upcomingSchedule.length > 0
+                          ? `Next class: ${selectedInstructor.upcomingSchedule[0]?.time || "TBD"}`
+                          : "No upcoming classes scheduled"
+                    }
+                  />
+                  <StatusCard
+                    icon={Users2}
+                    iconColor="text-green-500"
+                    title="Students Today"
+                    value={
+                      selectedInstructor.hasClassesToday
+                        ? (
+                            selectedInstructor.todaysClasses?.reduce((acc, cls) => acc + cls.students.length, 0) || 0
+                          ).toString()
+                        : "0"
+                    }
+                    subtitle={
+                      selectedInstructor.hasClassesToday
+                        ? `${selectedInstructor.todaysClasses?.length || 0} classes scheduled`
+                        : "No classes scheduled"
+                    }
+                  />
+                  <StatusCard
+                    icon={Briefcase}
+                    iconColor="text-purple-500"
+                    title="Hours Today"
+                    value={
+                      selectedInstructor.hasClassesToday
+                        ? selectedInstructor.todaysClasses?.length
+                          ? (selectedInstructor.todaysClasses.length * 1.5).toFixed(1)
+                          : "0"
+                        : "0"
+                    }
+                    subtitle={selectedInstructor.hasClassesToday ? "Teaching hours" : "Off today"}
+                  />
                 </div>
               </div>
 
@@ -1199,41 +1167,43 @@ function InstructorsContent() {
                 <Card>
                   <CardContent className="pt-6">
                     <div className="space-y-4">
-                      {selectedInstructor.upcomingSchedule && selectedInstructor.upcomingSchedule.length > 0 ? (
-                        selectedInstructor.upcomingSchedule.map((event, i) => (
-                          <div key={i} className="flex items-center p-2 hover:bg-muted rounded-md">
-                            <div className="mr-4 flex-shrink-0">
-                              <CalendarClock className="h-5 w-5 text-muted-foreground" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-sm">{event.title}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {event.time} • {event.location}
+                      <div className="space-y-0 divide-y divide-gray-100">
+                        {selectedInstructor.upcomingSchedule && selectedInstructor.upcomingSchedule.length > 0 ? (
+                          selectedInstructor.upcomingSchedule.map((event, i) => (
+                            <EventCard
+                              key={i}
+                              event={{
+                                id: i,
+                                title: event.title,
+                                subtitle: event.title,
+                                time: event.time,
+                                location: event.location,
+                                capacity: event.status === "Internal" ? "Internal" : `${event.students} Students`,
+                                status: event.status === "Internal" ? "Internal" : "Active",
+                                instructor: selectedInstructor.name.english,
+                                image: "/placeholder.svg?height=80&width=80",
+                              }}
+                            />
+                          ))
+                        ) : (
+                          <div className="flex items-center justify-center py-6">
+                            <div className="text-center">
+                              <Calendar className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                              <p className="font-medium">No upcoming classes scheduled</p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {selectedInstructor.availability === "unavailable"
+                                  ? "Currently on leave"
+                                  : "Available for scheduling"}
                               </p>
+                              <Button variant="outline" className="mt-4" size="sm">
+                                {selectedInstructor.availability === "unavailable"
+                                  ? "View Leave Status"
+                                  : "Schedule Classes"}
+                              </Button>
                             </div>
-                            <Badge variant={event.status === "Internal" ? "outline" : "default"} className="ml-2">
-                              {event.status === "Internal" ? "Internal" : `${event.students} Students`}
-                            </Badge>
                           </div>
-                        ))
-                      ) : (
-                        <div className="flex items-center justify-center py-6">
-                          <div className="text-center">
-                            <Calendar className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                            <p className="font-medium">No upcoming classes scheduled</p>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {selectedInstructor.availability === "unavailable"
-                                ? "Currently on leave"
-                                : "Available for scheduling"}
-                            </p>
-                            <Button variant="outline" className="mt-4" size="sm">
-                              {selectedInstructor.availability === "unavailable"
-                                ? "View Leave Status"
-                                : "Schedule Classes"}
-                            </Button>
-                          </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                     <Button variant="outline" className="w-full mt-4" size="sm">
                       View Full Schedule
