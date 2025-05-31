@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { TrendingUp, Package, Tag, Phone, Calendar, Users, Target, DollarSign } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis, Line } from "recharts"
+import { Package, Calendar, Users, Target, DollarSign } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 
@@ -11,11 +10,10 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { EventCard } from "@/components/event-card"
 import { StatusCard } from "@/components/status-card"
+import { ChartAreaTicketsRevenue } from "@/components/chart-area-interactive"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -59,37 +57,6 @@ const getLocationData = (locationId: number) => ({
   weeklyRevenue: 156000,
   weeklyChange: 12,
 })
-
-// Chart data for 6 months revenue with targets and previous year comparison
-const chartData = [
-  { month: "January", revenue: 186000, target: 180000, lastYear: 165000 },
-  { month: "February", revenue: 305000, target: 180000, lastYear: 280000 },
-  { month: "March", revenue: 237000, target: 180000, lastYear: 220000 },
-  { month: "April", revenue: 173000, target: 180000, lastYear: 190000 },
-  { month: "May", revenue: 209000, target: 180000, lastYear: 195000 },
-  { month: "June", revenue: 214000, target: 180000, lastYear: 200000 },
-  { month: "July", revenue: 298000, target: 180000, lastYear: 275000 },
-  { month: "August", revenue: 342000, target: 180000, lastYear: 320000 },
-  { month: "September", revenue: 267000, target: 180000, lastYear: 245000 },
-  { month: "October", revenue: 189000, target: 180000, lastYear: 175000 },
-  { month: "November", revenue: 234000, target: 180000, lastYear: 210000 },
-  { month: "December", revenue: 278000, target: 180000, lastYear: 255000 },
-]
-
-const chartConfig = {
-  revenue: {
-    label: "Revenue",
-    color: "#3B82F6",
-  },
-  target: {
-    label: "Target",
-    color: "#EF4444",
-  },
-  lastYear: {
-    label: "Last Year",
-    color: "#10B981",
-  },
-} satisfies ChartConfig
 
 // Today's events data
 const todaysEvents = [
@@ -264,99 +231,58 @@ function LocationDashboardContent() {
 
       {/* Revenue Performance Chart */}
       <div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Revenue Performance</CardTitle>
-            <CardDescription>
-              12-month revenue overview with monthly target (¥180,000) and last year comparison
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="px-2 sm:p-6">
-            <ChartContainer config={chartConfig} className="aspect-auto h-[300px] w-full">
-              <AreaChart
-                accessibilityLayer
-                data={chartData}
-                margin={{
-                  left: 12,
-                  right: 12,
-                  top: 12,
-                  bottom: 12,
-                }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  tickFormatter={(value) => value.slice(0, 3)}
-                />
-                <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" hideLabel />} />
-                <defs>
-                  <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1} />
-                  </linearGradient>
-                </defs>
-                <Area
-                  dataKey="revenue"
-                  type="natural"
-                  fill="url(#fillRevenue)"
-                  fillOpacity={0.4}
-                  stroke="#3B82F6"
-                  strokeWidth={2}
-                />
-                <Line
-                  dataKey="target"
-                  type="natural"
-                  stroke="#EF4444"
-                  strokeWidth={2}
-                  strokeDasharray="5 5"
-                  dot={false}
-                />
-                <Line
-                  dataKey="lastYear"
-                  type="natural"
-                  stroke="#10B981"
-                  strokeWidth={1.5}
-                  strokeOpacity={0.7}
-                  dot={false}
-                />
-              </AreaChart>
-            </ChartContainer>
-          </CardContent>
-          <CardFooter className="flex-col items-start gap-2 text-sm">
-            <div className="flex gap-2 font-medium leading-none">
-              Trending up by {locationData.weeklyChange}% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="flex gap-4 text-xs text-muted-foreground">
-              <span>• Current: 19% above target</span>
-              <span>• vs Last Year: +9% average</span>
-            </div>
-            <div className="leading-none text-muted-foreground">Showing total revenue for the last 12 months</div>
-          </CardFooter>
-        </Card>
+        <ChartAreaTicketsRevenue />
       </div>
 
       {/* Quick Actions */}
       <div>
         <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Button variant="outline" className="h-auto flex-col py-6 px-4">
-            <Tag className="h-6 w-6 mb-2" />
-            <span className="text-sm">Send Promotion</span>
-          </Button>
-          <Button variant="outline" className="h-auto flex-col py-6 px-4">
-            <Package className="h-6 w-6 mb-2" />
-            <span className="text-sm">Manage Inventory</span>
-          </Button>
-          <Button variant="outline" className="h-auto flex-col py-6 px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Button
+            className="h-auto flex-col py-6 px-4 bg-blue-500 hover:bg-blue-600 text-white"
+            onClick={() => router.push("/schedule?location=daikanyama")}
+          >
             <Calendar className="h-6 w-6 mb-2" />
             <span className="text-sm">Schedule Class</span>
           </Button>
-          <Button variant="outline" className="h-auto flex-col py-6 px-4">
-            <Phone className="h-6 w-6 mb-2" />
-            <span className="text-sm">Contact Waitlist</span>
+          <Button
+            variant="outline"
+            className="h-auto flex-col py-6 px-4"
+            onClick={() =>
+              window.open(
+                "mailto:naomi@artbar.co.jp,luci@artbar.co.jp,takashi@artbar.co.jp?subject=Today's Schedule - Daikanyama&body=Hi team,%0A%0ARegarding today's classes at Daikanyama location...",
+                "_blank",
+              )
+            }
+          >
+            <Users className="h-6 w-6 mb-2" />
+            <span className="text-sm">Message Today's Staff</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="h-auto flex-col py-6 px-4"
+            onClick={() => {
+              const csvData =
+                "Event,Time,Instructor,Booked,Capacity,Revenue\nAbstract Art Basics,14:30,Naomi,18,20,¥15500\nWatercolor Introduction,17:00,Luci,15,20,¥12000\nNight Scene Painting,19:30,Takashi,12,20,¥20000"
+              const blob = new Blob([csvData], { type: "text/csv" })
+              const url = window.URL.createObjectURL(blob)
+              const a = document.createElement("a")
+              a.href = url
+              a.download = `daikanyama-events-${new Date().toISOString().split("T")[0]}.csv`
+              a.click()
+              window.URL.revokeObjectURL(url)
+            }}
+          >
+            <Package className="h-6 w-6 mb-2" />
+            <span className="text-sm">Export Event Data</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="h-auto flex-col py-6 px-4"
+            onClick={() => router.push("/schedule?filter=daikanyama")}
+          >
+            <Calendar className="h-6 w-6 mb-2" />
+            <span className="text-sm">View Full Schedule</span>
           </Button>
         </div>
       </div>
