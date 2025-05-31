@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import type React from "react"
 
 // Helper function to parse capacity string like "8/12"
 export function parseCapacity(capacityString: string): { current: number; total: number } {
@@ -32,15 +32,20 @@ export interface EventCardProps {
   }
   variant?: "default" | "compact" | "detailed"
   className?: string
+  context?: "dashboard" | "instructor" | "location" // Add context prop
 }
 
-export function EventCard({ event, variant = "default", className = "" }: EventCardProps) {
+export function EventCard({ event, variant = "default", className = "", context = "dashboard" }: EventCardProps) {
   const [actionStatus, setActionStatus] = useState<"none" | "pending" | "success" | "error">(
     event.actionStatus || "none",
   )
 
-  const { current, total } = parseCapacity(event.capacity)
-  const progressPercentage = (current / total) * 100
+  const { current, total } =
+    typeof event.capacity === "string" && event.capacity.includes("/")
+      ? parseCapacity(event.capacity)
+      : { current: 0, total: 0 }
+
+  const progressPercentage = total > 0 ? (current / total) * 100 : 0
 
   const getProgressColor = () => {
     if (progressPercentage >= 100) return "bg-red-500"
@@ -62,13 +67,22 @@ export function EventCard({ event, variant = "default", className = "" }: EventC
     return null
   }
 
-  const handleAction = async () => {
+  const handleAction = async (e: React.MouseEvent) => {
+    e.stopPropagation() // Always stop propagation
+
     if (actionStatus === "pending" || !event.onAction) return
 
     setActionStatus("pending")
     try {
       await event.onAction()
       setActionStatus("success")
+
+      // Reset success state after 2 seconds
+      setTimeout(() => {
+        if (actionStatus === "success") {
+          setActionStatus("none")
+        }
+      }, 2000)
     } catch (error) {
       setActionStatus("error")
     }
@@ -95,13 +109,15 @@ export function EventCard({ event, variant = "default", className = "" }: EventC
 
   return (
     <div
-      className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200 ${className}`}
+      className={`p-3 sm:p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200 ${
+        context === "instructor" ? "border-b border-gray-100 last:border-0" : ""
+      } ${className}`}
       onClick={event.onClick}
     >
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-3 sm:gap-4">
         {/* Event Image */}
         <div className="flex-shrink-0">
-          <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
             <img
               src={
                 event.image ||
@@ -117,99 +133,75 @@ export function EventCard({ event, variant = "default", className = "" }: EventC
         <div className="flex-1 min-w-0">
           {/* Title and Status Row */}
           <div className="flex items-start justify-between mb-2">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h4 className="text-base font-semibold text-gray-900 truncate">{event.title}</h4>
+            <div className="flex-1 min-w-0 pr-2">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <h4 className="text-sm sm:text-base font-semibold text-gray-900 truncate">{event.title}</h4>
                 {getStatusBadge()}
               </div>
-              <p className="text-sm text-gray-600 truncate mb-2">{subtitle}</p>
+              <p className="text-xs sm:text-sm text-gray-600 truncate mb-2">{subtitle}</p>
             </div>
 
             {/* Percentage indicator */}
-            <div className="flex-shrink-0 ml-4">
+            <div className="flex-shrink-0">
               <span className="text-xs text-gray-500">{Math.round(progressPercentage)}% full</span>
             </div>
           </div>
 
           {/* Participants count */}
-          <div className="mb-3">
-            <span className="text-sm font-medium text-gray-700">
+          <div className="mb-2 sm:mb-3">
+            <span className="text-xs sm:text-sm font-medium text-gray-700">
               {current}/{total} participants
             </span>
           </div>
 
           {/* Progress Bar */}
-          <div className="mb-3">
-            <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="mb-2 sm:mb-3">
+            <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
               <div
-                className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
+                className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
                 style={{ width: `${Math.min(progressPercentage, 100)}%` }}
               />
             </div>
           </div>
 
           {/* Time, Location, and Action */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 flex-wrap">
               {event.time && (
                 <div className="flex items-center gap-1">
-                  <div className="w-4 h-4 rounded-full bg-gray-300 flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-gray-600" />
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gray-300 flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-600" />
                   </div>
-                  <span>{event.time}</span>
+                  <span className="whitespace-nowrap">{event.time}</span>
                 </div>
               )}
               {event.location && (
                 <div className="flex items-center gap-1">
-                  <span>{event.location}</span>
+                  <span className="whitespace-nowrap">{event.location}</span>
                 </div>
               )}
               {event.instructor && !event.instructorAvatar && (
                 <div className="flex items-center gap-1">
-                  <span>{event.instructor}</span>
+                  <span className="whitespace-nowrap">{event.instructor}</span>
                 </div>
               )}
               {event.instructor && event.instructorAvatar && (
                 <div className="flex items-center gap-1">
-                  <Avatar className="h-6 w-6">
+                  <Avatar className="h-5 w-5 sm:h-6 sm:w-6">
                     <AvatarImage src={event.instructorAvatar || "/placeholder.svg"} />
                     <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
                       {event.instructorInitials || event.instructor.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <span>{event.instructor}</span>
+                  <span className="whitespace-nowrap">{event.instructor}</span>
                 </div>
               )}
             </div>
 
-            {/* Action Button or Status */}
-            {event.actionLabel && (
-              <div className="ml-auto">
-                <Button
-                  size="sm"
-                  variant={actionStatus === "success" ? "outline" : "default"}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleAction()
-                  }}
-                  disabled={actionStatus === "pending"}
-                  className={actionStatus === "success" ? "text-green-600 border-green-600" : ""}
-                >
-                  {actionStatus === "pending"
-                    ? "Processing..."
-                    : actionStatus === "success"
-                      ? "Done"
-                      : actionStatus === "error"
-                        ? "Try Again"
-                        : event.actionLabel}
-                </Button>
-              </div>
-            )}
-
             {/* Price Display */}
             {event.price && variant === "detailed" && (
-              <div className="ml-auto">
-                <span className="font-medium text-gray-900">{event.price}</span>
+              <div className="flex-shrink-0">
+                <span className="font-medium text-gray-900 text-sm sm:text-base">{event.price}</span>
               </div>
             )}
           </div>

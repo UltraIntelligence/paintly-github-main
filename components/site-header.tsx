@@ -5,6 +5,14 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -26,7 +34,27 @@ export function SiteHeader() {
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
-        <h1 className="text-base font-medium">{getPageTitle()}</h1>
+        <Breadcrumb>
+          <BreadcrumbList>
+            {pathname === "/locations-test/daikanyama" ? (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/locations-test" className="text-base font-medium">
+                    Locations
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-base font-medium">Daikanyama</BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            ) : (
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-base font-medium">{getPageTitle()}</BreadcrumbPage>
+              </BreadcrumbItem>
+            )}
+          </BreadcrumbList>
+        </Breadcrumb>
 
         {/* Language Toggle - positioned on far right */}
         <div className="flex items-center space-x-2 ml-auto">

@@ -12,13 +12,15 @@ interface StatusCardProps {
 export function StatusCard({ icon: Icon, iconColor, title, value, subtitle }: StatusCardProps) {
   return (
     <Card>
-      <CardContent className="pt-6">
-        <div className="flex items-center">
-          <Icon className={`h-5 w-5 ${iconColor} mr-2`} />
-          <h4 className="font-medium">{title}</h4>
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between space-y-0 pb-2">
+          <h3 className="tracking-tight text-sm font-medium">{title}</h3>
+          <Icon className={`h-4 w-4 ${iconColor}`} />
         </div>
-        <p className="text-2xl font-bold mt-2">{value}</p>
-        <p className="text-sm text-muted-foreground">{subtitle}</p>
+        <div>
+          <div className="text-2xl font-bold">{value}</div>
+          <p className="text-xs text-muted-foreground">{subtitle}</p>
+        </div>
       </CardContent>
     </Card>
   )

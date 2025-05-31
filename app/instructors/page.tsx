@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Plus, Download, Upload, Users, MoreHorizontal, Check, Mail } from "lucide-react"
+import { Search, Plus, Users, MoreHorizontal, Check, Mail } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Calendar, Clock, Users2, Briefcase, CheckCircle2, CalendarDays, SearchIcon, DownloadIcon } from "lucide-react"
 import ReactConfetti from "react-confetti"
@@ -873,7 +873,7 @@ function InstructorsContent() {
 
       {/* Search and Filters */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search instructors..."
@@ -883,18 +883,6 @@ function InstructorsContent() {
           />
         </div>
         <div className="flex gap-2">
-          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select location" />
-            </SelectTrigger>
-            <SelectContent>
-              {locations.map((location) => (
-                <SelectItem key={location} value={location}>
-                  {location}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
           <Select value={selectedAvailability} onValueChange={setSelectedAvailability}>
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Status" />
@@ -909,14 +897,6 @@ function InstructorsContent() {
           </Select>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row ml-auto">
-          <Button variant="outline" size="sm">
-            <Upload className="mr-2 h-4 w-4" />
-            Import
-          </Button>
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
           <Button size="sm">
             <Plus className="mr-2 h-4 w-4" />
             Add Instructor
