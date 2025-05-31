@@ -24,6 +24,8 @@ import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { EventCard } from "@/components/event-card"
 import { StatusCard } from "@/components/status-card"
+import { useFavorites } from "@/hooks/use-favorites"
+import { FavoriteButton } from "@/components/favorite-button"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -604,6 +606,8 @@ function InstructorsContent() {
   const [showConfetti, setShowConfetti] = useState(false)
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
+  const { toggleFavorite, isFavorite, favorites } = useFavorites("instructors")
+
   // Update window size for confetti
   useEffect(() => {
     const updateWindowSize = () => {
@@ -657,11 +661,12 @@ function InstructorsContent() {
         activeTab === "all" ||
         (activeTab === "active" && instructor.availability !== "unavailable") ||
         (activeTab === "inactive" && instructor.availability === "unavailable") ||
-        (activeTab === "new" && instructor.id > 8)
+        (activeTab === "new" && instructor.id > 8) ||
+        (activeTab === "favorites" && isFavorite(instructor.id))
 
       return matchesSearch && matchesLocation && matchesAvailability && matchesTab
     })
-  }, [searchTerm, selectedLocation, selectedAvailability, activeTab])
+  }, [searchTerm, selectedLocation, selectedAvailability, activeTab, isFavorite])
 
   const getAvailabilityBadgeColor = (availability: string) => {
     switch (availability) {
@@ -911,6 +916,14 @@ function InstructorsContent() {
           <TabsTrigger value="active">Active</TabsTrigger>
           <TabsTrigger value="inactive">Inactive</TabsTrigger>
           <TabsTrigger value="new">New Applicants</TabsTrigger>
+          <TabsTrigger value="favorites">
+            Favorites{" "}
+            {favorites.size > 0 && (
+              <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
+                {favorites.size}
+              </Badge>
+            )}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-6">
@@ -954,12 +967,16 @@ function InstructorsContent() {
                         </div>
                       </AspectRatio>
                       <Badge
-                        className={`absolute top-2 right-2 text-xs px-2 py-1 ${getAvailabilityBadgeColor(
+                        className={`absolute top-2 left-2 text-xs px-2 py-1 ${getAvailabilityBadgeColor(
                           instructor.availability,
                         )}`}
                       >
                         {getAvailabilityText(instructor.availability)}
                       </Badge>
+                      <FavoriteButton
+                        isFavorite={isFavorite(instructor.id)}
+                        onToggle={() => toggleFavorite(instructor.id)}
+                      />
                     </div>
 
                     {/* Content Section */}

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Plus, Download, Upload, MapPin, MoreHorizontal } from "lucide-react"
+import { Search, Plus, MapPin, MoreHorizontal } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -10,14 +10,15 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { LocationDetailModal } from "@/components/location-detail-modal"
+import { Input } from "@/components/ui/input"
+import { useFavorites } from "@/hooks/use-favorites"
+import { FavoriteButton } from "@/components/favorite-button"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -178,18 +179,15 @@ const locationsData = [
   },
 ]
 
-const regions = ["All Regions", "Tokyo", "Kanagawa", "Osaka", "Okinawa", "Fukuoka"]
 const statusOptions = ["All Status", "Active", "Under Construction", "Coming Soon"]
 
 function LocationsContent() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedRegion, setSelectedRegion] = useState("All Regions")
   const [selectedStatus, setSelectedStatus] = useState("All Status")
   const [activeTab, setActiveTab] = useState("all")
 
-  const [selectedLocation, setSelectedLocation] = useState<(typeof locationsData)[0] | null>(null)
-  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false)
+  const { toggleFavorite, isFavorite, favorites } = useFavorites("locations")
 
   const filteredLocations = useMemo(() => {
     return locationsData.filter((location) => {
@@ -199,18 +197,6 @@ function LocationsContent() {
         location.name.japanese.includes(searchTerm) ||
         location.address.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
         location.address.japanese.includes(searchTerm)
-
-      const getRegion = (address: string) => {
-        if (address.includes("Tokyo") || address.includes("東京")) return "Tokyo"
-        if (address.includes("Kanagawa") || address.includes("神奈川")) return "Kanagawa"
-        if (address.includes("Osaka") || address.includes("大阪")) return "Osaka"
-        if (address.includes("Okinawa") || address.includes("沖縄")) return "Okinawa"
-        if (address.includes("Fukuoka") || address.includes("福岡")) return "Fukuoka"
-        return ""
-      }
-
-      const locationRegion = getRegion(location.address.english + location.address.japanese)
-      const matchesRegion = selectedRegion === "All Regions" || locationRegion === selectedRegion
 
       const statusMap: Record<string, string> = {
         active: "Active",
@@ -224,11 +210,12 @@ function LocationsContent() {
         activeTab === "all" ||
         (activeTab === "active" && location.status === "active") ||
         (activeTab === "franchise" && location.type === "franchise") ||
-        (activeTab === "upcoming" && (location.status === "under_construction" || location.status === "coming_soon"))
+        (activeTab === "upcoming" && (location.status === "under_construction" || location.status === "coming_soon")) ||
+        (activeTab === "favorites" && isFavorite(location.id))
 
-      return matchesSearch && matchesRegion && matchesStatus && matchesTab
+      return matchesSearch && matchesStatus && matchesTab
     })
-  }, [searchTerm, selectedRegion, selectedStatus, activeTab])
+  }, [searchTerm, selectedStatus, activeTab, isFavorite, favorites])
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
@@ -274,29 +261,17 @@ function LocationsContent() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
       {/* Search and Filters */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search locations..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <div className="flex gap-2">
-          <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select region" />
-            </SelectTrigger>
-            <SelectContent>
-              {regions.map((region) => (
-                <SelectItem key={region} value={region}>
-                  {region}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col sm:flex-row gap-2 flex-1">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search locations..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
           <Select value={selectedStatus} onValueChange={setSelectedStatus}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Status" />
@@ -310,16 +285,8 @@ function LocationsContent() {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex flex-col gap-2 sm:flex-row ml-auto">
-          <Button variant="outline" size="sm">
-            <Upload className="mr-2 h-4 w-4" />
-            Import
-          </Button>
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-          <Button size="sm">
+        <div className="lg:ml-auto">
+          <Button size="sm" className="w-full">
             <Plus className="mr-2 h-4 w-4" />
             Add Location
           </Button>
@@ -333,6 +300,14 @@ function LocationsContent() {
           <TabsTrigger value="active">Active</TabsTrigger>
           <TabsTrigger value="franchise">Franchise</TabsTrigger>
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
+          <TabsTrigger value="favorites">
+            Favorites{" "}
+            {favorites.size > 0 && (
+              <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
+                {favorites.size}
+              </Badge>
+            )}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-6">
@@ -345,7 +320,6 @@ function LocationsContent() {
                 variant="outline"
                 onClick={() => {
                   setSearchTerm("")
-                  setSelectedRegion("All Regions")
                   setSelectedStatus("All Status")
                 }}
               >
@@ -374,10 +348,14 @@ function LocationsContent() {
                         </div>
                       </AspectRatio>
                       <Badge
-                        className={`absolute top-2 right-2 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}
+                        className={`absolute top-2 left-2 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}
                       >
                         {getStatusText(location.status)}
                       </Badge>
+                      <FavoriteButton
+                        isFavorite={isFavorite(location.id)}
+                        onToggle={() => toggleFavorite(location.id)}
+                      />
                     </div>
 
                     {/* Content Section */}
@@ -422,8 +400,16 @@ function LocationsContent() {
                           variant="default"
                           className="flex-1 text-xs"
                           onClick={() => {
-                            setSelectedLocation(location)
-                            setIsLocationModalOpen(true)
+                            const locationRoutes: Record<number, string> = {
+                              1: "/locations/daikanyama",
+                              2: "/locations/cat-street",
+                              3: "/locations/ginza",
+                              4: "/locations/yokohama",
+                              5: "/locations/osaka",
+                              6: "/locations/okinawa",
+                              7: "/locations/fukuoka",
+                            }
+                            router.push(locationRoutes[location.id] || "/locations/daikanyama")
                           }}
                         >
                           View Details
@@ -449,13 +435,6 @@ function LocationsContent() {
           )}
         </TabsContent>
       </Tabs>
-      {selectedLocation && (
-        <LocationDetailModal
-          open={isLocationModalOpen}
-          onOpenChange={setIsLocationModalOpen}
-          location={selectedLocation}
-        />
-      )}
     </div>
   )
 }

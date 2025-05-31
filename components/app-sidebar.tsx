@@ -64,11 +64,6 @@ const data = {
       icon: MapPinIcon,
     },
     {
-      name: "Locations Test",
-      url: "/locations-test",
-      icon: MapPinIcon,
-    },
-    {
       name: "Gift Certificates",
       url: "#",
       icon: GiftIcon,

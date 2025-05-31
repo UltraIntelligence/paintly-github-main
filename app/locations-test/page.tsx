@@ -382,7 +382,18 @@ function LocationsTestContent() {
                           size="sm"
                           variant="default"
                           className="flex-1 text-xs"
-                          onClick={() => router.push("/locations-test/daikanyama")}
+                          onClick={() => {
+                            const locationRoutes: Record<number, string> = {
+                              1: "/locations-test/daikanyama",
+                              2: "/locations-test/cat-street",
+                              3: "/locations-test/ginza",
+                              4: "/locations-test/yokohama",
+                              5: "/locations-test/osaka",
+                              6: "/locations-test/okinawa",
+                              7: "/locations-test/fukuoka",
+                            }
+                            router.push(locationRoutes[location.id] || "/locations-test/daikanyama")
+                          }}
                         >
                           View Details
                         </Button>

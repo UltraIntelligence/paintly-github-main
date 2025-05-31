@@ -36,16 +36,80 @@ export function SiteHeader() {
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
         <Breadcrumb>
           <BreadcrumbList>
-            {pathname === "/locations-test/daikanyama" ? (
+            {pathname.startsWith("/locations/") && pathname !== "/locations" ? (
               <>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/locations-test" className="text-base font-medium">
+                  <BreadcrumbLink href="/locations" className="text-base font-medium">
                     Locations
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="text-base font-medium">Daikanyama</BreadcrumbPage>
+                  <BreadcrumbPage className="text-base font-medium">
+                    {pathname === "/locations/daikanyama" && "Daikanyama"}
+                    {pathname === "/locations/ginza" && "Ginza"}
+                    {pathname === "/locations/cat-street" && "Cat Street"}
+                    {pathname === "/locations/yokohama" && "Yokohama"}
+                    {pathname === "/locations/osaka" && "Osaka"}
+                    {pathname === "/locations/okinawa" && "Okinawa"}
+                    {pathname === "/locations/fukuoka" && "Fukuoka"}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            ) : pathname.startsWith("/instructors/") && pathname !== "/instructors" ? (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/instructors" className="text-base font-medium">
+                    Instructors
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-base font-medium">
+                    {pathname.split("/").pop()?.charAt(0).toUpperCase() + pathname.split("/").pop()?.slice(1)}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            ) : pathname.startsWith("/schedule/") && pathname !== "/schedule" ? (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/schedule" className="text-base font-medium">
+                    Schedule
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-base font-medium">
+                    {pathname.split("/").pop()?.charAt(0).toUpperCase() + pathname.split("/").pop()?.slice(1)}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            ) : pathname.startsWith("/templates/") && pathname !== "/templates" ? (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/templates" className="text-base font-medium">
+                    Templates
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-base font-medium">
+                    {pathname.split("/").pop()?.charAt(0).toUpperCase() + pathname.split("/").pop()?.slice(1)}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            ) : pathname.startsWith("/settings/") && pathname !== "/settings" ? (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/settings" className="text-base font-medium">
+                    Settings
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-base font-medium">
+                    {pathname.split("/").pop()?.charAt(0).toUpperCase() + pathname.split("/").pop()?.slice(1)}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </>
             ) : (
