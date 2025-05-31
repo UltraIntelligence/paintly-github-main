@@ -246,97 +246,97 @@ export function ChartAreaTicketsRevenue() {
   }, [isMobile])
 
   const chartData = [
-    { date: "2024-04-01", tickets: 145, revenue: 2175000 },
-    { date: "2024-04-02", tickets: 98, revenue: 1470000 },
-    { date: "2024-04-03", tickets: 87, revenue: 1305000 },
-    { date: "2024-04-04", tickets: 165, revenue: 2475000 },
-    { date: "2024-04-05", tickets: 134, revenue: 2010000 },
-    { date: "2024-04-06", tickets: 156, revenue: 2340000 },
-    { date: "2024-04-07", tickets: 123, revenue: 1845000 },
-    { date: "2024-04-08", tickets: 189, revenue: 2835000 },
-    { date: "2024-04-09", tickets: 76, revenue: 1140000 },
-    { date: "2024-04-10", tickets: 167, revenue: 2505000 },
-    { date: "2024-04-11", tickets: 178, revenue: 2670000 },
-    { date: "2024-04-12", tickets: 145, revenue: 2175000 },
-    { date: "2024-04-13", tickets: 198, revenue: 2970000 },
-    { date: "2024-04-14", tickets: 89, revenue: 1335000 },
-    { date: "2024-04-15", tickets: 112, revenue: 1680000 },
-    { date: "2024-04-16", tickets: 134, revenue: 2010000 },
-    { date: "2024-04-17", tickets: 234, revenue: 3510000 },
-    { date: "2024-04-18", tickets: 187, revenue: 2805000 },
-    { date: "2024-04-19", tickets: 156, revenue: 2340000 },
-    { date: "2024-04-20", tickets: 67, revenue: 1005000 },
-    { date: "2024-04-21", tickets: 123, revenue: 1845000 },
-    { date: "2024-04-22", tickets: 145, revenue: 2175000 },
-    { date: "2024-04-23", tickets: 98, revenue: 1470000 },
-    { date: "2024-04-24", tickets: 212, revenue: 3180000 },
-    { date: "2024-04-25", tickets: 167, revenue: 2505000 },
-    { date: "2024-04-26", tickets: 54, revenue: 810000 },
-    { date: "2024-04-27", tickets: 245, revenue: 3675000 },
-    { date: "2024-04-28", tickets: 89, revenue: 1335000 },
-    { date: "2024-04-29", tickets: 178, revenue: 2670000 },
-    { date: "2024-04-30", tickets: 267, revenue: 4005000 },
-    { date: "2024-05-01", tickets: 123, revenue: 1845000 },
-    { date: "2024-05-02", tickets: 189, revenue: 2835000 },
-    { date: "2024-05-03", tickets: 156, revenue: 2340000 },
-    { date: "2024-05-04", tickets: 234, revenue: 3510000 },
-    { date: "2024-05-05", tickets: 298, revenue: 4470000 },
-    { date: "2024-05-06", tickets: 345, revenue: 5175000 },
-    { date: "2024-05-07", tickets: 212, revenue: 3180000 },
-    { date: "2024-05-08", tickets: 98, revenue: 1470000 },
-    { date: "2024-05-09", tickets: 134, revenue: 2010000 },
-    { date: "2024-05-10", tickets: 178, revenue: 2670000 },
-    { date: "2024-05-11", tickets: 167, revenue: 2505000 },
-    { date: "2024-05-12", tickets: 145, revenue: 2175000 },
-    { date: "2024-05-13", tickets: 89, revenue: 1335000 },
-    { date: "2024-05-14", tickets: 387, revenue: 5805000 },
-    { date: "2024-05-15", tickets: 298, revenue: 4470000 },
-    { date: "2024-05-16", tickets: 234, revenue: 3510000 },
-    { date: "2024-05-17", tickets: 456, revenue: 6840000 },
-    { date: "2024-05-18", tickets: 189, revenue: 2835000 },
-    { date: "2024-05-19", tickets: 123, revenue: 1845000 },
-    { date: "2024-05-20", tickets: 145, revenue: 2175000 },
-    { date: "2024-05-21", tickets: 76, revenue: 1140000 },
-    { date: "2024-05-22", tickets: 87, revenue: 1305000 },
-    { date: "2024-05-23", tickets: 167, revenue: 2505000 },
-    { date: "2024-05-24", tickets: 156, revenue: 2340000 },
-    { date: "2024-05-25", tickets: 134, revenue: 2010000 },
-    { date: "2024-05-26", tickets: 98, revenue: 1470000 },
-    { date: "2024-05-27", tickets: 345, revenue: 5175000 },
-    { date: "2024-05-28", tickets: 156, revenue: 2340000 },
-    { date: "2024-05-29", tickets: 67, revenue: 1005000 },
-    { date: "2024-05-30", tickets: 234, revenue: 3510000 },
-    { date: "2024-05-31", tickets: 134, revenue: 2010000 },
-    { date: "2024-06-01", tickets: 145, revenue: 2175000 },
-    { date: "2024-06-02", tickets: 456, revenue: 6840000 },
-    { date: "2024-06-03", tickets: 89, revenue: 1335000 },
-    { date: "2024-06-04", tickets: 387, revenue: 5805000 },
-    { date: "2024-06-05", tickets: 54, revenue: 810000 },
-    { date: "2024-06-06", tickets: 167, revenue: 2505000 },
-    { date: "2024-06-07", tickets: 234, revenue: 3510000 },
-    { date: "2024-06-08", tickets: 298, revenue: 4470000 },
-    { date: "2024-06-09", tickets: 567, revenue: 8505000 },
-    { date: "2024-06-10", tickets: 123, revenue: 1845000 },
-    { date: "2024-06-11", tickets: 89, revenue: 1335000 },
-    { date: "2024-06-12", tickets: 678, revenue: 10170000 },
-    { date: "2024-06-13", tickets: 76, revenue: 1140000 },
-    { date: "2024-06-14", tickets: 456, revenue: 6840000 },
-    { date: "2024-06-15", tickets: 298, revenue: 4470000 },
-    { date: "2024-06-16", tickets: 345, revenue: 5175000 },
-    { date: "2024-06-17", tickets: 789, revenue: 11835000 },
-    { date: "2024-06-18", tickets: 98, revenue: 1470000 },
-    { date: "2024-06-19", tickets: 234, revenue: 3510000 },
-    { date: "2024-06-20", tickets: 567, revenue: 8505000 },
-    { date: "2024-06-21", tickets: 134, revenue: 2010000 },
-    { date: "2024-06-22", tickets: 298, revenue: 4470000 },
-    { date: "2024-06-23", tickets: 823, revenue: 12345000 },
-    { date: "2024-06-24", tickets: 89, revenue: 1335000 },
-    { date: "2024-06-25", tickets: 123, revenue: 1845000 },
-    { date: "2024-06-26", tickets: 456, revenue: 6840000 },
-    { date: "2024-06-27", tickets: 678, revenue: 10170000 },
-    { date: "2024-06-28", tickets: 134, revenue: 2010000 },
-    { date: "2024-06-29", tickets: 87, revenue: 1305000 },
-    { date: "2024-06-30", tickets: 567, revenue: 8505000 },
+    { date: "2024-04-01", tickets: 45, revenue: 247500 },
+    { date: "2024-04-02", tickets: 32, revenue: 176000 },
+    { date: "2024-04-03", tickets: 38, revenue: 209000 },
+    { date: "2024-04-04", tickets: 52, revenue: 286000 },
+    { date: "2024-04-05", tickets: 41, revenue: 225500 },
+    { date: "2024-04-06", tickets: 48, revenue: 264000 },
+    { date: "2024-04-07", tickets: 35, revenue: 192500 },
+    { date: "2024-04-08", tickets: 67, revenue: 368500 },
+    { date: "2024-04-09", tickets: 30, revenue: 165000 },
+    { date: "2024-04-10", tickets: 54, revenue: 297000 },
+    { date: "2024-04-11", tickets: 61, revenue: 335500 },
+    { date: "2024-04-12", tickets: 43, revenue: 236500 },
+    { date: "2024-04-13", tickets: 58, revenue: 319000 },
+    { date: "2024-04-14", tickets: 36, revenue: 198000 },
+    { date: "2024-04-15", tickets: 42, revenue: 231000 },
+    { date: "2024-04-16", tickets: 39, revenue: 214500 },
+    { date: "2024-04-17", tickets: 73, revenue: 401500 },
+    { date: "2024-04-18", tickets: 65, revenue: 357500 },
+    { date: "2024-04-19", tickets: 47, revenue: 258500 },
+    { date: "2024-04-20", tickets: 33, revenue: 181500 },
+    { date: "2024-04-21", tickets: 44, revenue: 242000 },
+    { date: "2024-04-22", tickets: 51, revenue: 280500 },
+    { date: "2024-04-23", tickets: 37, revenue: 203500 },
+    { date: "2024-04-24", tickets: 69, revenue: 379500 },
+    { date: "2024-04-25", tickets: 56, revenue: 308000 },
+    { date: "2024-04-26", tickets: 31, revenue: 170500 },
+    { date: "2024-04-27", tickets: 78, revenue: 429000 },
+    { date: "2024-04-28", tickets: 40, revenue: 220000 },
+    { date: "2024-04-29", tickets: 63, revenue: 346500 },
+    { date: "2024-04-30", tickets: 82, revenue: 451000 },
+    { date: "2024-05-01", tickets: 46, revenue: 253000 },
+    { date: "2024-05-02", tickets: 59, revenue: 324500 },
+    { date: "2024-05-03", tickets: 49, revenue: 269500 },
+    { date: "2024-05-04", tickets: 71, revenue: 390500 },
+    { date: "2024-05-05", tickets: 85, revenue: 467500 },
+    { date: "2024-05-06", tickets: 92, revenue: 506000 },
+    { date: "2024-05-07", tickets: 66, revenue: 363000 },
+    { date: "2024-05-08", tickets: 38, revenue: 209000 },
+    { date: "2024-05-09", tickets: 45, revenue: 247500 },
+    { date: "2024-05-10", tickets: 57, revenue: 313500 },
+    { date: "2024-05-11", tickets: 53, revenue: 291500 },
+    { date: "2024-05-12", tickets: 48, revenue: 264000 },
+    { date: "2024-05-13", tickets: 34, revenue: 187000 },
+    { date: "2024-05-14", tickets: 95, revenue: 522500 },
+    { date: "2024-05-15", tickets: 88, revenue: 484000 },
+    { date: "2024-05-16", tickets: 72, revenue: 396000 },
+    { date: "2024-05-17", tickets: 103, revenue: 566500 },
+    { date: "2024-05-18", tickets: 64, revenue: 352000 },
+    { date: "2024-05-19", tickets: 41, revenue: 225500 },
+    { date: "2024-05-20", tickets: 50, revenue: 275000 },
+    { date: "2024-05-21", tickets: 32, revenue: 176000 },
+    { date: "2024-05-22", tickets: 35, revenue: 192500 },
+    { date: "2024-05-23", tickets: 55, revenue: 302500 },
+    { date: "2024-05-24", tickets: 52, revenue: 286000 },
+    { date: "2024-05-25", tickets: 47, revenue: 258500 },
+    { date: "2024-05-26", tickets: 39, revenue: 214500 },
+    { date: "2024-05-27", tickets: 89, revenue: 489500 },
+    { date: "2024-05-28", tickets: 54, revenue: 297000 },
+    { date: "2024-05-29", tickets: 30, revenue: 165000 },
+    { date: "2024-05-30", tickets: 76, revenue: 418000 },
+    { date: "2024-05-31", tickets: 43, revenue: 236500 },
+    { date: "2024-06-01", tickets: 48, revenue: 264000 },
+    { date: "2024-06-02", tickets: 98, revenue: 539000 },
+    { date: "2024-06-03", tickets: 36, revenue: 198000 },
+    { date: "2024-06-04", tickets: 87, revenue: 478500 },
+    { date: "2024-06-05", tickets: 31, revenue: 170500 },
+    { date: "2024-06-06", tickets: 56, revenue: 308000 },
+    { date: "2024-06-07", tickets: 68, revenue: 374000 },
+    { date: "2024-06-08", tickets: 74, revenue: 407000 },
+    { date: "2024-06-09", tickets: 105, revenue: 577500 },
+    { date: "2024-06-10", tickets: 42, revenue: 231000 },
+    { date: "2024-06-11", tickets: 37, revenue: 203500 },
+    { date: "2024-06-12", tickets: 112, revenue: 616000 },
+    { date: "2024-06-13", tickets: 33, revenue: 181500 },
+    { date: "2024-06-14", tickets: 91, revenue: 500500 },
+    { date: "2024-06-15", tickets: 79, revenue: 434500 },
+    { date: "2024-06-16", tickets: 83, revenue: 456500 },
+    { date: "2024-06-17", tickets: 118, revenue: 649000 },
+    { date: "2024-06-18", tickets: 38, revenue: 209000 },
+    { date: "2024-06-19", tickets: 62, revenue: 341000 },
+    { date: "2024-06-20", tickets: 96, revenue: 528000 },
+    { date: "2024-06-21", tickets: 45, revenue: 247500 },
+    { date: "2024-06-22", tickets: 71, revenue: 390500 },
+    { date: "2024-06-23", tickets: 120, revenue: 660000 },
+    { date: "2024-06-24", tickets: 34, revenue: 187000 },
+    { date: "2024-06-25", tickets: 41, revenue: 225500 },
+    { date: "2024-06-26", tickets: 86, revenue: 473000 },
+    { date: "2024-06-27", tickets: 107, revenue: 588500 },
+    { date: "2024-06-28", tickets: 44, revenue: 242000 },
+    { date: "2024-06-29", tickets: 35, revenue: 192500 },
+    { date: "2024-06-30", tickets: 93, revenue: 511500 },
   ]
 
   const filteredData = chartData.filter((item) => {
@@ -354,16 +354,13 @@ export function ChartAreaTicketsRevenue() {
   })
 
   const chartConfig = {
-    performance: {
-      label: "Performance",
-    },
     tickets: {
       label: "Tickets Sold",
-      color: "#3b82f6", // Blue
+      color: "#3b82f6", // Blue - matching the main dashboard chart
     },
     revenue: {
       label: "Revenue (¥)",
-      color: "#f97316", // Orange
+      color: "#f97316", // Orange - matching the main dashboard chart
     },
   } satisfies ChartConfig
 
@@ -413,12 +410,12 @@ export function ChartAreaTicketsRevenue() {
           <AreaChart data={filteredData}>
             <defs>
               <linearGradient id="fillTickets" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={1.0} />
-                <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0.1} />
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={1.0} />
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
               </linearGradient>
               <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-mobile)" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="var(--color-mobile)" stopOpacity={0.1} />
+                <stop offset="5%" stopColor="#f97316" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#f97316" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
@@ -446,12 +443,18 @@ export function ChartAreaTicketsRevenue() {
                       day: "numeric",
                     })
                   }}
+                  valueFormatter={(value, name) => {
+                    if (name === "revenue") {
+                      return `¥${value.toLocaleString()}`
+                    }
+                    return value
+                  }}
                   indicator="dot"
                 />
               }
             />
-            <Area dataKey="revenue" type="natural" fill="url(#fillRevenue)" stroke="var(--color-mobile)" stackId="a" />
-            <Area dataKey="tickets" type="natural" fill="url(#fillTickets)" stroke="var(--color-desktop)" stackId="a" />
+            <Area dataKey="tickets" type="natural" fill="url(#fillTickets)" stroke="#3b82f6" stackId="a" />
+            <Area dataKey="revenue" type="natural" fill="url(#fillRevenue)" stroke="#f97316" stackId="b" />
           </AreaChart>
         </ChartContainer>
       </CardContent>
