@@ -1,29 +1,35 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 
 export function useFavorites(type: "templates" | "instructors" | "locations") {
   const [favorites, setFavorites] = useState<Set<number>>(new Set())
 
+  const storageKey = `artbar-favorites-${type}`
+
   // Load favorites from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem(`artbar-favorites-${type}`)
-    if (stored) {
-      try {
+    try {
+      const stored = localStorage.getItem(storageKey)
+      if (stored) {
         const favoriteIds = JSON.parse(stored)
         setFavorites(new Set(favoriteIds))
-      } catch (error) {
-        console.error("Failed to parse favorites from localStorage:", error)
       }
+    } catch (error) {
+      console.error("Failed to load favorites:", error)
     }
-  }, [type])
+  }, [storageKey])
 
-  // Save favorites to localStorage whenever they change
+  // Save favorites to localStorage whenever favorites change
   useEffect(() => {
-    localStorage.setItem(`artbar-favorites-${type}`, JSON.stringify(Array.from(favorites)))
-  }, [favorites, type])
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(Array.from(favorites)))
+    } catch (error) {
+      console.error("Failed to save favorites:", error)
+    }
+  }, [favorites, storageKey])
 
-  const toggleFavorite = (id: number) => {
+  const toggleFavorite = useCallback((id: number) => {
     setFavorites((prev) => {
       const newFavorites = new Set(prev)
       if (newFavorites.has(id)) {
@@ -33,14 +39,16 @@ export function useFavorites(type: "templates" | "instructors" | "locations") {
       }
       return newFavorites
     })
-  }
+  }, [])
 
-  const isFavorite = (id: number) => favorites.has(id)
+  const isFavorite = useCallback((id: number) => favorites.has(id), [favorites])
+
+  const getFavoriteCount = useCallback(() => favorites.size, [favorites])
 
   return {
     favorites,
     toggleFavorite,
     isFavorite,
-    favoriteCount: favorites.size,
+    getFavoriteCount,
   }
 }
