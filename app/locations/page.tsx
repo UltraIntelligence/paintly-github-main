@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Plus, MapPin, MoreHorizontal } from "lucide-react"
+import { Search, Plus, MapPin, MoreHorizontal, Users } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -19,6 +19,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from "@/components/ui/input"
 import { useFavorites } from "@/hooks/use-favorites"
 import { FavoriteButton } from "@/components/favorite-button"
+import { Heart } from "lucide-react"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -181,13 +182,68 @@ const locationsData = [
 
 const statusOptions = ["All Status", "Active", "Under Construction", "Coming Soon"]
 
+// Featured Section Component with comprehensive bottom margin fix
+function FeaturedSection({
+  title,
+  subtitle,
+  children,
+  isEmpty = false,
+  emptyMessage = "Favorite items appear here for quick access.",
+}) {
+  if (isEmpty) {
+    return (
+      <div className="mb-20">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
+          <p className="text-gray-600">{subtitle}</p>
+        </div>
+        <div className="flex flex-col items-center justify-center py-12 px-4 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+          <Heart className="h-12 w-12 text-gray-300 mb-4" />
+          <p className="text-gray-500 text-center max-w-md">{emptyMessage}</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mb-20">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
+        <p className="text-gray-600">{subtitle}</p>
+      </div>
+      {/* Generous spacing and padding to prevent clipping */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">{children}</div>
+    </div>
+  )
+}
+
+// Featured Card Component
+function FeaturedCard({ children, className = "" }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className={`group cursor-pointer ${className}`}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 function LocationsContent() {
   const router = useRouter()
+
+  // Get favorited locations for Featured section
+  const { toggleFavorite, isFavorite, favorites } = useFavorites("locations")
+
+  const featuredLocations = useMemo(() => {
+    return locationsData.filter((location) => isFavorite(location.id)).slice(0, 6)
+  }, [isFavorite, favorites])
+
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("All Status")
   const [activeTab, setActiveTab] = useState("all")
-
-  const { toggleFavorite, isFavorite, favorites } = useFavorites("locations")
 
   const filteredLocations = useMemo(() => {
     return locationsData.filter((location) => {
@@ -260,181 +316,260 @@ function LocationsContent() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
-      {/* Search and Filters */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-col sm:flex-row gap-2 flex-1">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search locations..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9"
-            />
+      {/* Featured Section */}
+      <FeaturedSection title="Featured" subtitle="Your primary locations" isEmpty={featuredLocations.length === 0}>
+        {featuredLocations.map((location) => (
+          <FeaturedCard key={location.id}>
+            <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
+              {/* Large Image Section */}
+              <div className="relative overflow-hidden h-56">
+                <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
+                  <img
+                    src={location.photo || "/placeholder.svg"}
+                    alt={`${location.name.english} location`}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <Badge className={`absolute top-3 left-3 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}>
+                  {getStatusText(location.status)}
+                </Badge>
+                <FavoriteButton
+                  isFavorite={isFavorite(location.id)}
+                  onToggle={() => toggleFavorite(location.id)}
+                  className="absolute top-3 right-3"
+                />
+              </div>
+
+              {/* Content Section */}
+              <CardContent className="p-5">
+                <div className="space-y-1 mb-3">
+                  {/* Only the main title is larger */}
+                  <h3 className="font-bold text-base text-gray-900 leading-tight">{location.name.japanese}</h3>
+                  {/* Subtitle same size as regular cards */}
+                  <p className="text-sm text-gray-600">{location.name.english}</p>
+                  {/* Address same size as regular cards */}
+                  <p className="text-sm text-gray-500 line-clamp-2 mt-2">{location.address.english}</p>
+                </div>
+
+                {/* Features same size as regular cards */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  <Badge variant="outline" className={`text-xs px-2 py-0.5 border ${getTypeBadgeColor(location.type)}`}>
+                    {location.type.charAt(0).toUpperCase() + location.type.slice(1)}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200">
+                    {location.capacity} capacity
+                  </Badge>
+                  {location.features.slice(0, 2).map((feature, index) => (
+                    <Badge key={index} variant="outline" className="text-xs px-2 py-0.5">
+                      {feature}
+                    </Badge>
+                  ))}
+                  {location.features.length > 2 && (
+                    <Badge variant="outline" className="text-xs px-2 py-0.5">
+                      +{location.features.length - 2}
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Metadata same size as regular cards */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center text-xs text-gray-500">
+                    <Users className="h-3.5 w-3.5 mr-1.5" />
+                    {location.capacity} capacity
+                  </div>
+                  <div className="text-xs text-gray-500">{location.openingHours}</div>
+                </div>
+              </CardContent>
+            </Card>
+          </FeaturedCard>
+        ))}
+      </FeaturedSection>
+
+      {/* All Locations Section */}
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">All Locations</h2>
+          <p className="text-gray-600">Manage your complete network of studio locations</p>
+        </div>
+
+        {/* Search and Filters */}
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col sm:flex-row gap-2 flex-1">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search locations..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                {statusOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              {statusOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="lg:ml-auto">
+            <Button size="sm" className="w-full">
+              <Plus className="mr-2 h-4 w-4" />
+              Add Location
+            </Button>
+          </div>
         </div>
-        <div className="lg:ml-auto">
-          <Button size="sm" className="w-full">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Location
-          </Button>
-        </div>
-      </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList>
-          <TabsTrigger value="all">All Locations</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="franchise">Franchise</TabsTrigger>
-          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-          <TabsTrigger value="favorites">
-            Favorites{" "}
-            {favorites.size > 0 && (
-              <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
-                {favorites.size}
-              </Badge>
-            )}
-          </TabsTrigger>
-        </TabsList>
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList>
+            <TabsTrigger value="all">All Locations</TabsTrigger>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="franchise">Franchise</TabsTrigger>
+            <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
+            <TabsTrigger value="favorites">
+              Favorites{" "}
+              {favorites.size > 0 && (
+                <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
+                  {favorites.size}
+                </Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value={activeTab} className="mt-6">
-          {filteredLocations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <MapPin className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">No locations found</h3>
-              <p className="text-muted-foreground mb-4">No locations match your current search and filter criteria.</p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchTerm("")
-                  setSelectedStatus("All Status")
-                }}
-              >
-                Clear filters
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-              {filteredLocations.map((location) => (
-                <motion.div
-                  key={location.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
+          <TabsContent value={activeTab} className="mt-6">
+            {filteredLocations.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <MapPin className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2">No locations found</h3>
+                <p className="text-muted-foreground mb-4">
+                  No locations match your current search and filter criteria.
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchTerm("")
+                    setSelectedStatus("All Status")
+                  }}
                 >
-                  <Card className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full">
-                    {/* Image Section */}
-                    <div className="relative overflow-hidden">
-                      <AspectRatio ratio={4 / 3} className="w-full">
-                        <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                          <img
-                            src={location.photo || "/placeholder.svg"}
-                            alt={`${location.name.english} location`}
-                            className="h-full w-full object-cover"
-                          />
+                  Clear filters
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                {filteredLocations.map((location) => (
+                  <motion.div
+                    key={location.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Card className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full">
+                      {/* Image Section */}
+                      <div className="relative overflow-hidden">
+                        <AspectRatio ratio={4 / 3} className="w-full">
+                          <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
+                            <img
+                              src={location.photo || "/placeholder.svg"}
+                              alt={`${location.name.english} location`}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                        </AspectRatio>
+                        <Badge
+                          className={`absolute top-2 left-2 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}
+                        >
+                          {getStatusText(location.status)}
+                        </Badge>
+                        <FavoriteButton
+                          isFavorite={isFavorite(location.id)}
+                          onToggle={() => toggleFavorite(location.id)}
+                        />
+                      </div>
+
+                      {/* Content Section */}
+                      <CardContent className="flex-1 p-5 flex flex-col">
+                        <div className="space-y-1 mb-3">
+                          <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
+                            {location.name.japanese}
+                          </h3>
+                          <p className="text-sm text-gray-600 line-clamp-1">{location.name.english}</p>
                         </div>
-                      </AspectRatio>
-                      <Badge
-                        className={`absolute top-2 left-2 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}
-                      >
-                        {getStatusText(location.status)}
-                      </Badge>
-                      <FavoriteButton
-                        isFavorite={isFavorite(location.id)}
-                        onToggle={() => toggleFavorite(location.id)}
-                      />
-                    </div>
 
-                    {/* Content Section */}
-                    <CardContent className="flex-1 p-5 flex flex-col">
-                      <div className="space-y-1 mb-3">
-                        <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
-                          {location.name.japanese}
-                        </h3>
-                        <p className="text-sm text-gray-600 line-clamp-1">{location.name.english}</p>
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          <Badge
+                            variant="outline"
+                            className={`text-xs px-2 py-0.5 border ${getTypeBadgeColor(location.type)}`}
+                          >
+                            {location.type.charAt(0).toUpperCase() + location.type.slice(1)}
+                          </Badge>
+                          <Badge
+                            variant="outline"
+                            className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
+                          >
+                            {location.capacity} capacity
+                          </Badge>
+                        </div>
+
+                        <p className="text-xs text-gray-500 mb-3 line-clamp-2">
+                          {location.address.english.split(",")[0]}
+                        </p>
+
+                        <div className="text-xs text-gray-500 mt-auto">
+                          {location.features.slice(0, 2).join(", ")}
+                          {location.features.length > 2 && ` +${location.features.length - 2} more`}
+                        </div>
+                      </CardContent>
+
+                      {/* Actions Section - Fixed at bottom */}
+                      <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="default"
+                            className="flex-1 text-xs"
+                            onClick={() => {
+                              const locationRoutes: Record<number, string> = {
+                                1: "/locations/daikanyama",
+                                2: "/locations/cat-street",
+                                3: "/locations/ginza",
+                                4: "/locations/yokohama",
+                                5: "/locations/osaka",
+                                6: "/locations/okinawa",
+                                7: "/locations/fukuoka",
+                              }
+                              router.push(locationRoutes[location.id] || "/locations/daikanyama")
+                            }}
+                          >
+                            View Details
+                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline" className="px-2">
+                                <MoreHorizontal className="h-3.5 w-3.5" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem className="text-sm">Schedule Event</DropdownMenuItem>
+                              <DropdownMenuItem className="text-sm">Edit Location</DropdownMenuItem>
+                              <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </div>
-
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        <Badge
-                          variant="outline"
-                          className={`text-xs px-2 py-0.5 border ${getTypeBadgeColor(location.type)}`}
-                        >
-                          {location.type.charAt(0).toUpperCase() + location.type.slice(1)}
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                        >
-                          {location.capacity} capacity
-                        </Badge>
-                      </div>
-
-                      <p className="text-xs text-gray-500 mb-3 line-clamp-2">
-                        {location.address.english.split(",")[0]}
-                      </p>
-
-                      <div className="text-xs text-gray-500 mt-auto">
-                        {location.features.slice(0, 2).join(", ")}
-                        {location.features.length > 2 && ` +${location.features.length - 2} more`}
-                      </div>
-                    </CardContent>
-
-                    {/* Actions Section - Fixed at bottom */}
-                    <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="default"
-                          className="flex-1 text-xs"
-                          onClick={() => {
-                            const locationRoutes: Record<number, string> = {
-                              1: "/locations/daikanyama",
-                              2: "/locations/cat-street",
-                              3: "/locations/ginza",
-                              4: "/locations/yokohama",
-                              5: "/locations/osaka",
-                              6: "/locations/okinawa",
-                              7: "/locations/fukuoka",
-                            }
-                            router.push(locationRoutes[location.id] || "/locations/daikanyama")
-                          }}
-                        >
-                          View Details
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline" className="px-2">
-                              <MoreHorizontal className="h-3.5 w-3.5" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem className="text-sm">Schedule Event</DropdownMenuItem>
-                            <DropdownMenuItem className="text-sm">Edit Location</DropdownMenuItem>
-                            <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   )
 }
