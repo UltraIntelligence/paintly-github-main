@@ -1,5 +1,13 @@
 "use client"
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+
+import { AvatarFallback } from "@/components/ui/avatar"
+
+import { AvatarImage } from "@/components/ui/avatar"
+
+import { Avatar } from "@/components/ui/avatar"
+
 import { useState, useEffect } from "react"
 import {
   ChevronLeft,
@@ -17,9 +25,6 @@ import { TrendingUp, DollarSign, ClockIcon, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { motion, AnimatePresence } from "framer-motion"
@@ -41,11 +46,14 @@ const pageTransition = {
 
 // Sample data with exact specifications
 const locations = [
-  { id: "all", name: "All", count: 3 },
+  { id: "all", name: "All Locations", count: 7 },
   { id: "daikanyama", name: "Daikanyama", count: 1 },
   { id: "catstreet", name: "Cat Street", count: 1 },
   { id: "ginza", name: "Ginza", count: 1 },
   { id: "yokohama", name: "Yokohama", count: 0 },
+  { id: "osaka", name: "Osaka", count: 2 },
+  { id: "okinawa", name: "Okinawa", count: 1 },
+  { id: "fukuoka", name: "Fukuoka", count: 1 },
 ]
 
 const instructors = [
@@ -314,6 +322,9 @@ const locationColors = {
   ginza: "#10B981",
   catstreet: "#F59E0B",
   yokohama: "#8B5CF6",
+  osaka: "#EC4899",
+  okinawa: "#22D3EE",
+  fukuoka: "#A855F7",
 }
 
 // Intelligent scheduling suggestions data
@@ -505,13 +516,15 @@ function ScheduleContent() {
   const [selectedSlot, setSelectedSlot] = useState<{ day: number; hour: number; availableHours: number } | null>(null)
   const [selectedEventDetail, setSelectedEventDetail] = useState<(typeof scheduledEvents)[0] | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState("")
-  const [selectedInstructor, setSelectedInstructor] = useState("")
+  const [selectedInstructorModal, setSelectedInstructorModal] = useState("")
   const [selectedDuration, setSelectedDuration] = useState("")
   const [suggestions, setSuggestions] = useState(schedulingSuggestions)
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [animationDirection, setAnimationDirection] = useState<"left" | "right" | null>(null)
   const [isSuggestionsCollapsed, setIsSuggestionsCollapsed] = useState(false)
+  const [selectedInstructor, setSelectedInstructor] = useState("all")
+  const [currentWeekOffset, setCurrentWeekOffset] = useState(0)
 
   // Force list view on mobile
   useEffect(() => {
@@ -542,7 +555,7 @@ function ScheduleContent() {
       const availableHours = getAvailableHours(dayIndex, hourIndex)
       setSelectedSlot({ day: dayIndex, hour: hourIndex, availableHours })
       setSelectedTemplate("")
-      setSelectedInstructor("")
+      setSelectedInstructorModal("")
       setSelectedDuration("")
       setIsScheduleModalOpen(true)
     }
@@ -554,11 +567,11 @@ function ScheduleContent() {
   }
 
   const handleScheduleEvent = () => {
-    if (selectedTemplate && selectedInstructor && selectedSlot) {
+    if (selectedTemplate && selectedInstructorModal && selectedSlot) {
       // Here you would typically make an API call to schedule the event
       console.log("Scheduling event:", {
         template: selectedTemplate,
-        instructor: selectedInstructor,
+        instructor: selectedInstructorModal,
         day: selectedSlot.day,
         hour: selectedSlot.hour,
         duration: selectedDuration,
@@ -578,9 +591,19 @@ function ScheduleContent() {
     }
   }
 
+  // Filter events based on selected location and instructor
+  const getFilteredEvents = () => {
+    return scheduledEvents.filter((event) => {
+      const matchesLocation = selectedLocation === "all" || event.location === selectedLocation
+      const matchesInstructor = selectedInstructor === "all" || event.instructor === selectedInstructor
+      return matchesLocation && matchesInstructor
+    })
+  }
+
   const renderTimeSlot = (dayIndex: number, hourIndex: number) => {
     const slotData = getSlotData(dayIndex, hourIndex)
-    const scheduledEvent = scheduledEvents.find(
+    const filteredEvents = getFilteredEvents()
+    const scheduledEvent = filteredEvents.find(
       (event) => event.day === dayIndex && hourIndex >= event.startHour && hourIndex < event.startHour + event.duration,
     )
 
@@ -810,8 +833,25 @@ function ScheduleContent() {
     })
   }
 
+  // Helper function to calculate week dates
+  const getCurrentWeekDates = () => {
+    const today = new Date()
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() + currentWeekOffset * 7)
+
+    const endDate = new Date(startDate)
+    endDate.setDate(startDate.getDate() + 6)
+
+    return {
+      start: startDate,
+      end: endDate,
+      label: `${startDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}-${endDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}, ${startDate.getFullYear()}`,
+    }
+  }
+
   // Transform events for list view
-  const eventsByDate = scheduledEvents
+  const filteredEvents = getFilteredEvents()
+  const eventsByDate = filteredEvents
     .sort((a, b) => {
       if (a.day !== b.day) return a.day - b.day
       return a.startHour - b.startHour
@@ -884,11 +924,14 @@ function ScheduleContent() {
         {/* Header */}
         <div className="flex flex-col gap-4 mb-6">
           {/* Top row - Search, Location Dropdown, and Location Tabs */}
+          {/* Top row - Search and Location Dropdown */}
+          {/* Top row - Search, Location Dropdown, and Instructor Dropdown */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input placeholder="Search events..." className="pl-10" />
             </div>
+
             <Select value={selectedLocation} onValueChange={setSelectedLocation}>
               <SelectTrigger className="w-full sm:w-[200px]">
                 <SelectValue placeholder="All Locations" />
@@ -902,23 +945,22 @@ function ScheduleContent() {
               </SelectContent>
             </Select>
 
-            <Tabs value={selectedLocation} onValueChange={setSelectedLocation} className="w-auto">
-              <TabsList>
-                {locations.map((location) => (
-                  <TabsTrigger value={location.id} key={location.id} className="gap-1">
-                    {location.name}{" "}
-                    {location.count > 0 && (
-                      <Badge
-                        variant="secondary"
-                        className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                      >
-                        {location.count}
-                      </Badge>
-                    )}
-                  </TabsTrigger>
+            <Select value={selectedInstructor} onValueChange={setSelectedInstructor}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="All Instructors" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Instructors</SelectItem>
+                {instructors.map((instructor) => (
+                  <SelectItem key={instructor.id} value={instructor.id}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: instructor.specialtyColor }} />
+                      {instructor.name}
+                    </div>
+                  </SelectItem>
                 ))}
-              </TabsList>
-            </Tabs>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Bottom row - View Controls and Date Navigation */}
@@ -958,11 +1000,11 @@ function ScheduleContent() {
             {/* Right side - Date Navigation - Hidden on mobile when in list view */}
             {selectedView !== "month" && (
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={() => setCurrentWeekOffset((prev) => prev - 1)}>
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <span className="text-sm font-medium px-4">May 19-25, 2025</span>
-                <Button variant="outline" size="sm">
+                <span className="text-sm font-medium px-4">{getCurrentWeekDates().label}</span>
+                <Button variant="outline" size="sm" onClick={() => setCurrentWeekOffset((prev) => prev + 1)}>
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -1243,7 +1285,8 @@ function ScheduleContent() {
                       const isCurrentDay = isCurrentMonth && dayNumber === 19 // May 19 as current day
 
                       // Get events for this day
-                      const dayEvents = scheduledEvents.filter((event) => {
+                      const filteredEvents = getFilteredEvents()
+                      const dayEvents = filteredEvents.filter((event) => {
                         const eventDate = 19 + event.day // Convert day index to actual date
                         return isCurrentMonth && dayNumber === eventDate
                       })
@@ -1403,12 +1446,20 @@ function ScheduleContent() {
                   <div className="p-4 bg-gray-50 border-r flex items-center justify-center">
                     <Clock className="h-4 w-4 text-gray-500" />
                   </div>
-                  {days.map((day, index) => (
-                    <div key={day} className="p-4 bg-gray-50 text-center border-r last:border-r-0">
-                      <div className="font-medium text-gray-900">{shortDays[index]}</div>
-                      <div className="text-sm text-gray-500">May {19 + index}</div>
-                    </div>
-                  ))}
+                  {days.map((day, index) => {
+                    const weekDates = getCurrentWeekDates()
+                    const dayDate = new Date(weekDates.start)
+                    dayDate.setDate(weekDates.start.getDate() + index)
+
+                    return (
+                      <div key={day} className="p-4 bg-gray-50 text-center border-r last:border-r-0">
+                        <div className="font-medium text-gray-900">{shortDays[index]}</div>
+                        <div className="text-sm text-gray-500">
+                          {dayDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
 
                 {/* Time slots with proper grid structure for spanning */}
@@ -1474,6 +1525,9 @@ function ScheduleContent() {
                               const startTime = timeSlots[event.startHour]
                               const endTime =
                                 timeSlots[event.startHour + event.duration] ||
+                                `${Number.parseInt(timeSlots[event.startHour].split(":")[0]) + event.duration}:${timeSlots[event.startHour].split(":")[1]}`
+
+                              timeSlots[event.startHour + event.duration] ||
                                 `${Number.parseInt(timeSlots[event.startHour].split(":")[0]) + event.duration}:${timeSlots[event.startHour].split(":")[1]}`
 
                               // Find matching template for image
@@ -1671,7 +1725,7 @@ function ScheduleContent() {
               {selectedTemplate && (
                 <div className="space-y-3">
                   <label className="text-sm font-medium">Instructor Assignment</label>
-                  <Select value={selectedInstructor} onValueChange={setSelectedInstructor}>
+                  <Select value={selectedInstructorModal} onValueChange={setSelectedInstructorModal}>
                     <SelectTrigger>
                       <SelectValue placeholder="Choose instructor..." />
                     </SelectTrigger>
@@ -1724,7 +1778,7 @@ function ScheduleContent() {
                 </Button>
                 <Button
                   onClick={handleScheduleEvent}
-                  disabled={!selectedTemplate || !selectedInstructor}
+                  disabled={!selectedTemplate || !selectedInstructorModal}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   Schedule Event

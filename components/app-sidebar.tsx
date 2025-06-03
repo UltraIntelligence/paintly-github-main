@@ -51,6 +51,7 @@ const data = {
       url: "/templates",
       icon: ImageIcon,
     },
+    // Remove the Corporate Templates item
   ],
   navDocuments: [
     {
@@ -65,12 +66,12 @@ const data = {
     },
     {
       name: "Gift Certificates",
-      url: "#",
+      url: "/gift-certificates",
       icon: GiftIcon,
     },
     {
       name: "Private Events",
-      url: "#",
+      url: "/private-events",
       icon: Building2Icon,
     },
   ],

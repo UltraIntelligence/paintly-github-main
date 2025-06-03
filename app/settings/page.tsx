@@ -17,6 +17,7 @@ import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "@/components/ui/use-toast"
+import { MailIcon } from "lucide-react"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -109,6 +110,8 @@ export default function SettingsPage() {
     marketing: false,
   })
   const [giftCertificateExpiration, setGiftCertificateExpiration] = useState("12-months")
+
+  const [emailPlatformUrl, setEmailPlatformUrl] = useState("")
 
   const handleSave = () => {
     setIsSaving(true)
@@ -1560,6 +1563,96 @@ export default function SettingsPage() {
                                         Apply Recommended Settings
                                       </Button>
                                     </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Email Integration */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Email Integration</CardTitle>
+                            <CardDescription>
+                              Connect your email platform for quick access from the dashboard
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-6">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                              <div className="space-y-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="email-platform-url">Email Platform URL</Label>
+                                  <Input
+                                    id="email-platform-url"
+                                    placeholder="https://mail.google.com or your email platform URL"
+                                    value={emailPlatformUrl}
+                                    onChange={(e) => setEmailPlatformUrl(e.target.value)}
+                                  />
+                                  <p className="text-xs text-muted-foreground">
+                                    Enter the URL to your email platform (Gmail, Outlook, etc.)
+                                  </p>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label>Quick Access Button</Label>
+                                  <div className="flex items-center gap-3 p-3 border rounded-lg bg-gray-50">
+                                    <Button size="icon" className="h-9 w-9" variant="outline">
+                                      <MailIcon />
+                                    </Button>
+                                    <div>
+                                      <p className="font-medium text-sm">Dashboard Email Button</p>
+                                      <p className="text-xs text-muted-foreground">
+                                        This button appears in your sidebar for quick email access
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="space-y-4">
+                                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                  <div className="flex items-start gap-3">
+                                    <Info className="h-5 w-5 text-blue-600 mt-0.5" />
+                                    <div>
+                                      <h4 className="font-medium text-blue-900 mb-1">Email Integration Benefits</h4>
+                                      <ul className="text-sm text-blue-700 space-y-1">
+                                        <li>• Quick access to customer emails</li>
+                                        <li>• Respond to booking inquiries faster</li>
+                                        <li>• Manage customer communications efficiently</li>
+                                        <li>• Stay connected without leaving the dashboard</li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label>Popular Email Platforms</Label>
+                                  <div className="grid grid-cols-1 gap-2">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="justify-start"
+                                      onClick={() => setEmailPlatformUrl("https://mail.google.com")}
+                                    >
+                                      Gmail (https://mail.google.com)
+                                    </Button>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="justify-start"
+                                      onClick={() => setEmailPlatformUrl("https://outlook.live.com")}
+                                    >
+                                      Outlook (https://outlook.live.com)
+                                    </Button>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="justify-start"
+                                      onClick={() => setEmailPlatformUrl("https://mail.yahoo.com")}
+                                    >
+                                      Yahoo Mail (https://mail.yahoo.com)
+                                    </Button>
                                   </div>
                                 </div>
                               </div>

@@ -24,6 +24,7 @@ export function NavMain({
   }[]
 }) {
   const [isQuickCreateOpen, setIsQuickCreateOpen] = useState(false)
+  const [emailPlatformUrl, setEmailPlatformUrl] = useState("https://mail.google.com")
 
   return (
     <SidebarGroup>
@@ -38,9 +39,15 @@ export function NavMain({
               <PlusCircleIcon />
               <span>Quick Create</span>
             </SidebarMenuButton>
-            <Button size="icon" className="h-9 w-9 shrink-0 group-data-[collapsible=icon]:opacity-0" variant="outline">
+            <Button
+              size="icon"
+              className="h-9 w-9 shrink-0 group-data-[collapsible=icon]:opacity-0"
+              variant="outline"
+              onClick={() => window.open(emailPlatformUrl, "_blank")}
+              title="Open Email Platform"
+            >
               <MailIcon />
-              <span className="sr-only">Inbox</span>
+              <span className="sr-only">Open Email Platform</span>
             </Button>
           </SidebarMenuItem>
         </SidebarMenu>

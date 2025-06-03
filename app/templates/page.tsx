@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useFavorites } from "@/hooks/use-favorites"
 import { FavoriteButton } from "@/components/favorite-button"
 import { FeaturedSection, FeaturedCard } from "@/components/featured-section"
+import { NewTemplateWizard } from "@/components/new-template-wizard"
 
 const templatesData = [
   {
@@ -191,6 +192,17 @@ export default function TemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedLocation, setSelectedLocation] = useState("all")
   const [activeCategory, setActiveCategory] = useState("All")
+  const [showTemplateWizard, setShowTemplateWizard] = useState(false)
+  const [categories, setCategories] = useState([
+    "All",
+    "Favorites",
+    "Kids Only",
+    "Master Artists",
+    "Paint Pouring",
+    "Seasonal",
+  ])
+  const [showNewCategoryInput, setShowNewCategoryInput] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState("")
 
   const { toggleFavorite, isFavorite, favorites } = useFavorites("templates")
 
@@ -209,6 +221,14 @@ export default function TemplatesPage() {
     const matchesFavorites = activeCategory !== "Favorites" || isFavorite(template.id)
     return matchesSearch && matchesCategory && matchesFavorites
   })
+
+  const addNewCategory = () => {
+    if (newCategoryName.trim() && !categories.includes(newCategoryName.trim())) {
+      setCategories((prev) => [...prev, newCategoryName.trim()])
+      setNewCategoryName("")
+      setShowNewCategoryInput(false)
+    }
+  }
 
   const getCategoryCount = (category: string) => {
     if (category === "All") return templates.length
@@ -301,6 +321,29 @@ export default function TemplatesPage() {
                                 </div>
                               </div>
                             </CardContent>
+                            {/* Actions Section - Add this after CardContent */}
+                            <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="default" className="flex-1 text-xs">
+                                  Schedule
+                                </Button>
+                                <Button size="sm" variant="outline" className="flex-1 text-xs">
+                                  Edit
+                                </Button>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button size="sm" variant="outline" className="px-2">
+                                      <MoreHorizontal className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem className="text-sm">View Details</DropdownMenuItem>
+                                    <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
+                                    <DropdownMenuItem className="text-sm text-red-600">Archive</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            </div>
                           </Card>
                         </FeaturedCard>
                       ))}
@@ -340,69 +383,53 @@ export default function TemplatesPage() {
 
                           <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-auto">
                             <TabsList>
-                              <TabsTrigger value="All" className="gap-1">
-                                All{" "}
-                                <Badge
-                                  variant="secondary"
-                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                                >
-                                  {getCategoryCount("All")}
-                                </Badge>
-                              </TabsTrigger>
-                              <TabsTrigger value="Favorites" className="gap-1">
-                                Favorites{" "}
-                                <Badge
-                                  variant="secondary"
-                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                                >
-                                  {getCategoryCount("Favorites")}
-                                </Badge>
-                              </TabsTrigger>
-                              <TabsTrigger value="Kids Only" className="gap-1">
-                                Kids Only{" "}
-                                <Badge
-                                  variant="secondary"
-                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                                >
-                                  {getCategoryCount("Kids Only")}
-                                </Badge>
-                              </TabsTrigger>
-                              <TabsTrigger value="Master Artists" className="gap-1">
-                                Master Artists{" "}
-                                <Badge
-                                  variant="secondary"
-                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                                >
-                                  {getCategoryCount("Master Artists")}
-                                </Badge>
-                              </TabsTrigger>
-                              <TabsTrigger value="Paint Pouring" className="gap-1">
-                                Paint Pouring{" "}
-                                <Badge
-                                  variant="secondary"
-                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                                >
-                                  {getCategoryCount("Paint Pouring")}
-                                </Badge>
-                              </TabsTrigger>
-                              <TabsTrigger value="Seasonal" className="gap-1">
-                                Seasonal{" "}
-                                <Badge
-                                  variant="secondary"
-                                  className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-                                >
-                                  {getCategoryCount("Seasonal")}
-                                </Badge>
-                              </TabsTrigger>
+                              {categories.map((category) => (
+                                <TabsTrigger key={category} value={category} className="gap-1">
+                                  {category}{" "}
+                                  <Badge
+                                    variant="secondary"
+                                    className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
+                                  >
+                                    {getCategoryCount(category)}
+                                  </Badge>
+                                </TabsTrigger>
+                              ))}
                             </TabsList>
                           </Tabs>
 
                           <div className="flex gap-2 ml-auto">
-                            <Button size="sm" variant="outline">
-                              <Plus className="mr-2 h-4 w-4" />
-                              Import
+                            {showNewCategoryInput ? (
+                              <div className="flex gap-2 items-center">
+                                <Input
+                                  value={newCategoryName}
+                                  onChange={(e) => setNewCategoryName(e.target.value)}
+                                  placeholder="Category name"
+                                  className="w-32"
+                                  onKeyPress={(e) => e.key === "Enter" && addNewCategory()}
+                                />
+                                <Button size="sm" onClick={addNewCategory}>
+                                  Add
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    setShowNewCategoryInput(false)
+                                    setNewCategoryName("")
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                              </div>
+                            ) : (
+                              <Button size="sm" variant="outline" onClick={() => setShowNewCategoryInput(true)}>
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Category
+                              </Button>
+                            )}
+                            <Button size="sm" onClick={() => setShowTemplateWizard(true)}>
+                              Add Template
                             </Button>
-                            <Button size="sm">Add Template</Button>
                           </div>
                         </div>
                       </div>
@@ -512,6 +539,7 @@ export default function TemplatesPage() {
             </motion.div>
           </AnimatePresence>
         </SidebarInset>
+        <NewTemplateWizard open={showTemplateWizard} onOpenChange={setShowTemplateWizard} />
       </SidebarProvider>
     </ThemeProvider>
   )

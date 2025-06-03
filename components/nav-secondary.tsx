@@ -1,5 +1,8 @@
+"use client"
+
 import type { LucideIcon } from "lucide-react"
 import type React from "react"
+import { useState } from "react"
 
 import {
   SidebarGroup,
@@ -9,6 +12,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { ThemeToggle } from "./theme-toggle"
+import { GlobalSearchModal } from "./global-search-modal"
 
 export function NavSecondary({
   items,
@@ -24,6 +28,8 @@ export function NavSecondary({
   const settingsItem = items.find((item) => item.title === "Settings")
   const helpItem = items.find((item) => item.title === "Get Help")
   const otherItems = items.filter((item) => item.title !== "Settings" && item.title !== "Get Help")
+
+  const [searchModalOpen, setSearchModalOpen] = useState(false)
 
   return (
     <SidebarGroup {...props}>
@@ -56,19 +62,27 @@ export function NavSecondary({
             </SidebarMenuItem>
           )}
 
-          {/* Render other items */}
+          {/* Render other items with special handling for search */}
           {otherItems.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                <a href={item.url}>
+              {item.title === "Search" ? (
+                <SidebarMenuButton onClick={() => setSearchModalOpen(true)}>
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
+                </SidebarMenuButton>
+              ) : (
+                <SidebarMenuButton asChild>
+                  <a href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </a>
+                </SidebarMenuButton>
+              )}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
       </SidebarGroupContent>
+      <GlobalSearchModal open={searchModalOpen} onOpenChange={setSearchModalOpen} />
     </SidebarGroup>
   )
 }

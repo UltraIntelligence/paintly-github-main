@@ -4,6 +4,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { NewTemplateWizard } from "./new-template-wizard"
+import { ScheduledEventWizard } from "./scheduled-event-wizard"
+import { PrivateEventWizard } from "./corporate-event-template-wizard"
 
 interface QuickCreateModalProps {
   open: boolean
@@ -12,6 +14,8 @@ interface QuickCreateModalProps {
 
 export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) {
   const [showTemplateWizard, setShowTemplateWizard] = useState(false)
+  const [showScheduledEventWizard, setShowScheduledEventWizard] = useState(false)
+  const [showPrivateEventWizard, setShowPrivateEventWizard] = useState(false)
 
   const handleCreateTemplate = () => {
     onOpenChange(false)
@@ -19,13 +23,13 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
   }
 
   const handleScheduleEvent = () => {
-    // TODO: Navigate to event scheduling
     onOpenChange(false)
+    setShowScheduledEventWizard(true)
   }
 
   const handleCreatePrivateEvent = () => {
-    // TODO: Navigate to private event creation
     onOpenChange(false)
+    setShowPrivateEventWizard(true)
   }
 
   return (
@@ -122,6 +126,8 @@ export function QuickCreateModal({ open, onOpenChange }: QuickCreateModalProps) 
       </Dialog>
 
       <NewTemplateWizard open={showTemplateWizard} onOpenChange={setShowTemplateWizard} />
+      <ScheduledEventWizard open={showScheduledEventWizard} onOpenChange={setShowScheduledEventWizard} />
+      <PrivateEventWizard open={showPrivateEventWizard} onOpenChange={setShowPrivateEventWizard} />
     </>
   )
 }

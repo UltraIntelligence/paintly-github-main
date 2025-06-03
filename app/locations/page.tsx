@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { useFavorites } from "@/hooks/use-favorites"
 import { FavoriteButton } from "@/components/favorite-button"
 import { Heart } from "lucide-react"
+import { AddLocationModal } from "@/components/add-location-modal"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -233,6 +234,7 @@ function FeaturedCard({ children, className = "" }) {
 
 function LocationsContent() {
   const router = useRouter()
+  const [showAddLocationModal, setShowAddLocationModal] = useState(false)
 
   // Get favorited locations for Featured section
   const { toggleFavorite, isFavorite, favorites } = useFavorites("locations")
@@ -380,6 +382,44 @@ function LocationsContent() {
                   <div className="text-xs text-gray-500">{location.openingHours}</div>
                 </div>
               </CardContent>
+              {/* Actions Section - Add this after CardContent */}
+              <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="default"
+                    className="flex-1 text-xs"
+                    onClick={() => {
+                      const locationRoutes: Record<number, string> = {
+                        1: "/locations/daikanyama",
+                        2: "/locations/cat-street",
+                        3: "/locations/ginza",
+                        4: "/locations/yokohama",
+                        5: "/locations/osaka",
+                        6: "/locations/okinawa",
+                        7: "/locations/fukuoka",
+                      }
+                      router.push(locationRoutes[location.id] || "/locations/daikanyama")
+                    }}
+                  >
+                    View Details
+                  </Button>
+                  <Button size="sm" variant="outline" className="flex-1 text-xs">
+                    Schedule Event
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="sm" variant="outline" className="px-2">
+                        <MoreHorizontal className="h-3.5 w-3.5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem className="text-sm">Edit Location</DropdownMenuItem>
+                      <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
             </Card>
           </FeaturedCard>
         ))}
@@ -418,7 +458,7 @@ function LocationsContent() {
             </Select>
           </div>
           <div className="lg:ml-auto">
-            <Button size="sm" className="w-full">
+            <Button size="sm" className="w-full" onClick={() => setShowAddLocationModal(true)}>
               <Plus className="mr-2 h-4 w-4" />
               Add Location
             </Button>
@@ -548,6 +588,9 @@ function LocationsContent() {
                           >
                             View Details
                           </Button>
+                          <Button size="sm" variant="outline" className="flex-1 text-xs">
+                            Schedule Event
+                          </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button size="sm" variant="outline" className="px-2">
@@ -555,7 +598,6 @@ function LocationsContent() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem className="text-sm">Schedule Event</DropdownMenuItem>
                               <DropdownMenuItem className="text-sm">Edit Location</DropdownMenuItem>
                               <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
                             </DropdownMenuContent>
@@ -570,6 +612,9 @@ function LocationsContent() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Add Location Modal */}
+      <AddLocationModal open={showAddLocationModal} onOpenChange={setShowAddLocationModal} />
     </div>
   )
 }
