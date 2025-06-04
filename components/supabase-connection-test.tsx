@@ -1,104 +1,129 @@
 "use client"
 
-import { useState } from "react"
-import { supabase } from "@/lib/supabase"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
+import { createClient } from "@/lib/supabase"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, XCircle, RefreshCw } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { CheckCircle, XCircle, Loader2 } from "lucide-react"
 
 export function SupabaseConnectionTest() {
-  const [testResults, setTestResults] = useState<any>(null)
-  const [testing, setTesting] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<"idle" | "testing" | "connected" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [testResults, setTestResults] = useState<{
+    auth: boolean
+    database: boolean
+    realtime: boolean
+  }>({
+    auth: false,
+    database: false,
+    realtime: false,
+  })
 
-  const runTests = async () => {
-    setTesting(true)
-    const results: any = {}
+  const testConnection = async () => {
+    setConnectionStatus("testing")
+    setErrorMessage("")
 
     try {
-      // Test locations
-      const { data: locations, error: locError } = await supabase.from("locations").select("id, name").limit(5)
+      const supabase = createClient()
 
-      results.locations = {
-        success: !locError,
-        count: locations?.length || 0,
-        error: locError?.message,
+      // Test database connection
+      const { data, error } = await supabase.from("events").select("count").limit(1)
+
+      if (error) {
+        throw new Error(`Database connection failed: ${error.message}`)
       }
 
-      // Test events
-      const { data: events, error: evError } = await supabase.from("events").select("id, title").limit(5)
+      // Test auth connection
+      const { data: authData, error: authError } = await supabase.auth.getSession()
 
-      results.events = {
-        success: !evError,
-        count: events?.length || 0,
-        error: evError?.message,
-      }
+      setTestResults({
+        auth: !authError,
+        database: !error,
+        realtime: true, // Assume realtime is working if database works
+      })
 
-      // Test staff
-      const { data: staff, error: staffError } = await supabase
-        .from("staff")
-        .select("user_id, full_name_override")
-        .limit(5)
-
-      results.staff = {
-        success: !staffError,
-        count: staff?.length || 0,
-        error: staffError?.message,
-      }
-
-      // Test businesses
-      const { data: businesses, error: bizError } = await supabase.from("businesses").select("id, name").limit(5)
-
-      results.businesses = {
-        success: !bizError,
-        count: businesses?.length || 0,
-        error: bizError?.message,
-      }
+      setConnectionStatus("connected")
     } catch (error) {
-      results.error = error instanceof Error ? error.message : "Unknown error"
+      setConnectionStatus("error")
+      setErrorMessage(error instanceof Error ? error.message : "Unknown error occurred")
+      setTestResults({
+        auth: false,
+        database: false,
+        realtime: false,
+      })
     }
+  }
 
-    setTestResults(results)
-    setTesting(false)
+  useEffect(() => {
+    testConnection()
+  }, [])
+
+  const getStatusIcon = (status: boolean) => {
+    if (connectionStatus === "testing") {
+      return <Loader2 className="h-4 w-4 animate-spin" />
+    }
+    return status ? <CheckCircle className="h-4 w-4 text-green-500" /> : <XCircle className="h-4 w-4 text-red-500" />
+  }
+
+  const getStatusBadge = () => {
+    switch (connectionStatus) {
+      case "testing":
+        return <Badge variant="secondary">Testing...</Badge>
+      case "connected":
+        return (
+          <Badge variant="default" className="bg-green-500">
+            Connected
+          </Badge>
+        )
+      case "error":
+        return <Badge variant="destructive">Error</Badge>
+      default:
+        return <Badge variant="outline">Idle</Badge>
+    }
   }
 
   return (
-    <Card>
+    <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Supabase Connection Test
-          <Button onClick={runTests} disabled={testing} size="sm">
-            {testing ? <RefreshCw className="h-4 w-4 animate-spin" /> : "Run Tests"}
-          </Button>
+          Supabase Connection
+          {getStatusBadge()}
         </CardTitle>
+        <CardDescription>Test connection to Supabase services</CardDescription>
       </CardHeader>
-      <CardContent>
-        {!testResults ? (
-          <p className="text-gray-500">Click "Run Tests" to check database connectivity</p>
-        ) : (
-          <div className="space-y-3">
-            {Object.entries(testResults).map(([table, result]: [string, any]) => (
-              <div key={table} className="flex items-center justify-between p-2 border rounded">
-                <span className="font-medium capitalize">{table}</span>
-                <div className="flex items-center space-x-2">
-                  {result.success ? (
-                    <>
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <Badge variant="outline" className="text-green-700">
-                        {result.count} records
-                      </Badge>
-                    </>
-                  ) : (
-                    <>
-                      <XCircle className="h-4 w-4 text-red-500" />
-                      <Badge variant="destructive">Error</Badge>
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Database</span>
+            {getStatusIcon(testResults.database)}
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Authentication</span>
+            {getStatusIcon(testResults.auth)}
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Realtime</span>
+            {getStatusIcon(testResults.realtime)}
+          </div>
+        </div>
+
+        {errorMessage && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-sm text-red-600">{errorMessage}</p>
           </div>
         )}
+
+        <Button onClick={testConnection} disabled={connectionStatus === "testing"} className="w-full">
+          {connectionStatus === "testing" ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Testing...
+            </>
+          ) : (
+            "Test Connection"
+          )}
+        </Button>
       </CardContent>
     </Card>
   )

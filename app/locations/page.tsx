@@ -335,11 +335,7 @@ function LocationsContent() {
                 <Badge className={`absolute top-3 left-3 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}>
                   {getStatusText(location.status)}
                 </Badge>
-                <FavoriteButton
-                  isFavorite={isFavorite(location.id)}
-                  onToggle={() => toggleFavorite(location.id)}
-                  className="absolute top-3 right-3"
-                />
+                <FavoriteButton isFavorite={isFavorite(location.id)} onToggle={() => toggleFavorite(location.id)} />
               </div>
 
               {/* Content Section */}

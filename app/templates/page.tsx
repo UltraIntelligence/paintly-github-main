@@ -273,7 +273,6 @@ export default function TemplatesPage() {
                               <FavoriteButton
                                 isFavorite={isFavorite(template.id)}
                                 onToggle={() => toggleFavorite(template.id)}
-                                className="absolute top-3 right-3"
                               />
                             </div>
 

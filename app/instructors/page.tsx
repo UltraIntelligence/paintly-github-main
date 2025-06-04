@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Search, Plus, Users, MoreHorizontal, Star, MapPin, Clock } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -312,6 +313,7 @@ function InstructorsContent() {
   const [activeTab, setActiveTab] = useState("all")
 
   const { toggleFavorite, isFavorite, favorites } = useFavorites("instructors")
+  const router = useRouter()
 
   // Get favorited instructors for Featured section
   const featuredInstructors = useMemo(() => {
@@ -373,6 +375,10 @@ function InstructorsContent() {
     }
   }
 
+  const handleViewDetails = (instructorId: number) => {
+    router.push(`/instructors/${instructorId}`)
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
       {/* Featured Section */}
@@ -398,11 +404,7 @@ function InstructorsContent() {
                 >
                   {getAvailabilityText(instructor.availability)}
                 </Badge>
-                <FavoriteButton
-                  isFavorite={isFavorite(instructor.id)}
-                  onToggle={() => toggleFavorite(instructor.id)}
-                  className="absolute top-3 right-3"
-                />
+                <FavoriteButton isFavorite={isFavorite(instructor.id)} onToggle={() => toggleFavorite(instructor.id)} />
               </div>
 
               {/* Content Section */}
@@ -449,7 +451,12 @@ function InstructorsContent() {
                   <Button size="sm" variant="default" className="flex-1 text-xs">
                     Schedule
                   </Button>
-                  <Button size="sm" variant="outline" className="flex-1 text-xs">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 text-xs"
+                    onClick={() => handleViewDetails(instructor.id)}
+                  >
                     View Details
                   </Button>
                   <DropdownMenu>
@@ -639,7 +646,12 @@ function InstructorsContent() {
                           <Button size="sm" variant="default" className="flex-1 text-xs">
                             Schedule
                           </Button>
-                          <Button size="sm" variant="outline" className="flex-1 text-xs">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 text-xs"
+                            onClick={() => handleViewDetails(instructor.id)}
+                          >
                             View Details
                           </Button>
                           <DropdownMenu>

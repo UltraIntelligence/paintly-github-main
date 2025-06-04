@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Search, Filter, QrCode, Gift, CircleDollarSign, Calendar, ArrowUpDown, Check, X, Heart } from "lucide-react"
+import { Search, QrCode, Gift, CircleDollarSign, Calendar, ArrowUpDown, Check, X } from "lucide-react"
 
 import { ThemeProvider } from "../../components/theme-provider"
 import { AppSidebar } from "../../components/app-sidebar"
@@ -27,8 +27,14 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { FavoriteButton } from "@/components/favorite-button"
-import { useFavorites } from "@/hooks/use-favorites"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 // Sample gift certificate data
 const giftCertificates = [
@@ -153,29 +159,51 @@ export default function GiftCertificatesPage() {
   const [showRedeemDialog, setShowRedeemDialog] = useState(false)
   const [redeemAmount, setRedeemAmount] = useState("")
   const [redeemDescription, setRedeemDescription] = useState("")
-  const { favorites, toggleFavorite, isFavorite } = useFavorites("certificates")
-
-  // Filter certificates based on search query and active status
-  const filteredCertificates = giftCertificates.filter((cert) => {
-    const matchesSearch =
-      cert.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cert.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cert.recipientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cert.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cert.recipientEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cert.type.toLowerCase().includes(searchQuery.toLowerCase())
-
-    if (showActiveOnly) {
-      return matchesSearch && cert.status === "Active"
-    }
-
-    return matchesSearch
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" }>({
+    key: "purchaseDate",
+    direction: "desc",
   })
 
-  // Get featured certificates (favorited ones)
-  const featuredCertificates = giftCertificates.filter((cert) =>
-    isFavorite(Number.parseInt(cert.id.replace(/\D/g, "")) || 1),
-  )
+  // Filter and sort certificates
+  const filteredCertificates = giftCertificates
+    .filter((cert) => {
+      const matchesSearch =
+        cert.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        cert.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        cert.recipientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        cert.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        cert.recipientEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        cert.type.toLowerCase().includes(searchQuery.toLowerCase())
+
+      if (showActiveOnly) {
+        return matchesSearch && cert.status === "Active"
+      }
+
+      return matchesSearch
+    })
+    .sort((a, b) => {
+      // Handle different data types for sorting
+      if (sortConfig.key === "value") {
+        // Extract numeric value from string (e.g., "¥5,000" -> 5000)
+        const valueA = Number.parseInt(a[sortConfig.key].replace(/[^\d]/g, "")) || 0
+        const valueB = Number.parseInt(b[sortConfig.key].replace(/[^\d]/g, "")) || 0
+        return sortConfig.direction === "asc" ? valueA - valueB : valueB - valueA
+      } else if (sortConfig.key === "purchaseDate") {
+        // Compare dates
+        const dateA = new Date(a[sortConfig.key]).getTime()
+        const dateB = new Date(b[sortConfig.key]).getTime()
+        return sortConfig.direction === "asc" ? dateA - dateB : dateB - dateA
+      } else {
+        // Default string comparison
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "asc" ? -1 : 1
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "asc" ? 1 : -1
+        }
+        return 0
+      }
+    })
 
   const handleOpenCertificate = (certificate: any) => {
     setSelectedCertificate(certificate)
@@ -206,11 +234,10 @@ export default function GiftCertificatesPage() {
   // Certificate table row component to avoid duplication
   const CertificateTableRow = ({ certificate }: { certificate: any }) => {
     const isZeroBalance = certificate.value === "¥0"
-    const certId = Number.parseInt(certificate.id.replace(/\D/g, "")) || 1
 
     return (
       <TableRow className={isZeroBalance ? "opacity-60" : ""}>
-        <TableCell>
+        <TableCell className="md:w-[50px]">
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center ${
               isZeroBalance ? "bg-gray-100" : "bg-green-100"
@@ -219,7 +246,7 @@ export default function GiftCertificatesPage() {
             {isZeroBalance ? <Check className="h-4 w-4 text-gray-600" /> : <Gift className="h-4 w-4 text-green-600" />}
           </div>
         </TableCell>
-        <TableCell>
+        <TableCell className="md:w-[180px]">
           <div>
             <p className="font-medium">{certificate.code}</p>
             <p className="text-xs text-muted-foreground">{certificate.type}</p>
@@ -275,9 +302,6 @@ export default function GiftCertificatesPage() {
             <p className="text-xs text-muted-foreground">Sent: {formatDate(certificate.sentDate)}</p>
           </div>
         </TableCell>
-        <TableCell className="text-center">
-          <FavoriteButton isFavorite={isFavorite(certId)} onToggle={() => toggleFavorite(certId)} />
-        </TableCell>
         <TableCell className="text-right">
           <Button variant="ghost" size="sm" onClick={() => handleOpenCertificate(certificate)}>
             Open
@@ -303,20 +327,59 @@ export default function GiftCertificatesPage() {
               {/* Search and Actions Bar */}
               <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
                 <div className="flex w-full max-w-sm items-center space-x-2">
-                  <Input
-                    placeholder="Search by code, name, email..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full"
-                  />
-                  <Button variant="outline" size="icon">
-                    <Search className="h-4 w-4" />
-                    <span className="sr-only">Search</span>
-                  </Button>
-                  <Button variant="outline" size="icon">
-                    <Filter className="h-4 w-4" />
-                    <span className="sr-only">Filter</span>
-                  </Button>
+                  <div className="relative w-full">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search by code, name, email..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-9"
+                    />
+                    {searchQuery && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-1 top-1 h-7 w-7 p-0"
+                        onClick={() => setSearchQuery("")}
+                      >
+                        <X className="h-3 w-3" />
+                        <span className="sr-only">Clear search</span>
+                      </Button>
+                    )}
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <ArrowUpDown className="h-4 w-4" />
+                        <span className="sr-only">Sort</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => setSortConfig({ key: "code", direction: "asc" })}>
+                        Code (A-Z)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSortConfig({ key: "code", direction: "desc" })}>
+                        Code (Z-A)
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => setSortConfig({ key: "value", direction: "desc" })}>
+                        Balance (High-Low)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSortConfig({ key: "value", direction: "asc" })}>
+                        Balance (Low-High)
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => setSortConfig({ key: "purchaseDate", direction: "desc" })}>
+                        Purchase Date (Newest)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSortConfig({ key: "purchaseDate", direction: "asc" })}>
+                        Purchase Date (Oldest)
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
                 <div className="flex gap-2 ml-auto">
                   <Button size="sm" variant="outline" onClick={() => setShowVerification(true)}>
@@ -327,50 +390,6 @@ export default function GiftCertificatesPage() {
                     Create Certificate
                   </Button>
                 </div>
-              </div>
-
-              {/* Featured Certificates Section */}
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Featured</h2>
-                    <p className="text-sm text-muted-foreground">Your frequently accessed certificates</p>
-                  </div>
-                </div>
-
-                {featuredCertificates.length > 0 ? (
-                  <div className="rounded-md border">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[50px]"></TableHead>
-                          <TableHead className="w-[180px]">Code</TableHead>
-                          <TableHead>Balance</TableHead>
-                          <TableHead>Buyer</TableHead>
-                          <TableHead>Recipient</TableHead>
-                          <TableHead>Purchased On</TableHead>
-                          <TableHead className="w-[50px] text-center">Favorite</TableHead>
-                          <TableHead className="text-right">Action</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {featuredCertificates.map((certificate) => (
-                          <CertificateTableRow key={certificate.id} certificate={certificate} />
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                ) : (
-                  <Card className="bg-muted/40">
-                    <CardContent className="flex flex-col items-center justify-center py-8">
-                      <Heart className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                      <h3 className="text-lg font-medium text-center">No featured certificates</h3>
-                      <p className="text-sm text-muted-foreground text-center mt-1">
-                        Click the heart icon on any certificate to add it to your favorites
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
               </div>
 
               {/* Gift Certificates Table */}
@@ -390,48 +409,49 @@ export default function GiftCertificatesPage() {
                 </div>
 
                 <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[50px]"></TableHead>
-                        <TableHead className="w-[180px]">
-                          <div className="flex items-center gap-1">
-                            Code
-                            <ArrowUpDown className="h-3 w-3" />
-                          </div>
-                        </TableHead>
-                        <TableHead>
-                          <div className="flex items-center gap-1">
-                            Balance
-                            <ArrowUpDown className="h-3 w-3" />
-                          </div>
-                        </TableHead>
-                        <TableHead>Buyer</TableHead>
-                        <TableHead>Recipient</TableHead>
-                        <TableHead>
-                          <div className="flex items-center gap-1">
-                            Purchased On
-                            <ArrowUpDown className="h-3 w-3" />
-                          </div>
-                        </TableHead>
-                        <TableHead className="w-[50px] text-center">Favorite</TableHead>
-                        <TableHead className="text-right">Action</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredCertificates.length === 0 ? (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
                         <TableRow>
-                          <TableCell colSpan={8} className="h-24 text-center">
-                            No certificates found.
-                          </TableCell>
+                          <TableHead className="md:w-[50px]"></TableHead>
+                          <TableHead className="md:w-[180px]">
+                            <div className="flex items-center gap-1">
+                              Code
+                              <ArrowUpDown className="h-3 w-3" />
+                            </div>
+                          </TableHead>
+                          <TableHead>
+                            <div className="flex items-center gap-1">
+                              Balance
+                              <ArrowUpDown className="h-3 w-3" />
+                            </div>
+                          </TableHead>
+                          <TableHead>Buyer</TableHead>
+                          <TableHead>Recipient</TableHead>
+                          <TableHead>
+                            <div className="flex items-center gap-1">
+                              Purchased On
+                              <ArrowUpDown className="h-3 w-3" />
+                            </div>
+                          </TableHead>
+                          <TableHead className="text-right">Action</TableHead>
                         </TableRow>
-                      ) : (
-                        filteredCertificates.map((certificate) => (
-                          <CertificateTableRow key={certificate.id} certificate={certificate} />
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredCertificates.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={7} className="h-24 text-center">
+                              No certificates found.
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          filteredCertificates.map((certificate) => (
+                            <CertificateTableRow key={certificate.id} certificate={certificate} />
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
               </div>
             </div>

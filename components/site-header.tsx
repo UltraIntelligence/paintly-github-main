@@ -27,6 +27,10 @@ export function SiteHeader() {
       return "Gift Certificates"
     }
 
+    if (pathname === "/private-events") {
+      return "Private Events"
+    }
+
     // Extract page name from pathname
     const pageName = pathname.split("/").pop() || ""
     // Capitalize first letter
@@ -40,7 +44,49 @@ export function SiteHeader() {
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
         <Breadcrumb>
           <BreadcrumbList>
-            {pathname.startsWith("/locations/") && pathname !== "/locations" ? (
+            {pathname.startsWith("/instructors/") && pathname !== "/instructors" ? (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/instructors" className="text-base font-medium">
+                    Instructors
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-base font-medium">
+                    {(() => {
+                      const instructorId = pathname.split("/").pop()
+                      const instructorNames: { [key: string]: string } = {
+                        "1": "Cathy",
+                        "2": "Luci",
+                        "3": "Naomi",
+                        "4": "Momo",
+                        "5": "Daria",
+                        "6": "Nanako",
+                        "7": "Aika",
+                        "8": "Kiyoe",
+                        "9": "Michi",
+                        "10": "Mineko",
+                        "11": "Fuyou",
+                        "12": "Sakura",
+                        "13": "Yuko",
+                        "14": "Rie",
+                        "15": "Ken",
+                        "16": "Naoko",
+                        "17": "Uka",
+                        "18": "Helen",
+                        "19": "Yuka",
+                        "20": "Harry",
+                        "21": "Jenna",
+                        "22": "Akiko",
+                        "23": "Minako",
+                      }
+                      return instructorNames[instructorId || ""] || instructorId
+                    })()}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            ) : pathname.startsWith("/locations/") && pathname !== "/locations" ? (
               <>
                 <BreadcrumbItem>
                   <BreadcrumbLink href="/locations" className="text-base font-medium">
@@ -57,20 +103,6 @@ export function SiteHeader() {
                     {pathname === "/locations/osaka" && "Osaka"}
                     {pathname === "/locations/okinawa" && "Okinawa"}
                     {pathname === "/locations/fukuoka" && "Fukuoka"}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </>
-            ) : pathname.startsWith("/instructors/") && pathname !== "/instructors" ? (
-              <>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/instructors" className="text-base font-medium">
-                    Instructors
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-base font-medium">
-                    {pathname.split("/").pop()?.charAt(0).toUpperCase() + pathname.split("/").pop()?.slice(1)}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
               </>
