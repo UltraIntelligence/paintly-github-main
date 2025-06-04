@@ -30,7 +30,8 @@ const pageTransition = {
 
 const instructorsData = [
   {
-    id: 1,
+    id: "cathy",
+    numericId: 1,
     name: { japanese: "キャシー・トンプソン", english: "Cathy Thompson" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["CEO", "Leadership", "Studio Management"],
@@ -47,7 +48,8 @@ const instructorsData = [
     role: "CEO",
   },
   {
-    id: 2,
+    id: "naomi",
+    numericId: 2,
     name: { japanese: "ナオミ", english: "Naomi" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Marketing", "Abstract Art", "Trendy Sessions"],
@@ -64,7 +66,8 @@ const instructorsData = [
     role: "Marketing Director & Instructor",
   },
   {
-    id: 3,
+    id: "luci",
+    numericId: 3,
     name: { japanese: "ルシファ・パン", english: "Luci" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Fantasy Art", "Colorful Paintings", "Dreamy Style"],
@@ -81,7 +84,8 @@ const instructorsData = [
     role: "Instructor",
   },
   {
-    id: 4,
+    id: "momo",
+    numericId: 4,
     name: { japanese: "モモ", english: "Momo" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Abstract Art", "Dot Technique", "Color Theory"],
@@ -98,7 +102,8 @@ const instructorsData = [
     role: "Professional Artist & Instructor",
   },
   {
-    id: 5,
+    id: "nanako",
+    numericId: 5,
     name: { japanese: "ナナコ", english: "Nanako" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Japanese Painting", "Acrylic", "Color Mixing"],
@@ -115,7 +120,8 @@ const instructorsData = [
     role: "Instructor",
   },
   {
-    id: 6,
+    id: "aika",
+    numericId: 6,
     name: { japanese: "あいか", english: "Aika" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Oil Painting", "Tapestry Art", "Natural Elements"],
@@ -132,7 +138,8 @@ const instructorsData = [
     role: "Instructor",
   },
   {
-    id: 7,
+    id: "kiyoe",
+    numericId: 7,
     name: { japanese: "清恵", english: "Kiyoe" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Pottery", "Ceramics", "Kids Classes"],
@@ -149,7 +156,8 @@ const instructorsData = [
     role: "Pottery Specialist",
   },
   {
-    id: 8,
+    id: "michi-kim",
+    numericId: 8,
     name: { japanese: "Michi Kim", english: "Michi Kim" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Kids Classes", "Fun Art", "Children's Art"],
@@ -166,7 +174,8 @@ const instructorsData = [
     role: "Kids Specialist",
   },
   {
-    id: 9,
+    id: "fuyou",
+    numericId: 9,
     name: { japanese: "長嶋 芙蓉", english: "Fuyou Nagashima" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Ink Painting", "Calligraphy", "Traditional Art"],
@@ -183,7 +192,8 @@ const instructorsData = [
     role: "Ink Painting Master",
   },
   {
-    id: 10,
+    id: "sakura",
+    numericId: 10,
     name: { japanese: "さくら", english: "Sakura" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Japanese Painting", "Animal Art", "3D Art"],
@@ -200,7 +210,8 @@ const instructorsData = [
     role: "Multi-Style Artist",
   },
   {
-    id: 11,
+    id: "daria",
+    numericId: 11,
     name: { japanese: "Daria", english: "Daria" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Illustration", "Experimental Art", "Mixed Media"],
@@ -217,7 +228,8 @@ const instructorsData = [
     role: "Illustrator",
   },
   {
-    id: 12,
+    id: "rie",
+    numericId: 12,
     name: { japanese: "Rie", english: "Rie" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Alcohol Ink Art", "Resin Art", "Art Therapy"],
@@ -234,7 +246,8 @@ const instructorsData = [
     role: "Alcohol Ink & Resin Specialist",
   },
   {
-    id: 13,
+    id: "ken",
+    numericId: 13,
     name: { japanese: "田中 健", english: "Ken Tanaka" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Pen Drawing", "Detailed Art", "Illustration"],
@@ -251,7 +264,8 @@ const instructorsData = [
     role: "Pen Drawing Specialist",
   },
   {
-    id: 14,
+    id: "uka",
+    numericId: 14,
     name: { japanese: "ユカ", english: "Uka" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Children's Books", "Oil Painting", "Illustration"],
@@ -268,7 +282,8 @@ const instructorsData = [
     role: "Children's Book Author & Illustrator",
   },
   {
-    id: 15,
+    id: "akiko",
+    numericId: 15,
     name: { japanese: "アキコ", english: "Akiko" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Japanese Painting", "Colorful Art", "Illustration"],
@@ -285,7 +300,8 @@ const instructorsData = [
     role: "Instructor",
   },
   {
-    id: 16,
+    id: "minako",
+    numericId: 16,
     name: { japanese: "ミナコ", english: "Minako" },
     photo: "/placeholder.svg?height=240&width=320",
     specialties: ["Printmaking", "Graphic Design", "Kids Classes"],
@@ -317,7 +333,7 @@ function InstructorsContent() {
 
   // Get favorited instructors for Featured section
   const featuredInstructors = useMemo(() => {
-    return instructorsData.filter((instructor) => isFavorite(instructor.id)).slice(0, 6)
+    return instructorsData.filter((instructor) => isFavorite(instructor.numericId)).slice(0, 6)
   }, [isFavorite, favorites])
 
   const filteredInstructors = useMemo(() => {
@@ -343,7 +359,7 @@ function InstructorsContent() {
         activeTab === "all" ||
         (activeTab === "available" && instructor.availability === "available") ||
         (activeTab === "experienced" && Number.parseInt(instructor.experience) >= 5) ||
-        (activeTab === "favorites" && isFavorite(instructor.id))
+        (activeTab === "favorites" && isFavorite(instructor.numericId))
 
       return matchesSearch && matchesLocation && matchesAvailability && matchesTab
     })
@@ -375,7 +391,7 @@ function InstructorsContent() {
     }
   }
 
-  const handleViewDetails = (instructorId: number) => {
+  const handleViewDetails = (instructorId: string) => {
     router.push(`/instructors/${instructorId}`)
   }
 
@@ -404,7 +420,10 @@ function InstructorsContent() {
                 >
                   {getAvailabilityText(instructor.availability)}
                 </Badge>
-                <FavoriteButton isFavorite={isFavorite(instructor.id)} onToggle={() => toggleFavorite(instructor.id)} />
+                <FavoriteButton
+                  isFavorite={isFavorite(instructor.numericId)}
+                  onToggle={() => toggleFavorite(instructor.numericId)}
+                />
               </div>
 
               {/* Content Section */}
@@ -437,16 +456,15 @@ function InstructorsContent() {
                 </div>
 
                 {/* Metadata same size as regular cards */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center text-xs text-gray-500">
                     <Star className="h-3.5 w-3.5 mr-1.5 text-amber-500 fill-current" />
                     {instructor.rating} • {instructor.totalClasses} classes
                   </div>
                   <div className="text-xs font-medium text-gray-700">{instructor.hourlyRate}</div>
                 </div>
-              </CardContent>
-              {/* Actions Section - Add this after CardContent */}
-              <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+
+                {/* Actions Section */}
                 <div className="flex gap-2">
                   <Button size="sm" variant="default" className="flex-1 text-xs">
                     Schedule
@@ -472,7 +490,7 @@ function InstructorsContent() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-              </div>
+              </CardContent>
             </Card>
           </FeaturedCard>
         ))}
@@ -592,8 +610,8 @@ function InstructorsContent() {
                           {getAvailabilityText(instructor.availability)}
                         </Badge>
                         <FavoriteButton
-                          isFavorite={isFavorite(instructor.id)}
-                          onToggle={() => toggleFavorite(instructor.id)}
+                          isFavorite={isFavorite(instructor.numericId)}
+                          onToggle={() => toggleFavorite(instructor.numericId)}
                         />
                       </div>
 
@@ -637,11 +655,9 @@ function InstructorsContent() {
                           )}
                         </div>
 
-                        <div className="text-xs text-gray-500 mt-auto">Next: {instructor.nextAvailable}</div>
-                      </CardContent>
+                        <div className="text-xs text-gray-500 mt-auto mb-4">Next: {instructor.nextAvailable}</div>
 
-                      {/* Actions Section - Fixed at bottom */}
-                      <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                        {/* Actions Section */}
                         <div className="flex gap-2">
                           <Button size="sm" variant="default" className="flex-1 text-xs">
                             Schedule
@@ -667,7 +683,7 @@ function InstructorsContent() {
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>
-                      </div>
+                      </CardContent>
                     </Card>
                   </motion.div>
                 ))}

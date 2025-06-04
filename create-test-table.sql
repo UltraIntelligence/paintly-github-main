@@ -14,6 +14,3 @@ ALTER TABLE public.test ENABLE ROW LEVEL SECURITY;
 -- Create a policy to allow read access (adjust as needed for your security requirements)
 CREATE POLICY "Allow read access to test table" ON public.test
   FOR SELECT USING (true);
-
--- Select the data to verify it worked
-SELECT * FROM public.test;
