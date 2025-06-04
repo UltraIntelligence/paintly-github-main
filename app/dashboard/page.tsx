@@ -637,7 +637,7 @@ const data = [
 export default function Page() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={false}>
         <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader />

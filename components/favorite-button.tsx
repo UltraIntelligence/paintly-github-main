@@ -15,7 +15,7 @@ export function FavoriteButton({ isFavorite, onToggle, className = "" }: Favorit
     <Button
       variant="ghost"
       size="sm"
-      className={`absolute top-2 right-2 h-8 w-8 p-0 bg-white/80 backdrop-blur-sm hover:bg-white/90 shadow-sm ${className}`}
+      className={`h-8 w-8 p-0 hover:bg-muted ${className}`}
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()

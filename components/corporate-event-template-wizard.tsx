@@ -700,6 +700,7 @@ export function PrivateEventWizard({ open = false, onOpenChange = () => {} }: Co
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Images & Media</h3>
 
+                  {/* Featured Image */}
                   <FormField
                     control={form.control}
                     name="featuredImage"
@@ -753,6 +754,7 @@ export function PrivateEventWizard({ open = false, onOpenChange = () => {} }: Co
                     )}
                   />
 
+                  {/* Company Logo */}
                   <FormField
                     control={form.control}
                     name="companyLogo"
@@ -806,6 +808,7 @@ export function PrivateEventWizard({ open = false, onOpenChange = () => {} }: Co
                     )}
                   />
 
+                  {/* Gallery Images */}
                   <FormField
                     control={form.control}
                     name="galleryImages"

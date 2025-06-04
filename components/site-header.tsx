@@ -23,6 +23,10 @@ export function SiteHeader() {
       return "Welcome back, Cathy."
     }
 
+    if (pathname === "/gift-certificates") {
+      return "Gift Certificates"
+    }
+
     // Extract page name from pathname
     const pageName = pathname.split("/").pop() || ""
     // Capitalize first letter

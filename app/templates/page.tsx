@@ -238,7 +238,7 @@ export default function TemplatesPage() {
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={false}>
         <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader />
@@ -322,8 +322,8 @@ export default function TemplatesPage() {
                               </div>
                             </CardContent>
                             {/* Actions Section - Add this after CardContent */}
-                            <div className="p-5 pt-0">
-                              <div className="flex gap-2 items-center">
+                            <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                              <div className="flex gap-2">
                                 <Button size="sm" variant="default" className="flex-1 text-xs">
                                   Schedule
                                 </Button>
@@ -501,8 +501,8 @@ export default function TemplatesPage() {
                             </CardContent>
 
                             {/* Actions Section - Fixed at bottom */}
-                            <div className="p-5 pt-0">
-                              <div className="flex gap-2 items-center">
+                            <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                              <div className="flex gap-2">
                                 <Button size="sm" variant="default" className="flex-1 text-xs">
                                   Schedule
                                 </Button>

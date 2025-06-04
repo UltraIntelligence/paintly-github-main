@@ -33,6 +33,16 @@ import { AppSidebar } from "../../components/app-sidebar"
 import { SiteHeader } from "../../components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Input } from "@/components/ui/input"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -525,6 +535,8 @@ function ScheduleContent() {
   const [isSuggestionsCollapsed, setIsSuggestionsCollapsed] = useState(false)
   const [selectedInstructor, setSelectedInstructor] = useState("all")
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0)
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
+  const [pendingSuggestion, setPendingSuggestion] = useState<(typeof suggestions)[0] | null>(null)
 
   // Force list view on mobile
   useEffect(() => {
@@ -867,19 +879,28 @@ function ScheduleContent() {
   const next7Days = Array.from({ length: 7 }, (_, i) => i)
 
   const handleAcceptSuggestion = (suggestionId: string) => {
-    setAnimationDirection("left")
-    setIsAnimating(true)
+    const suggestion = suggestions.find((s) => s.id === suggestionId)
+    if (suggestion) {
+      setPendingSuggestion(suggestion)
+      setIsConfirmDialogOpen(true)
+    }
+  }
 
-    // Simulate scheduling the suggested sessions
-    setTimeout(() => {
-      setSuggestions((prev) => prev.filter((s) => s.id !== suggestionId))
-      setCurrentSuggestionIndex((prev) => Math.max(0, prev - 1))
-      setIsAnimating(false)
-      setAnimationDirection(null)
+  const confirmAcceptSuggestion = () => {
+    if (pendingSuggestion) {
+      setAnimationDirection("left")
+      setIsAnimating(true)
 
-      // Show success message
-      alert("Sessions scheduled successfully!")
-    }, 350)
+      // Simulate scheduling the suggested sessions
+      setTimeout(() => {
+        setSuggestions((prev) => prev.filter((s) => s.id !== pendingSuggestion.id))
+        setCurrentSuggestionIndex((prev) => Math.max(0, prev - 1))
+        setIsAnimating(false)
+        setAnimationDirection(null)
+        setIsConfirmDialogOpen(false)
+        setPendingSuggestion(null)
+      }, 350)
+    }
   }
 
   const handleDismissSuggestion = (suggestionId: string) => {
@@ -1358,6 +1379,8 @@ function ScheduleContent() {
                                     onClick={(e) => {
                                       e.stopPropagation()
                                       handleEventClick(event)
+                                      e.stopPropagation()
+                                      handleEventClick(event)
                                     }}
                                     title={`${event.title} - ${event.location} - ${timeSlots[event.startHour]}`}
                                   />
@@ -1514,7 +1537,7 @@ function ScheduleContent() {
                         {/* Date Header */}
                         <div className="sticky top-0 bg-gray-50 px-6 py-3 border-b border-gray-200 z-10">
                           <h3 className="text-sm font-medium text-gray-900">{dateLabel}</h3>
-                          <p className="text-xs text-gray-500">May {19 + dayIndex}, 2025</p>
+                          <div className="text-xs text-gray-500">May {19 + dayIndex}, 2025</div>
                         </div>
 
                         {/* Events for this day */}
@@ -1525,9 +1548,6 @@ function ScheduleContent() {
                               const startTime = timeSlots[event.startHour]
                               const endTime =
                                 timeSlots[event.startHour + event.duration] ||
-                                `${Number.parseInt(timeSlots[event.startHour].split(":")[0]) + event.duration}:${timeSlots[event.startHour].split(":")[1]}`
-
-                              timeSlots[event.startHour + event.duration] ||
                                 `${Number.parseInt(timeSlots[event.startHour].split(":")[0]) + event.duration}:${timeSlots[event.startHour].split(":")[1]}`
 
                               // Find matching template for image
@@ -1582,7 +1602,7 @@ function ScheduleContent() {
                                               </Badge>
                                             )}
                                           </div>
-                                          <p className="text-sm text-gray-600 truncate mb-2">{event.titleEn}</p>
+                                          <div className="text-sm text-gray-600 truncate mb-2">{event.titleEn}</div>
                                         </div>
 
                                         {/* Instructor Avatar */}
@@ -1644,7 +1664,7 @@ function ScheduleContent() {
                         ) : (
                           <div className="p-8 text-center">
                             <Calendar className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                            <p className="text-sm text-gray-500">No events scheduled</p>
+                            <div className="text-sm text-gray-500">No events scheduled</div>
                           </div>
                         )}
                       </div>
@@ -1654,8 +1674,8 @@ function ScheduleContent() {
               ) : (
                 <div className="text-center py-12">
                   <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">No events scheduled</p>
-                  <p className="text-sm text-gray-500 mb-4">Start by creating your first event</p>
+                  <div className="text-gray-600 mb-2">No events scheduled</div>
+                  <div className="text-sm text-gray-500 mb-4">Start by creating your first event</div>
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white">Schedule Event</Button>
                 </div>
               )}
@@ -1669,10 +1689,10 @@ function ScheduleContent() {
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Schedule Event</DialogTitle>
-            <p className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600">
               {selectedSlot &&
                 `${days[selectedSlot.day]}, May ${19 + selectedSlot.day} at ${timeSlots[selectedSlot.hour]}`}
-            </p>
+            </div>
           </DialogHeader>
 
           {selectedSlot && (
@@ -1711,11 +1731,11 @@ function ScheduleContent() {
                         {templates.find((t) => t.id === selectedTemplate)?.japaneseTitle} |{" "}
                         {templates.find((t) => t.id === selectedTemplate)?.englishTitle}
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-600">
                         Duration: {templates.find((t) => t.id === selectedTemplate)?.duration} hours | Canvas:{" "}
                         {templates.find((t) => t.id === selectedTemplate)?.canvas} | Difficulty:{" "}
                         {templates.find((t) => t.id === selectedTemplate)?.difficulty}
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1753,7 +1773,7 @@ function ScheduleContent() {
               <div className="space-y-3">
                 <label className="text-sm font-medium">Location</label>
                 <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm">{locations.find((l) => l.id === selectedLocation)?.name} Studio</p>
+                  <div className="text-sm">{locations.find((l) => l.id === selectedLocation)?.name} Studio</div>
                 </div>
               </div>
 
@@ -1762,11 +1782,11 @@ function ScheduleContent() {
                 <div className="space-y-3">
                   <label className="text-sm font-medium">Time Duration</label>
                   <div className="p-3 bg-gray-50 rounded-lg">
-                    <p className="text-sm">
+                    <div className="text-sm">
                       {timeSlots[selectedSlot.hour]} -{" "}
                       {timeSlots[selectedSlot.hour + Math.floor(Number.parseFloat(selectedDuration))] ||
                         `${Number.parseInt(timeSlots[selectedSlot.hour].split(":")[0]) + Math.floor(Number.parseFloat(selectedDuration))}:${timeSlots[selectedSlot.hour].split(":")[1]}`}
-                    </p>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1822,28 +1842,28 @@ function ScheduleContent() {
                 </div>
 
                 <div className="text-sm space-y-1">
-                  <p>
+                  <div>
                     <span className="font-medium">Time:</span> {days[selectedEventDetail.day]}, May{" "}
                     {19 + selectedEventDetail.day} • {timeSlots[selectedEventDetail.startHour]}-
                     {timeSlots[selectedEventDetail.startHour + selectedEventDetail.duration]}
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <span className="font-medium">Location:</span> Artbar {selectedEventDetail.location}
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <span className="font-medium">Instructor:</span>{" "}
                     {getInstructor(selectedEventDetail.instructor)?.name}
-                  </p>
+                  </div>
                 </div>
               </div>
 
               {/* Bookings */}
               <div className="space-y-3">
                 <div>
-                  <p className="font-medium">
+                  <div className="font-medium">
                     Bookings: {selectedEventDetail.participants.current}/{selectedEventDetail.participants.max}{" "}
                     participants
-                  </p>
+                  </div>
                   <div className="flex gap-2 mt-2">
                     <Button variant="outline" size="sm">
                       View All Bookings
@@ -1890,6 +1910,69 @@ function ScheduleContent() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Schedule Sessions</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              {pendingSuggestion && (
+                <div className="space-y-3">
+                  <div>
+                    Are you sure you want to schedule the following sessions for{" "}
+                    <span className="font-medium">{pendingSuggestion.suggestion.title}</span>?
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <img
+                        src={pendingSuggestion.template.image || "/placeholder.svg"}
+                        alt={pendingSuggestion.template.englishTitle}
+                        className="w-12 h-12 rounded-lg object-cover"
+                      />
+                      <div>
+                        <div className="font-medium text-sm">
+                          {pendingSuggestion.template.japaneseTitle} | {pendingSuggestion.template.englishTitle}
+                        </div>
+                        <div className="text-xs text-gray-600">
+                          Instructor: {pendingSuggestion.suggestion.instructor}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-sm space-y-1">
+                      <div className="font-medium">Scheduled Dates:</div>
+                      {pendingSuggestion.suggestion.suggestedDates.map((date, index) => (
+                        <div key={index} className="text-gray-600">
+                          • {date.date} at {date.time}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="text-sm text-gray-600">
+                    This will create {pendingSuggestion.suggestion.suggestedDates.length} new events in your schedule.
+                  </div>
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                setIsConfirmDialogOpen(false)
+                setPendingSuggestion(null)
+              }}
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmAcceptSuggestion} className="bg-blue-600 hover:bg-blue-700 text-white">
+              Schedule {pendingSuggestion?.suggestion.suggestedDates.length || 0} Sessions
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

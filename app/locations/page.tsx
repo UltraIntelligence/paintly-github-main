@@ -19,8 +19,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from "@/components/ui/input"
 import { useFavorites } from "@/hooks/use-favorites"
 import { FavoriteButton } from "@/components/favorite-button"
+import { Heart } from "lucide-react"
 import { AddLocationModal } from "@/components/add-location-modal"
-import { FeaturedSection, FeaturedCard } from "@/components/featured-section"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -184,8 +184,53 @@ const locationsData = [
 const statusOptions = ["All Status", "Active", "Under Construction", "Coming Soon"]
 
 // Featured Section Component with comprehensive bottom margin fix
+function FeaturedSection({
+  title,
+  subtitle,
+  children,
+  isEmpty = false,
+  emptyMessage = "Favorite items appear here for quick access.",
+}) {
+  if (isEmpty) {
+    return (
+      <div className="mb-20">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
+          <p className="text-gray-600">{subtitle}</p>
+        </div>
+        <div className="flex flex-col items-center justify-center py-12 px-4 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+          <Heart className="h-12 w-12 text-gray-300 mb-4" />
+          <p className="text-gray-500 text-center max-w-md">{emptyMessage}</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mb-20">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
+        <p className="text-gray-600">{subtitle}</p>
+      </div>
+      {/* Generous spacing and padding to prevent clipping */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">{children}</div>
+    </div>
+  )
+}
 
 // Featured Card Component
+function FeaturedCard({ children, className = "" }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className={`group cursor-pointer ${className}`}
+    >
+      {children}
+    </motion.div>
+  )
+}
 
 function LocationsContent() {
   const router = useRouter()
@@ -272,7 +317,7 @@ function LocationsContent() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-8 p-4 lg:p-6">
+    <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
       {/* Featured Section */}
       <FeaturedSection title="Featured" subtitle="Your primary locations" isEmpty={featuredLocations.length === 0}>
         {featuredLocations.map((location) => (
@@ -300,11 +345,15 @@ function LocationsContent() {
               {/* Content Section */}
               <CardContent className="p-5">
                 <div className="space-y-1 mb-3">
+                  {/* Only the main title is larger */}
                   <h3 className="font-bold text-base text-gray-900 leading-tight">{location.name.japanese}</h3>
+                  {/* Subtitle same size as regular cards */}
                   <p className="text-sm text-gray-600">{location.name.english}</p>
+                  {/* Address same size as regular cards */}
                   <p className="text-sm text-gray-500 line-clamp-2 mt-2">{location.address.english}</p>
                 </div>
 
+                {/* Features same size as regular cards */}
                 <div className="flex flex-wrap gap-1.5 mb-3">
                   <Badge variant="outline" className={`text-xs px-2 py-0.5 border ${getTypeBadgeColor(location.type)}`}>
                     {location.type.charAt(0).toUpperCase() + location.type.slice(1)}
@@ -324,6 +373,7 @@ function LocationsContent() {
                   )}
                 </div>
 
+                {/* Metadata same size as regular cards */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center text-xs text-gray-500">
                     <Users className="h-3.5 w-3.5 mr-1.5" />
@@ -332,10 +382,9 @@ function LocationsContent() {
                   <div className="text-xs text-gray-500">{location.openingHours}</div>
                 </div>
               </CardContent>
-
-              {/* Actions Section */}
-              <div className="p-5 pt-0">
-                <div className="flex gap-2 items-center">
+              {/* Actions Section - Add this after CardContent */}
+              <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                <div className="flex gap-2">
                   <Button
                     size="sm"
                     variant="default"
@@ -518,8 +567,8 @@ function LocationsContent() {
                       </CardContent>
 
                       {/* Actions Section - Fixed at bottom */}
-                      <div className="p-5 pt-0">
-                        <div className="flex gap-2 items-center">
+                      <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
+                        <div className="flex gap-2">
                           <Button
                             size="sm"
                             variant="default"
@@ -573,7 +622,7 @@ function LocationsContent() {
 export default function LocationsPage() {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={false}>
         <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader />
