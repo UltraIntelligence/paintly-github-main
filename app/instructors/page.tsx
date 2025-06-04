@@ -408,15 +408,11 @@ function InstructorsContent() {
               {/* Content Section */}
               <CardContent className="p-5">
                 <div className="space-y-1 mb-3">
-                  {/* Only the main title is larger */}
                   <h3 className="font-bold text-base text-gray-900 leading-tight">{instructor.name.japanese}</h3>
-                  {/* Subtitle same size as regular cards */}
                   <p className="text-sm text-gray-600">{instructor.name.english}</p>
-                  {/* Bio same size as regular cards */}
                   <p className="text-sm text-gray-500 line-clamp-2 mt-2">{instructor.bio}</p>
                 </div>
 
-                {/* Specialties same size as regular cards */}
                 <div className="flex flex-wrap gap-1.5 mb-3">
                   {instructor.specialties.slice(0, 3).map((specialty, index) => (
                     <Badge
@@ -434,7 +430,6 @@ function InstructorsContent() {
                   )}
                 </div>
 
-                {/* Metadata same size as regular cards */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center text-xs text-gray-500">
                     <Star className="h-3.5 w-3.5 mr-1.5 text-amber-500 fill-current" />
@@ -443,9 +438,10 @@ function InstructorsContent() {
                   <div className="text-xs font-medium text-gray-700">{instructor.hourlyRate}</div>
                 </div>
               </CardContent>
-              {/* Actions Section - Add this after CardContent */}
-              <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
-                <div className="flex gap-2">
+
+              {/* Actions Section */}
+              <div className="p-5 pt-0">
+                <div className="flex gap-2 items-center">
                   <Button size="sm" variant="default" className="flex-1 text-xs">
                     Schedule
                   </Button>
@@ -634,8 +630,8 @@ function InstructorsContent() {
                       </CardContent>
 
                       {/* Actions Section - Fixed at bottom */}
-                      <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
-                        <div className="flex gap-2">
+                      <div className="p-5 pt-0">
+                        <div className="flex gap-2 items-center">
                           <Button size="sm" variant="default" className="flex-1 text-xs">
                             Schedule
                           </Button>

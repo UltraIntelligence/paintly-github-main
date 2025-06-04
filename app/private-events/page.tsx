@@ -236,7 +236,7 @@ export default function PrivateEventsPage() {
                               />
                             </div>
 
-                            <CardContent className="p-4">
+                            <CardContent className="p-5">
                               <div className="space-y-1 mb-3">
                                 <p className="text-sm text-gray-600 font-medium">{event.company}</p>
                                 <h3 className="font-bold text-base text-gray-900 leading-tight">{event.title}</h3>
@@ -266,8 +266,9 @@ export default function PrivateEventsPage() {
                                 </div>
                               </div>
                             </CardContent>
-                            <div className="p-4 pt-0 border-t border-gray-100 bg-gray-50">
-                              <div className="flex gap-2">
+
+                            <div className="p-5 pt-0">
+                              <div className="flex gap-2 items-center">
                                 <Button size="sm" variant="default" className="flex-1 text-xs min-w-0">
                                   View Details
                                 </Button>
@@ -449,8 +450,8 @@ export default function PrivateEventsPage() {
                               </div>
                             </CardContent>
 
-                            <div className="p-4 pt-0 border-t border-gray-100 bg-gray-50">
-                              <div className="flex gap-2">
+                            <div className="p-4 pt-0">
+                              <div className="flex gap-2 items-center">
                                 <Button size="sm" variant="default" className="flex-1 text-xs min-w-0">
                                   View Details
                                 </Button>
