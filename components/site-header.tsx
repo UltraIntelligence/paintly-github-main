@@ -58,8 +58,8 @@ export function SiteHeader() {
                       const instructorId = pathname.split("/").pop()
                       const instructorNames: { [key: string]: string } = {
                         "1": "Cathy",
-                        "2": "Luci",
-                        "3": "Naomi",
+                        "2": "Naomi",
+                        "3": "Luci",
                         "4": "Momo",
                         "5": "Daria",
                         "6": "Nanako",
