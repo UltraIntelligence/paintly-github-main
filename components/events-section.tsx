@@ -1,12 +1,11 @@
 import { CardContent } from "@/components/ui/card"
 import { CalendarIcon, ChevronDownIcon, FilterIcon, SearchIcon } from "lucide-react"
-
-import { Badge } from "@/components/ui/badge"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PaintlyEventCard } from "./paintly-event-card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export function EventsSection() {
   return (
@@ -15,59 +14,54 @@ export function EventsSection() {
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <CardTitle>Upcoming Events</CardTitle>
+              <CardTitle className="mb-1">Upcoming Events</CardTitle>
               <CardDescription>Manage your scheduled painting workshops</CardDescription>
             </div>
             <div className="flex flex-wrap gap-2 items-center">
-              <Tabs defaultValue="today" className="w-auto">
-                <TabsList>
-                  <TabsTrigger value="today" className="flex gap-2">
-                    Today{" "}
-                    <Badge variant="secondary" className="rounded-full">
-                      2
-                    </Badge>
-                  </TabsTrigger>
-                  <TabsTrigger value="scheduled" className="flex gap-2">
-                    Scheduled{" "}
-                    <Badge variant="secondary" className="rounded-full">
-                      15
-                    </Badge>
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-3 mb-6">
-            <div className="flex-1 flex flex-col md:flex-row gap-3">
-              <Button variant="outline" className="justify-between w-full md:w-auto">
-                All Locations
-                <ChevronDownIcon className="ml-2 h-4 w-4" />
-              </Button>
-              <Button variant="outline" className="justify-between w-full md:w-auto">
-                All Instructors
-                <ChevronDownIcon className="ml-2 h-4 w-4" />
-              </Button>
-              <Button variant="outline" className="justify-between w-full md:w-auto">
-                <CalendarIcon className="mr-2 h-4 w-4" />
+              <Select defaultValue="all-locations">
+                <SelectTrigger className="w-[140px] h-9">
+                  <SelectValue placeholder="All Locations" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all-locations">All Locations</SelectItem>
+                  <SelectItem value="shibuya">Shibuya Studio</SelectItem>
+                  <SelectItem value="ginza">Ginza Studio</SelectItem>
+                  <SelectItem value="ueno">Ueno Studio</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select defaultValue="all-instructors">
+                <SelectTrigger className="w-[140px] h-9">
+                  <SelectValue placeholder="All Instructors" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all-instructors">All Instructors</SelectItem>
+                  <SelectItem value="yuki">Yuki Tanaka</SelectItem>
+                  <SelectItem value="hiroshi">Hiroshi Sato</SelectItem>
+                  <SelectItem value="kenji">Kenji Yamada</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button variant="outline" className="h-9 gap-2">
+                <CalendarIcon className="h-4 w-4" />
                 All Dates
-                <ChevronDownIcon className="ml-2 h-4 w-4" />
+                <ChevronDownIcon className="h-4 w-4" />
               </Button>
-            </div>
-            <div className="flex gap-3">
-              <div className="relative flex-1">
-                <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input type="search" placeholder="Search events..." className="w-full pl-8 md:w-[200px] lg:w-[300px]" />
+
+              <div className="relative">
+                <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input type="search" placeholder="Search events..." className="w-[200px] lg:w-[250px] pl-9 h-9" />
               </div>
-              <Button variant="outline" className="gap-2">
+
+              <Button variant="outline" className="h-9 gap-2">
                 <FilterIcon className="h-4 w-4" />
                 Filters
                 <ChevronDownIcon className="h-4 w-4" />
               </Button>
             </div>
           </div>
-
+        </CardHeader>
+        <CardContent>
           <Tabs defaultValue="today" className="w-full">
             <TabsContent value="today" className="space-y-4 mt-0">
               <PaintlyEventCard

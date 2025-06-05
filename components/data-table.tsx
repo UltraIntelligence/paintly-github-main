@@ -27,18 +27,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import {
-  CheckCircle2Icon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronsLeftIcon,
-  ChevronsRightIcon,
-  GripVerticalIcon,
-  LoaderIcon,
-  MoreVerticalIcon,
-  TrendingUpIcon,
-} from "lucide-react"
+import { CheckCircle2Icon, GripVerticalIcon, LoaderIcon, MoreVerticalIcon, TrendingUpIcon } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -69,11 +58,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { TableCell, TableRow } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CalendarIcon, FilterIcon, SearchIcon } from "lucide-react"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
+import { Table, TableBody, TableHead, TableHeader, TableCell, TableRow } from "@/components/ui/table"
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
@@ -81,8 +66,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Progress } from "@/components/ui/progress"
 import { CopyIcon, Globe, Users, Palette } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-import { EventCard } from "@/components/event-card"
 
 export const schema = z.object({
   id: z.number(),
@@ -1017,374 +1000,32 @@ export function DataTable({
   }
 
   return (
-    <Tabs defaultValue="today" className="flex w-full flex-col justify-start gap-4">
-      <div className="flex items-center justify-between px-4 lg:px-6">
-        <Label htmlFor="view-selector" className="sr-only">
-          View
-        </Label>
-        <Select defaultValue="outline">
-          <SelectTrigger
-            className="@4xl/main:hidden flex w-fit"
-            id="view-selector"
-            onClick={(e) => {
-              // Preserve scroll position for mobile tab switching
-              const currentScrollY = window.scrollY
-              setTimeout(() => {
-                window.scrollTo(0, currentScrollY)
-              }, 0)
-            }}
-          >
-            <SelectValue placeholder="Select a view" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="today">Today</SelectItem>
-            <SelectItem value="scheduled">Scheduled</SelectItem>
-          </SelectContent>
-        </Select>
-        <TabsList className="@4xl/main:flex hidden">
-          <TabsTrigger
-            value="today"
-            className="gap-1"
-            onClick={(e) => {
-              e.preventDefault()
-              // Preserve scroll position when switching tabs
-              const currentScrollY = window.scrollY
-              setTimeout(() => {
-                window.scrollTo(0, currentScrollY)
-              }, 0)
-            }}
-          >
-            Today{" "}
-            <Badge
-              variant="secondary"
-              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-            >
-              2
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger
-            value="scheduled"
-            className="gap-1"
-            onClick={(e) => {
-              e.preventDefault()
-              // Preserve scroll position when switching tabs
-              const currentScrollY = window.scrollY
-              setTimeout(() => {
-                window.scrollTo(0, currentScrollY)
-              }, 0)
-            }}
-          >
-            Scheduled{" "}
-            <Badge
-              variant="secondary"
-              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/30"
-            >
-              15
-            </Badge>
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Unified Filter Bar for both tabs */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* Location Filter */}
-          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="All Locations" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-locations">All Locations</SelectItem>
-              <SelectItem value="Artbar Ginza">Artbar Ginza</SelectItem>
-              <SelectItem value="Artbar Shibuya">Artbar Shibuya</SelectItem>
-              <SelectItem value="Artbar Harajuku">Artbar Harajuku</SelectItem>
-              <SelectItem value="SPACES Shinjuku">SPACES Shinjuku</SelectItem>
-              <SelectItem value="Artbar Daikanyama">Artbar Daikanyama</SelectItem>
-              <SelectItem value="Artbar Cat Street Harajuku">Artbar Cat Street Harajuku</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Instructor Filter */}
-          <Select value={selectedInstructor} onValueChange={setSelectedInstructor}>
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="All Instructors" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-instructors">All Instructors</SelectItem>
-              <SelectItem value="Yuki Tanaka">Yuki Tanaka</SelectItem>
-              <SelectItem value="Hiroshi Sato">Hiroshi Sato</SelectItem>
-              <SelectItem value="Akiko Yamada">Akiko Yamada</SelectItem>
-              <SelectItem value="Nanako">Nanako</SelectItem>
-              <SelectItem value="Naomi">Naomi</SelectItem>
-              <SelectItem value="Luci">Luci</SelectItem>
-              <SelectItem value="Jenna">Jenna</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Date Filter - Context aware */}
-          <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-32 justify-start text-left font-normal">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {formatDateRange()}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <div className="p-3">
-                <div className="flex gap-2 mb-3">
-                  <Button size="sm" variant="outline" onClick={() => setDateRange({})}>
-                    All Dates
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setDateRange({ from: new Date(), to: new Date() })}
-                  >
-                    Today
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      const tomorrow = new Date()
-                      tomorrow.setDate(tomorrow.getDate() + 1)
-                      setDateRange({ from: tomorrow, to: tomorrow })
-                    }}
-                  >
-                    Tomorrow
-                  </Button>
-                </div>
-                <Separator className="mb-3" />
-                <div className="text-sm font-medium mb-2">Custom Range</div>
-                <Calendar mode="range" selected={dateRange} onSelect={setDateRange} numberOfMonths={1} />
-                <div className="flex gap-2 mt-3">
-                  <Button size="sm" variant="outline" onClick={() => setDateRange({})}>
-                    Clear
-                  </Button>
-                  <Button size="sm" onClick={() => setIsDatePopoverOpen(false)}>
-                    Apply
-                  </Button>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          {/* Search Input */}
-          <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search events..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-40 pl-9"
-            />
-          </div>
-
-          {/* More Filters */}
-          <Popover open={isFiltersPopoverOpen} onOpenChange={setIsFiltersPopoverOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm">
-                <FilterIcon className="mr-2 h-4 w-4" />
-                Filters
-                <ChevronDownIcon className="ml-2 h-4 w-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80" align="end">
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium">Status</Label>
-                  <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                    <SelectTrigger className="w-full mt-1">
-                      <SelectValue placeholder="All Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all-status">All Status</SelectItem>
-                      <SelectItem value="Active">Active</SelectItem>
-                      <SelectItem value="Live">Live</SelectItem>
-                      <SelectItem value="Sold Out">Sold Out</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Separator />
-
-                <Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
-                  Clear All Filters
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-
-      {/* Content tabs with identical structure and spacing */}
-      <div className="mt-4">
-        <TabsContent value="today" className="m-0">
-          <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                <div className="divide-y divide-gray-200">
-                  {/* Today Section */}
-                  <div>
-                    <div className="sticky top-0 bg-gray-50 px-6 py-3 border-b border-gray-200 z-10">
-                      <h3 className="text-sm font-medium text-gray-900">Today</h3>
-                      <p className="text-xs text-gray-500">May 19, 2025</p>
-                    </div>
-
-                    {/* Today Events */}
-                    {todayEvents.length > 0 ? (
-                      <div className="divide-y divide-gray-100">
-                        {todayEvents.map((event) => (
-                          <EventCard
-                            key={event.id}
-                            event={{
-                              ...event,
-                              subtitle: event.title.includes("Van Gogh")
-                                ? "Van Gogh Starry Night"
-                                : event.title.includes("モネ")
-                                  ? "Monet Water Lilies"
-                                  : "Art Class",
-                            }}
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="p-8 text-center">
-                        <CalendarIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-500">No events scheduled</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Pagination - keep existing */}
-            <div className="flex items-center justify-between px-4">
-              <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">2 of 2 events today</div>
-              <div className="flex w-full items-center gap-8 lg:w-fit">
-                <div className="hidden items-center gap-2 lg:flex">
-                  <Label htmlFor="rows-per-page" className="text-sm font-medium">
-                    Events per page
-                  </Label>
-                  <Select defaultValue="10">
-                    <SelectTrigger className="w-20" id="rows-per-page">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent side="top">
-                      <SelectItem value="5">5</SelectItem>
-                      <SelectItem value="10">10</SelectItem>
-                      <SelectItem value="20">20</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex w-fit items-center justify-center text-sm font-medium">Page 1 of 1</div>
-                <div className="ml-auto flex items-center gap-2 lg:ml-0">
-                  <Button variant="outline" className="hidden h-8 w-8 p-0 lg:flex" disabled>
-                    <ChevronsLeftIcon />
-                  </Button>
-                  <Button variant="outline" className="size-8" size="icon" disabled>
-                    <ChevronLeftIcon />
-                  </Button>
-                  <Button variant="outline" className="size-8" size="icon" disabled>
-                    <ChevronRightIcon />
-                  </Button>
-                  <Button variant="outline" className="hidden size-8 lg:flex" size="icon" disabled>
-                    <ChevronsRightIcon />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="scheduled" className="m-0">
-          <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                {/* Events List - Dynamic based on filters */}
-                <div className="space-y-6">
-                  {Object.keys(groupedEvents).length === 0 ? (
-                    <div className="text-center py-12">
-                      <CalendarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-600 mb-2">No events found matching your filters.</p>
-                      <Button variant="outline" onClick={clearFilters} className="mt-4">
-                        Clear Filters
-                      </Button>
-                    </div>
-                  ) : (
-                    Object.entries(groupedEvents).map(([section, events]) => (
-                      <div key={section}>
-                        <div className="sticky top-0 bg-gray-50 px-6 py-3 border-b border-gray-200 z-10">
-                          <h3 className="text-sm font-medium text-gray-900">
-                            {section.includes("TODAY")
-                              ? "Today"
-                              : section.includes("TOMORROW")
-                                ? "Tomorrow"
-                                : section.includes("MAY 27")
-                                  ? "May 27"
-                                  : section.split(" - ")[0]}
-                          </h3>
-                          <p className="text-xs text-gray-500">
-                            {section.includes("TODAY")
-                              ? "May 25, 2025"
-                              : section.includes("TOMORROW")
-                                ? "May 26, 2025"
-                                : section.includes("MAY 27")
-                                  ? "May 27, 2025"
-                                  : section.split(" - ")[1] || ""}
-                          </p>
-                        </div>
-                        <div className="divide-y divide-gray-100">
-                          {events.map((event) => (
-                            <EventCard key={event.id} event={event} />
-                          ))}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Pagination */}
-            <div className="flex items-center justify-between px-4">
-              <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">10 of 15 scheduled events</div>
-              <div className="flex w-full items-center gap-8 lg:w-fit">
-                <div className="hidden items-center gap-2 lg:flex">
-                  <Label htmlFor="rows-per-page-scheduled" className="text-sm font-medium">
-                    Events per page
-                  </Label>
-                  <Select defaultValue="10">
-                    <SelectTrigger className="w-20" id="rows-per-page-scheduled">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent side="top">
-                      <SelectItem value="5">5</SelectItem>
-                      <SelectItem value="10">10</SelectItem>
-                      <SelectItem value="20">20</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex w-fit items-center justify-center text-sm font-medium">Page 1 of 2</div>
-                <div className="ml-auto flex items-center gap-2 lg:ml-0">
-                  <Button variant="outline" className="hidden h-8 w-8 p-0 lg:flex" disabled>
-                    <ChevronsLeftIcon />
-                  </Button>
-                  <Button variant="outline" className="size-8" size="icon" disabled>
-                    <ChevronLeftIcon />
-                  </Button>
-                  <Button variant="outline" className="size-8" size="icon">
-                    <ChevronRightIcon />
-                  </Button>
-                  <Button variant="outline" className="hidden size-8 lg:flex" size="icon">
-                    <ChevronsRightIcon />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-      </div>
-    </Tabs>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => <DraggableRow key={row.id} row={row} />)
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   )
 }
 
