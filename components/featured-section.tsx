@@ -41,7 +41,7 @@ export function FeaturedSection({
         <p className="text-gray-600">{subtitle}</p>
       </div>
       {/* Removed fixed height constraints and added generous padding */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">{children}</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-4">{children}</div>
     </div>
   )
 }

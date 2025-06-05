@@ -1,24 +1,21 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Search, MoreHorizontal, Clock, Square, Award, Plus } from "lucide-react"
+import { Search, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ThemeProvider } from "../../components/theme-provider"
 import { AppSidebar } from "../../components/app-sidebar"
 import { SiteHeader } from "../../components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { motion, AnimatePresence } from "framer-motion"
 import { useFavorites } from "@/hooks/use-favorites"
-import { FavoriteButton } from "@/components/favorite-button"
 import { FeaturedSection, FeaturedCard } from "@/components/featured-section"
 import { NewTemplateWizard } from "@/components/new-template-wizard"
+import { PaintlyCard } from "@/components/paintly-card"
 
 const templatesData = [
   {
@@ -163,21 +160,6 @@ const templatesData = [
   },
 ]
 
-const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case "Beginner":
-      return "bg-emerald-100 text-emerald-700"
-    case "Intermediate":
-      return "bg-amber-100 text-amber-700"
-    case "Advanced":
-      return "bg-rose-100 text-rose-700"
-    case "Kids":
-      return "bg-purple-100 text-purple-700"
-    default:
-      return "bg-gray-100 text-gray-700"
-  }
-}
-
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -255,95 +237,39 @@ export default function TemplatesPage() {
                     >
                       {featuredTemplates.map((template) => (
                         <FeaturedCard key={template.id}>
-                          <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
-                            {/* Large Image Section */}
-                            <div className="relative overflow-hidden h-56">
-                              <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                                <img
-                                  src={`/placeholder.svg?height=400&width=500&query=${encodeURIComponent(template.englishTitle + " " + template.category + " art painting featured")}`}
-                                  alt={`${template.englishTitle} template`}
-                                  className="h-full w-full object-cover"
-                                />
-                              </div>
-                              {template.popular && (
-                                <Badge className="absolute top-3 left-3 bg-orange-100 text-orange-700 text-xs px-2 py-1">
-                                  Popular
-                                </Badge>
-                              )}
-                              <FavoriteButton
-                                isFavorite={isFavorite(template.id)}
-                                onToggle={() => toggleFavorite(template.id)}
-                              />
-                            </div>
-
-                            {/* Content Section */}
-                            <CardContent className="p-5">
-                              <div className="space-y-1 mb-3">
-                                {/* Only the main title is larger */}
-                                <h3 className="font-bold text-base text-gray-900 leading-tight">
-                                  {template.japaneseTitle}
-                                </h3>
-                                {/* Subtitle same size as regular cards */}
-                                <p className="text-sm text-gray-600">{template.englishTitle}</p>
-                                {/* Description same size as regular cards */}
-                                <p className="text-sm text-gray-500 line-clamp-2 mt-2">{template.description}</p>
-                              </div>
-
-                              {/* Tags same size as regular cards */}
-                              <div className="flex flex-wrap gap-1.5 mb-3">
-                                <Badge
-                                  variant="outline"
-                                  className={`text-xs px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}
-                                >
-                                  {template.difficulty}
-                                </Badge>
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                                >
-                                  {template.category}
-                                </Badge>
-                                <Badge variant="outline" className="text-xs px-2 py-0.5">
-                                  {template.canvas}
-                                </Badge>
-                              </div>
-
-                              {/* Metadata same size as regular cards */}
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center text-xs text-gray-500">
-                                  <Clock className="h-3.5 w-3.5 mr-1.5" />
-                                  {template.duration}
-                                </div>
-                                <div className="flex items-center text-xs font-medium text-gray-700">
-                                  <Award className="h-3.5 w-3.5 mr-1 text-amber-500" />
-                                  {template.averageRating}
-                                </div>
-                              </div>
-                            </CardContent>
-                            {/* Actions Section - Add this after CardContent */}
-                            <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="default" className="flex-1 text-xs">
-                                  Schedule
-                                </Button>
-                                <Button size="sm" variant="outline" className="flex-1 text-xs">
-                                  Edit
-                                </Button>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button size="sm" variant="outline" className="px-2">
-                                      <MoreHorizontal className="h-3.5 w-3.5" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem className="text-sm">View Details</DropdownMenuItem>
-                                    <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
-                                    <DropdownMenuItem className="text-sm text-red-600">Archive</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </div>
-                            </div>
-                          </Card>
+                          <PaintlyCard
+                            type="template"
+                            image={`/placeholder.svg?height=300&width=300&query=${encodeURIComponent(template.englishTitle + " " + template.category + " art painting featured")}`}
+                            title={template.japaneseTitle}
+                            subtitle={template.englishTitle}
+                            badges={[
+                              { text: template.difficulty, variant: "outline" },
+                              { text: template.category, variant: "outline" },
+                              { text: template.canvas, variant: "outline" },
+                            ]}
+                            metaInfo={[
+                              { text: template.duration },
+                              { text: `Used ${template.scheduled}` },
+                              { text: `${template.averageRating} rating` },
+                            ]}
+                            rating={template.averageRating}
+                            primaryButton={{
+                              text: "Schedule",
+                              onClick: () => console.log(`Schedule ${template.englishTitle}`),
+                            }}
+                            secondaryButton={{
+                              text: "Edit",
+                              onClick: () => console.log(`Edit ${template.englishTitle}`),
+                            }}
+                            onFavorite={() => toggleFavorite(template.id)}
+                            isFavorited={isFavorite(template.id)}
+                            menuItems={[
+                              { label: "View Details", onClick: () => console.log(`View ${template.englishTitle}`) },
+                              { label: "Duplicate", onClick: () => console.log(`Duplicate ${template.englishTitle}`) },
+                              { label: "Archive", onClick: () => console.log(`Archive ${template.englishTitle}`) },
+                            ]}
+                            className="h-full"
+                          />
                         </FeaturedCard>
                       ))}
                     </FeaturedSection>
@@ -436,93 +362,40 @@ export default function TemplatesPage() {
                       {/* Template Cards Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         {filteredTemplates.map((template) => (
-                          <Card
+                          <PaintlyCard
                             key={template.id}
-                            className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full"
-                          >
-                            {/* Image Section */}
-                            <div className="relative overflow-hidden">
-                              <AspectRatio ratio={4 / 3} className="w-full">
-                                <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                                  <img
-                                    src={`/placeholder.svg?height=240&width=320&query=${encodeURIComponent(template.englishTitle + " " + template.category + " art painting")}`}
-                                    alt={`${template.englishTitle} template`}
-                                    className="h-full w-full object-cover"
-                                  />
-                                </div>
-                              </AspectRatio>
-                              {template.popular && (
-                                <Badge className="absolute top-2 left-2 bg-orange-100 text-orange-700 text-xs px-2 py-1">
-                                  Popular
-                                </Badge>
-                              )}
-                              <FavoriteButton
-                                isFavorite={isFavorite(template.id)}
-                                onToggle={() => toggleFavorite(template.id)}
-                              />
-                            </div>
-
-                            {/* Content Section */}
-                            <CardContent className="flex-1 p-5 flex flex-col">
-                              <div className="space-y-1 mb-3">
-                                <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
-                                  {template.japaneseTitle}
-                                </h3>
-                                <p className="text-sm text-gray-600 line-clamp-1">{template.englishTitle}</p>
-                              </div>
-
-                              <div className="flex items-center text-xs text-gray-500 mb-3">
-                                <Clock className="h-3.5 w-3.5 mr-1.5" />
-                                {template.duration}
-                                <Square className="h-3.5 w-3.5 ml-3 mr-1.5" />
-                                {template.canvas}
-                              </div>
-
-                              <div className="flex flex-wrap gap-1.5 mb-3">
-                                <Badge
-                                  variant="outline"
-                                  className={`text-xs px-2 py-0.5 border ${getDifficultyColor(template.difficulty)}`}
-                                >
-                                  {template.difficulty}
-                                </Badge>
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                                >
-                                  {template.category}
-                                </Badge>
-                              </div>
-
-                              <div className="flex items-center text-xs text-gray-500 mt-auto">
-                                <Award className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
-                                Used {template.scheduled}
-                              </div>
-                            </CardContent>
-
-                            {/* Actions Section - Fixed at bottom */}
-                            <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="default" className="flex-1 text-xs">
-                                  Schedule
-                                </Button>
-                                <Button size="sm" variant="outline" className="flex-1 text-xs">
-                                  Edit
-                                </Button>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button size="sm" variant="outline" className="px-2">
-                                      <MoreHorizontal className="h-3.5 w-3.5" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem className="text-sm">View Details</DropdownMenuItem>
-                                    <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
-                                    <DropdownMenuItem className="text-sm text-red-600">Archive</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </div>
-                            </div>
-                          </Card>
+                            type="template"
+                            image={`/placeholder.svg?height=300&width=300&query=${encodeURIComponent(template.englishTitle + " " + template.category + " art painting")}`}
+                            title={template.japaneseTitle}
+                            subtitle={template.englishTitle}
+                            badges={[
+                              { text: template.difficulty, variant: "outline" },
+                              { text: template.category, variant: "outline" },
+                              { text: template.canvas, variant: "outline" },
+                            ]}
+                            metaInfo={[
+                              { text: template.duration },
+                              { text: template.canvas },
+                              { text: `Used ${template.scheduled}` },
+                            ]}
+                            rating={template.averageRating}
+                            primaryButton={{
+                              text: "Schedule",
+                              onClick: () => console.log(`Schedule ${template.englishTitle}`),
+                            }}
+                            secondaryButton={{
+                              text: "Edit",
+                              onClick: () => console.log(`Edit ${template.englishTitle}`),
+                            }}
+                            onFavorite={() => toggleFavorite(template.id)}
+                            isFavorited={isFavorite(template.id)}
+                            menuItems={[
+                              { label: "View Details", onClick: () => console.log(`View ${template.englishTitle}`) },
+                              { label: "Duplicate", onClick: () => console.log(`Duplicate ${template.englishTitle}`) },
+                              { label: "Archive", onClick: () => console.log(`Archive ${template.englishTitle}`) },
+                            ]}
+                            className="h-full"
+                          />
                         ))}
                       </div>
 
