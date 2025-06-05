@@ -24,7 +24,7 @@ export function FeaturedSection({
       <div className="mb-12">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
-          <p className="text-gray-600">{subtitle}</p>
+          <p className="text-gray-600">Your favorited cards for easy access</p>
         </div>
         <div className="flex flex-col items-center justify-center py-12 px-4 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
           <Heart className="h-12 w-12 text-gray-300 mb-4" />
@@ -38,7 +38,7 @@ export function FeaturedSection({
     <div className="mb-12">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
-        <p className="text-gray-600">{subtitle}</p>
+        <p className="text-gray-600">Your favorited cards for easy access</p>
       </div>
       {/* Removed fixed height constraints and added generous padding */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-4">{children}</div>

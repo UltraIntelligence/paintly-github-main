@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Plus, MapPin, MoreHorizontal, Users } from "lucide-react"
+import { Search, Plus, MapPin, Heart } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -11,16 +11,12 @@ import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { useFavorites } from "@/hooks/use-favorites"
-import { FavoriteButton } from "@/components/favorite-button"
-import { Heart } from "lucide-react"
 import { AddLocationModal } from "@/components/add-location-modal"
+import { PaintlyCard } from "@/components/paintly-card"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -213,7 +209,7 @@ function FeaturedSection({
         <p className="text-gray-600">{subtitle}</p>
       </div>
       {/* Generous spacing and padding to prevent clipping */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">{children}</div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{children}</div>
     </div>
   )
 }
@@ -319,105 +315,56 @@ function LocationsContent() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
       {/* Featured Section */}
-      <FeaturedSection title="Featured" subtitle="Your primary locations" isEmpty={featuredLocations.length === 0}>
+      <FeaturedSection
+        title="Featured"
+        subtitle="Your frequently used locations"
+        isEmpty={featuredLocations.length === 0}
+      >
         {featuredLocations.map((location) => (
-          <FeaturedCard key={location.id}>
-            <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
-              {/* Large Image Section */}
-              <div className="relative overflow-hidden h-56">
-                <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                  <img
-                    src={location.photo || "/placeholder.svg"}
-                    alt={`${location.name.english} location`}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <Badge className={`absolute top-3 left-3 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}>
-                  {getStatusText(location.status)}
-                </Badge>
-                <FavoriteButton isFavorite={isFavorite(location.id)} onToggle={() => toggleFavorite(location.id)} />
-              </div>
-
-              {/* Content Section */}
-              <CardContent className="p-5">
-                <div className="space-y-1 mb-3">
-                  {/* Only the main title is larger */}
-                  <h3 className="font-bold text-base text-gray-900 leading-tight">{location.name.japanese}</h3>
-                  {/* Subtitle same size as regular cards */}
-                  <p className="text-sm text-gray-600">{location.name.english}</p>
-                  {/* Address same size as regular cards */}
-                  <p className="text-sm text-gray-500 line-clamp-2 mt-2">{location.address.english}</p>
-                </div>
-
-                {/* Features same size as regular cards */}
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  <Badge variant="outline" className={`text-xs px-2 py-0.5 border ${getTypeBadgeColor(location.type)}`}>
-                    {location.type.charAt(0).toUpperCase() + location.type.slice(1)}
-                  </Badge>
-                  <Badge variant="outline" className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200">
-                    {location.capacity} capacity
-                  </Badge>
-                  {location.features.slice(0, 2).map((feature, index) => (
-                    <Badge key={index} variant="outline" className="text-xs px-2 py-0.5">
-                      {feature}
-                    </Badge>
-                  ))}
-                  {location.features.length > 2 && (
-                    <Badge variant="outline" className="text-xs px-2 py-0.5">
-                      +{location.features.length - 2}
-                    </Badge>
-                  )}
-                </div>
-
-                {/* Metadata same size as regular cards */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-xs text-gray-500">
-                    <Users className="h-3.5 w-3.5 mr-1.5" />
-                    {location.capacity} capacity
-                  </div>
-                  <div className="text-xs text-gray-500">{location.openingHours}</div>
-                </div>
-              </CardContent>
-              {/* Actions Section - Add this after CardContent */}
-              <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="default"
-                    className="flex-1 text-xs"
-                    onClick={() => {
-                      const locationRoutes: Record<number, string> = {
-                        1: "/locations/daikanyama",
-                        2: "/locations/cat-street",
-                        3: "/locations/ginza",
-                        4: "/locations/yokohama",
-                        5: "/locations/osaka",
-                        6: "/locations/okinawa",
-                        7: "/locations/fukuoka",
-                      }
-                      router.push(locationRoutes[location.id] || "/locations/daikanyama")
-                    }}
-                  >
-                    View Details
-                  </Button>
-                  <Button size="sm" variant="outline" className="flex-1 text-xs">
-                    Schedule Event
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="sm" variant="outline" className="px-2">
-                        <MoreHorizontal className="h-3.5 w-3.5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem className="text-sm">Edit Location</DropdownMenuItem>
-                      <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
-            </Card>
-          </FeaturedCard>
+          <PaintlyCard
+            key={location.id}
+            type="location"
+            image={location.photo}
+            title={location.name.japanese}
+            subtitle={location.name.english}
+            badges={[
+              { text: getStatusText(location.status), badgeType: "category" },
+              { text: location.type.charAt(0).toUpperCase() + location.type.slice(1), badgeType: "skill" },
+              { text: `${location.capacity} capacity`, badgeType: "canvas" },
+            ]}
+            metaInfo={[
+              { text: `${Math.floor(Math.random() * 5) + 1} events today` },
+              { text: `${Math.floor(Math.random() * 30) + 70}% capacity` },
+              { text: location.openingHours },
+            ]}
+            primaryButton={{
+              text: "View Details",
+              onClick: () => {
+                const locationRoutes: Record<number, string> = {
+                  1: "/locations/daikanyama",
+                  2: "/locations/cat-street",
+                  3: "/locations/ginza",
+                  4: "/locations/yokohama",
+                  5: "/locations/osaka",
+                  6: "/locations/okinawa",
+                  7: "/locations/fukuoka",
+                }
+                router.push(locationRoutes[location.id] || "/locations/daikanyama")
+              },
+            }}
+            secondaryButton={{
+              text: "Schedule Event",
+              onClick: () => console.log("Schedule event for", location.name.english),
+              variant: "outline",
+            }}
+            onFavorite={() => toggleFavorite(location.id)}
+            isFavorited={isFavorite(location.id)}
+            menuItems={[
+              { label: "Edit Location", onClick: () => console.log("Edit", location.name.english) },
+              { label: "View Analytics", onClick: () => console.log("Analytics", location.name.english) },
+              { label: "Deactivate", onClick: () => console.log("Deactivate", location.name.english) },
+            ]}
+          />
         ))}
       </FeaturedSection>
 
@@ -505,102 +452,54 @@ function LocationsContent() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Card className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full">
-                      {/* Image Section */}
-                      <div className="relative overflow-hidden">
-                        <AspectRatio ratio={4 / 3} className="w-full">
-                          <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                            <img
-                              src={location.photo || "/placeholder.svg"}
-                              alt={`${location.name.english} location`}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                        </AspectRatio>
-                        <Badge
-                          className={`absolute top-2 left-2 text-xs px-2 py-1 ${getStatusBadgeColor(location.status)}`}
-                        >
-                          {getStatusText(location.status)}
-                        </Badge>
-                        <FavoriteButton
-                          isFavorite={isFavorite(location.id)}
-                          onToggle={() => toggleFavorite(location.id)}
-                        />
-                      </div>
-
-                      {/* Content Section */}
-                      <CardContent className="flex-1 p-5 flex flex-col">
-                        <div className="space-y-1 mb-3">
-                          <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
-                            {location.name.japanese}
-                          </h3>
-                          <p className="text-sm text-gray-600 line-clamp-1">{location.name.english}</p>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          <Badge
-                            variant="outline"
-                            className={`text-xs px-2 py-0.5 border ${getTypeBadgeColor(location.type)}`}
-                          >
-                            {location.type.charAt(0).toUpperCase() + location.type.slice(1)}
-                          </Badge>
-                          <Badge
-                            variant="outline"
-                            className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                          >
-                            {location.capacity} capacity
-                          </Badge>
-                        </div>
-
-                        <p className="text-xs text-gray-500 mb-3 line-clamp-2">
-                          {location.address.english.split(",")[0]}
-                        </p>
-
-                        <div className="text-xs text-gray-500 mt-auto">
-                          {location.features.slice(0, 2).join(", ")}
-                          {location.features.length > 2 && ` +${location.features.length - 2} more`}
-                        </div>
-                      </CardContent>
-
-                      {/* Actions Section - Fixed at bottom */}
-                      <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50">
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="default"
-                            className="flex-1 text-xs"
-                            onClick={() => {
-                              const locationRoutes: Record<number, string> = {
-                                1: "/locations/daikanyama",
-                                2: "/locations/cat-street",
-                                3: "/locations/ginza",
-                                4: "/locations/yokohama",
-                                5: "/locations/osaka",
-                                6: "/locations/okinawa",
-                                7: "/locations/fukuoka",
-                              }
-                              router.push(locationRoutes[location.id] || "/locations/daikanyama")
-                            }}
-                          >
-                            View Details
-                          </Button>
-                          <Button size="sm" variant="outline" className="flex-1 text-xs">
-                            Schedule Event
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="sm" variant="outline" className="px-2">
-                                <MoreHorizontal className="h-3.5 w-3.5" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem className="text-sm">Edit Location</DropdownMenuItem>
-                              <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div>
-                    </Card>
+                    <PaintlyCard
+                      type="location"
+                      image={location.photo}
+                      title={location.name.japanese}
+                      subtitle={location.name.english}
+                      badges={[
+                        { text: getStatusText(location.status), badgeType: "category" },
+                        { text: location.type.charAt(0).toUpperCase() + location.type.slice(1), badgeType: "skill" },
+                        { text: `${location.capacity} capacity`, badgeType: "canvas" },
+                      ]}
+                      metaInfo={[
+                        { text: `${Math.floor(Math.random() * 5) + 1} events today` },
+                        { text: `${Math.floor(Math.random() * 30) + 70}% capacity` },
+                        { text: location.openingHours },
+                        {
+                          text:
+                            location.features.slice(0, 2).join(", ") +
+                            (location.features.length > 2 ? ` +${location.features.length - 2}` : ""),
+                        },
+                      ]}
+                      primaryButton={{
+                        text: "View Details",
+                        onClick: () => {
+                          const locationRoutes: Record<number, string> = {
+                            1: "/locations/daikanyama",
+                            2: "/locations/cat-street",
+                            3: "/locations/ginza",
+                            4: "/locations/yokohama",
+                            5: "/locations/osaka",
+                            6: "/locations/okinawa",
+                            7: "/locations/fukuoka",
+                          }
+                          router.push(locationRoutes[location.id] || "/locations/daikanyama")
+                        },
+                      }}
+                      secondaryButton={{
+                        text: "Schedule Event",
+                        onClick: () => console.log("Schedule event for", location.name.english),
+                        variant: "outline",
+                      }}
+                      onFavorite={() => toggleFavorite(location.id)}
+                      isFavorited={isFavorite(location.id)}
+                      menuItems={[
+                        { label: "Edit Location", onClick: () => console.log("Edit", location.name.english) },
+                        { label: "View Analytics", onClick: () => console.log("Analytics", location.name.english) },
+                        { label: "Deactivate", onClick: () => console.log("Deactivate", location.name.english) },
+                      ]}
+                    />
                   </motion.div>
                 ))}
               </div>

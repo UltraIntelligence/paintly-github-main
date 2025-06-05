@@ -1,24 +1,22 @@
 "use client"
 
+import { Badge } from "@/components/ui/badge"
+
 import { useState, useMemo } from "react"
-import { Search, MoreHorizontal, Clock, Users, Award } from "lucide-react"
+import { Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ThemeProvider } from "../../components/theme-provider"
 import { AppSidebar } from "../../components/app-sidebar"
 import { SiteHeader } from "../../components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { motion, AnimatePresence } from "framer-motion"
 import { useFavorites } from "@/hooks/use-favorites"
-import { FavoriteButton } from "@/components/favorite-button"
 import { FeaturedSection, FeaturedCard } from "@/components/featured-section"
 import { PrivateEventWizard } from "@/components/corporate-event-template-wizard"
+import { PaintlyCard } from "@/components/paintly-card"
 
 const eventsData = [
   {
@@ -143,19 +141,6 @@ const eventsData = [
   },
 ]
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Active":
-      return "bg-emerald-100 text-emerald-700"
-    case "Confirmed":
-      return "bg-blue-100 text-blue-700"
-    case "Planning":
-      return "bg-amber-100 text-amber-700"
-    default:
-      return "bg-gray-100 text-gray-700"
-  }
-}
-
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -210,85 +195,43 @@ export default function PrivateEventsPage() {
                     {/* Featured Section */}
                     <FeaturedSection
                       title="Featured"
-                      subtitle="Your most-used private events"
+                      subtitle="Your frequently used private events"
                       isEmpty={featuredEvents.length === 0}
                     >
                       {featuredEvents.map((event) => (
                         <FeaturedCard key={event.id}>
-                          <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
-                            <div className="relative overflow-hidden h-56">
-                              <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                                <img
-                                  src={`/placeholder.svg?height=400&width=500&query=${encodeURIComponent(event.title + " " + event.company + " corporate event featured")}`}
-                                  alt={`${event.title} event`}
-                                  className="h-full w-full object-cover"
-                                />
-                              </div>
-                              <Badge
-                                className={`absolute top-3 left-3 text-xs px-2 py-1 ${getStatusColor(event.status)}`}
-                              >
-                                {event.status}
-                              </Badge>
-                              <FavoriteButton
-                                isFavorite={isFavorite(event.id)}
-                                onToggle={() => toggleFavorite(event.id)}
-                                className="absolute top-3 right-3"
-                              />
-                            </div>
-
-                            <CardContent className="p-4">
-                              <div className="space-y-1 mb-3">
-                                <p className="text-sm text-gray-600 font-medium">{event.company}</p>
-                                <h3 className="font-bold text-base text-gray-900 leading-tight">{event.title}</h3>
-                                <p className="text-sm text-gray-500 line-clamp-2 mt-2">{event.description}</p>
-                              </div>
-
-                              <div className="flex flex-wrap gap-1.5 mb-3">
-                                {event.tags.slice(0, 3).map((tag) => (
-                                  <Badge
-                                    key={tag}
-                                    variant="outline"
-                                    className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                                  >
-                                    {tag}
-                                  </Badge>
-                                ))}
-                              </div>
-
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center text-xs text-gray-500">
-                                  <Clock className="h-3.5 w-3.5 mr-1.5" />
-                                  {event.duration}
-                                </div>
-                                <div className="flex items-center text-xs font-medium text-gray-700">
-                                  <Award className="h-3.5 w-3.5 mr-1 text-amber-500" />
-                                  {event.averageRating}
-                                </div>
-                              </div>
-                            </CardContent>
-                            <div className="p-4 pt-0 border-t border-gray-100 bg-gray-50">
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="default" className="flex-1 text-xs min-w-0">
-                                  View Details
-                                </Button>
-                                <Button size="sm" variant="outline" className="flex-1 text-xs min-w-0">
-                                  Schedule Event
-                                </Button>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button size="sm" variant="outline" className="px-2 shrink-0">
-                                      <MoreHorizontal className="h-3.5 w-3.5" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem className="text-sm">Edit Event</DropdownMenuItem>
-                                    <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
-                                    <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </div>
-                            </div>
-                          </Card>
+                          <PaintlyCard
+                            type="event"
+                            image={`/placeholder.svg?height=400&width=500&query=${encodeURIComponent(event.title + " " + event.company + " corporate event featured")}`}
+                            title={event.company}
+                            subtitle={event.title}
+                            badges={[
+                              { text: event.status, badgeType: "category" },
+                              { text: event.capacity, badgeType: "canvas" },
+                              ...event.tags.slice(0, 2).map((tag) => ({ text: tag, badgeType: "category" })),
+                            ]}
+                            metaInfo={[
+                              { text: event.duration },
+                              { text: event.location },
+                              { text: `Rating ${event.averageRating}` },
+                            ]}
+                            rating={event.averageRating}
+                            primaryButton={{
+                              text: "View Details",
+                              onClick: () => console.log("View details", event.id),
+                            }}
+                            secondaryButton={{
+                              text: "Schedule Event",
+                              onClick: () => console.log("Schedule event", event.id),
+                            }}
+                            onFavorite={() => toggleFavorite(event.id)}
+                            isFavorited={isFavorite(event.id)}
+                            menuItems={[
+                              { label: "Edit Event", onClick: () => console.log("Edit", event.id) },
+                              { label: "Duplicate", onClick: () => console.log("Duplicate", event.id) },
+                              { label: "Deactivate", onClick: () => console.log("Deactivate", event.id) },
+                            ]}
+                          />
                         </FeaturedCard>
                       ))}
                     </FeaturedSection>
@@ -386,92 +329,39 @@ export default function PrivateEventsPage() {
                       {/* Event Cards Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredEvents.map((event) => (
-                          <Card
+                          <PaintlyCard
                             key={event.id}
-                            className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full"
-                          >
-                            <div className="relative overflow-hidden">
-                              <AspectRatio ratio={4 / 3} className="w-full">
-                                <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                                  <img
-                                    src={`/placeholder.svg?height=240&width=320&query=${encodeURIComponent(event.title + " " + event.company + " corporate event")}`}
-                                    alt={`${event.title} event`}
-                                    className="h-full w-full object-cover"
-                                  />
-                                </div>
-                              </AspectRatio>
-                              <Badge
-                                className={`absolute top-2 left-2 text-xs px-2 py-1 ${getStatusColor(event.status)}`}
-                              >
-                                {event.status}
-                              </Badge>
-                              <FavoriteButton
-                                isFavorite={isFavorite(event.id)}
-                                onToggle={() => toggleFavorite(event.id)}
-                              />
-                            </div>
-
-                            <CardContent className="flex-1 p-4 flex flex-col">
-                              <div className="space-y-1 mb-3">
-                                <p className="text-sm text-gray-600 font-medium line-clamp-1">{event.company}</p>
-                                <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
-                                  {event.title}
-                                </h3>
-                              </div>
-
-                              <div className="flex items-center text-xs text-gray-500 mb-3">
-                                <Clock className="h-3.5 w-3.5 mr-1.5" />
-                                {event.duration}
-                                <Users className="h-3.5 w-3.5 ml-3 mr-1.5" />
-                                {event.capacity}
-                              </div>
-
-                              <div className="flex flex-wrap gap-1.5 mb-3">
-                                {event.tags.slice(0, 2).map((tag) => (
-                                  <Badge
-                                    key={tag}
-                                    variant="outline"
-                                    className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                                  >
-                                    {tag}
-                                  </Badge>
-                                ))}
-                                {event.tags.length > 2 && (
-                                  <Badge variant="outline" className="text-xs px-2 py-0.5">
-                                    +{event.tags.length - 2}
-                                  </Badge>
-                                )}
-                              </div>
-
-                              <div className="flex items-center text-xs text-gray-500 mt-auto">
-                                <Award className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
-                                Rating {event.averageRating}
-                              </div>
-                            </CardContent>
-
-                            <div className="p-4 pt-0 border-t border-gray-100 bg-gray-50">
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="default" className="flex-1 text-xs min-w-0">
-                                  View Details
-                                </Button>
-                                <Button size="sm" variant="outline" className="flex-1 text-xs min-w-0">
-                                  Schedule Event
-                                </Button>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button size="sm" variant="outline" className="px-2 shrink-0">
-                                      <MoreHorizontal className="h-3.5 w-3.5" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem className="text-sm">Edit Event</DropdownMenuItem>
-                                    <DropdownMenuItem className="text-sm">Duplicate</DropdownMenuItem>
-                                    <DropdownMenuItem className="text-sm text-red-600">Deactivate</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </div>
-                            </div>
-                          </Card>
+                            type="event"
+                            image={`/placeholder.svg?height=240&width=320&query=${encodeURIComponent(event.title + " " + event.company + " corporate event")}`}
+                            title={event.company}
+                            subtitle={event.title}
+                            badges={[
+                              { text: event.status, badgeType: "category" },
+                              { text: event.capacity, badgeType: "canvas" },
+                              ...event.tags.slice(0, 1).map((tag) => ({ text: tag, badgeType: "category" })),
+                            ]}
+                            metaInfo={[
+                              { text: event.duration },
+                              { text: event.location },
+                              { text: `Rating ${event.averageRating}` },
+                            ]}
+                            rating={event.averageRating}
+                            primaryButton={{
+                              text: "View Details",
+                              onClick: () => console.log("View details", event.id),
+                            }}
+                            secondaryButton={{
+                              text: "Schedule Event",
+                              onClick: () => console.log("Schedule event", event.id),
+                            }}
+                            onFavorite={() => toggleFavorite(event.id)}
+                            isFavorited={isFavorite(event.id)}
+                            menuItems={[
+                              { label: "Edit Event", onClick: () => console.log("Edit", event.id) },
+                              { label: "Duplicate", onClick: () => console.log("Duplicate", event.id) },
+                              { label: "Deactivate", onClick: () => console.log("Deactivate", event.id) },
+                            ]}
+                          />
                         ))}
                       </div>
 

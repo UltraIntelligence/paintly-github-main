@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Plus, Users, MoreHorizontal, Star, MapPin, Clock } from "lucide-react"
+import { Search, Plus, Users } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -12,14 +12,11 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useFavorites } from "@/hooks/use-favorites"
-import { FavoriteButton } from "@/components/favorite-button"
 import { FeaturedSection, FeaturedCard } from "@/components/featured-section"
+import { PaintlyCard } from "@/components/paintly-card"
 
 const pageTransition = {
   initial: { opacity: 0, y: 20 },
@@ -405,93 +402,38 @@ function InstructorsContent() {
       >
         {featuredInstructors.map((instructor) => (
           <FeaturedCard key={instructor.id}>
-            <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
-              {/* Large Image Section */}
-              <div className="relative overflow-hidden h-56">
-                <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                  <img
-                    src={instructor.photo || "/placeholder.svg"}
-                    alt={`${instructor.name.english} instructor`}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <Badge
-                  className={`absolute top-3 left-3 text-xs px-2 py-1 ${getAvailabilityBadgeColor(instructor.availability)}`}
-                >
-                  {getAvailabilityText(instructor.availability)}
-                </Badge>
-                <FavoriteButton
-                  isFavorite={isFavorite(instructor.numericId)}
-                  onToggle={() => toggleFavorite(instructor.numericId)}
-                />
-              </div>
-
-              {/* Content Section */}
-              <CardContent className="p-5">
-                <div className="space-y-1 mb-3">
-                  {/* Only the main title is larger */}
-                  <h3 className="font-bold text-base text-gray-900 leading-tight">{instructor.name.japanese}</h3>
-                  {/* Subtitle same size as regular cards */}
-                  <p className="text-sm text-gray-600">{instructor.name.english}</p>
-                  {/* Bio same size as regular cards */}
-                  <p className="text-sm text-gray-500 line-clamp-2 mt-2">{instructor.bio}</p>
-                </div>
-
-                {/* Specialties same size as regular cards */}
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  {instructor.specialties.slice(0, 3).map((specialty, index) => (
-                    <Badge
-                      key={index}
-                      variant="outline"
-                      className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                    >
-                      {specialty}
-                    </Badge>
-                  ))}
-                  {instructor.specialties.length > 3 && (
-                    <Badge variant="outline" className="text-xs px-2 py-0.5">
-                      +{instructor.specialties.length - 3}
-                    </Badge>
-                  )}
-                </div>
-
-                {/* Metadata same size as regular cards */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center text-xs text-gray-500">
-                    <Star className="h-3.5 w-3.5 mr-1.5 text-amber-500 fill-current" />
-                    {instructor.rating} • {instructor.totalClasses} classes
-                  </div>
-                  <div className="text-xs font-medium text-gray-700">{instructor.hourlyRate}</div>
-                </div>
-
-                {/* Actions Section */}
-                <div className="flex gap-2">
-                  <Button size="sm" variant="default" className="flex-1 text-xs">
-                    Schedule
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex-1 text-xs"
-                    onClick={() => handleViewDetails(instructor.id)}
-                  >
-                    View Details
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="sm" variant="outline" className="px-2">
-                        <MoreHorizontal className="h-3.5 w-3.5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem className="text-sm">Message</DropdownMenuItem>
-                      <DropdownMenuItem className="text-sm">Edit Profile</DropdownMenuItem>
-                      <DropdownMenuItem className="text-sm">View Full Schedule</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </CardContent>
-            </Card>
+            <PaintlyCard
+              type="instructor"
+              image={instructor.photo}
+              title={instructor.name.japanese}
+              subtitle={instructor.name.english}
+              badges={[
+                { text: instructor.experience, badgeType: "skill" },
+                { text: getAvailabilityText(instructor.availability), badgeType: "category" },
+                ...instructor.specialties.slice(0, 2).map((specialty) => ({ text: specialty, badgeType: "category" })),
+              ]}
+              metaInfo={[
+                { text: `${instructor.rating} ⭐ • ${instructor.totalClasses} classes` },
+                { text: `📍 ${instructor.location}` },
+                { text: `Next: ${instructor.nextAvailable}` },
+              ]}
+              rating={instructor.rating}
+              primaryButton={{
+                text: "View Details",
+                onClick: () => handleViewDetails(instructor.id),
+              }}
+              secondaryButton={{
+                text: "Schedule",
+                onClick: () => console.log(`Schedule with ${instructor.name.english}`),
+              }}
+              onFavorite={() => toggleFavorite(instructor.numericId)}
+              isFavorited={isFavorite(instructor.numericId)}
+              menuItems={[
+                { label: "Message", onClick: () => console.log(`Message ${instructor.name.english}`) },
+                { label: "Edit Profile", onClick: () => console.log(`Edit ${instructor.name.english}`) },
+                { label: "View Full Schedule", onClick: () => console.log(`Schedule for ${instructor.name.english}`) },
+              ]}
+            />
           </FeaturedCard>
         ))}
       </FeaturedSection>
@@ -592,99 +534,44 @@ function InstructorsContent() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Card className="group overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col h-full">
-                      {/* Image Section */}
-                      <div className="relative overflow-hidden">
-                        <AspectRatio ratio={4 / 3} className="w-full">
-                          <div className="bg-gray-100 w-full h-full group-hover:scale-105 transition-transform duration-300">
-                            <img
-                              src={instructor.photo || "/placeholder.svg"}
-                              alt={`${instructor.name.english} instructor`}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                        </AspectRatio>
-                        <Badge
-                          className={`absolute top-2 left-2 text-xs px-2 py-1 ${getAvailabilityBadgeColor(instructor.availability)}`}
-                        >
-                          {getAvailabilityText(instructor.availability)}
-                        </Badge>
-                        <FavoriteButton
-                          isFavorite={isFavorite(instructor.numericId)}
-                          onToggle={() => toggleFavorite(instructor.numericId)}
-                        />
-                      </div>
-
-                      {/* Content Section */}
-                      <CardContent className="flex-1 p-5 flex flex-col">
-                        <div className="space-y-1 mb-3">
-                          <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-1">
-                            {instructor.name.japanese}
-                          </h3>
-                          <p className="text-sm text-gray-600 line-clamp-1">{instructor.name.english}</p>
-                        </div>
-
-                        <div className="flex items-center text-xs text-gray-500 mb-3">
-                          <Star className="h-3.5 w-3.5 mr-1.5 text-amber-500 fill-current" />
-                          {instructor.rating}
-                          <span className="mx-2">•</span>
-                          {instructor.totalClasses} classes
-                        </div>
-
-                        <div className="flex items-center text-xs text-gray-500 mb-3">
-                          <MapPin className="h-3.5 w-3.5 mr-1.5" />
-                          {instructor.location}
-                          <Clock className="h-3.5 w-3.5 ml-3 mr-1.5" />
-                          {instructor.experience}
-                        </div>
-
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          {instructor.specialties.slice(0, 2).map((specialty, index) => (
-                            <Badge
-                              key={index}
-                              variant="outline"
-                              className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border-blue-200"
-                            >
-                              {specialty}
-                            </Badge>
-                          ))}
-                          {instructor.specialties.length > 2 && (
-                            <Badge variant="outline" className="text-xs px-2 py-0.5">
-                              +{instructor.specialties.length - 2}
-                            </Badge>
-                          )}
-                        </div>
-
-                        <div className="text-xs text-gray-500 mt-auto mb-4">Next: {instructor.nextAvailable}</div>
-
-                        {/* Actions Section */}
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="default" className="flex-1 text-xs">
-                            Schedule
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="flex-1 text-xs"
-                            onClick={() => handleViewDetails(instructor.id)}
-                          >
-                            View Details
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="sm" variant="outline" className="px-2">
-                                <MoreHorizontal className="h-3.5 w-3.5" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem className="text-sm">Message</DropdownMenuItem>
-                              <DropdownMenuItem className="text-sm">Edit Profile</DropdownMenuItem>
-                              <DropdownMenuItem className="text-sm">View Full Schedule</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <PaintlyCard
+                      type="instructor"
+                      image={instructor.photo}
+                      title={instructor.name.japanese}
+                      subtitle={instructor.name.english}
+                      badges={[
+                        { text: instructor.experience, badgeType: "skill" },
+                        { text: getAvailabilityText(instructor.availability), badgeType: "category" },
+                        ...instructor.specialties
+                          .slice(0, 2)
+                          .map((specialty) => ({ text: specialty, badgeType: "category" })),
+                      ]}
+                      metaInfo={[
+                        { text: `${instructor.rating} ⭐ • ${instructor.totalClasses} classes` },
+                        { text: `📍 ${instructor.location}` },
+                        { text: `Next: ${instructor.nextAvailable}` },
+                        { text: instructor.hourlyRate },
+                      ]}
+                      rating={instructor.rating}
+                      primaryButton={{
+                        text: "View Details",
+                        onClick: () => handleViewDetails(instructor.id),
+                      }}
+                      secondaryButton={{
+                        text: "Schedule",
+                        onClick: () => console.log(`Schedule with ${instructor.name.english}`),
+                      }}
+                      onFavorite={() => toggleFavorite(instructor.numericId)}
+                      isFavorited={isFavorite(instructor.numericId)}
+                      menuItems={[
+                        { label: "Message", onClick: () => console.log(`Message ${instructor.name.english}`) },
+                        { label: "Edit Profile", onClick: () => console.log(`Edit ${instructor.name.english}`) },
+                        {
+                          label: "View Full Schedule",
+                          onClick: () => console.log(`Schedule for ${instructor.name.english}`),
+                        },
+                      ]}
+                    />
                   </motion.div>
                 ))}
               </div>
