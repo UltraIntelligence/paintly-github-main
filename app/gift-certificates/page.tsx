@@ -23,7 +23,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -326,7 +325,7 @@ export default function GiftCertificatesPage() {
             <div className="flex flex-col space-y-6">
               {/* Search and Actions Bar */}
               <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-                <div className="flex w-full max-w-sm items-center space-x-2">
+                <div className="flex w-full max-w-lg items-center space-x-2">
                   <div className="relative w-full">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -348,30 +347,46 @@ export default function GiftCertificatesPage() {
                     )}
                   </div>
 
+                  <Button
+                    variant={showActiveOnly ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setShowActiveOnly(!showActiveOnly)}
+                    className="whitespace-nowrap"
+                  >
+                    Active
+                  </Button>
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <ArrowUpDown className="h-4 w-4" />
-                        <span className="sr-only">Sort</span>
+                      <Button variant="outline" size="sm" className="whitespace-nowrap">
+                        Filters
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuLabel>Filter & Sort Options</DropdownMenuLabel>
                       <DropdownMenuSeparator />
+                      <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                        Status
+                      </DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => setShowActiveOnly(false)}>All Certificates</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setShowActiveOnly(true)}>Active Only</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                        Sort by
+                      </DropdownMenuLabel>
                       <DropdownMenuItem onClick={() => setSortConfig({ key: "code", direction: "asc" })}>
                         Code (A-Z)
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setSortConfig({ key: "code", direction: "desc" })}>
                         Code (Z-A)
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => setSortConfig({ key: "value", direction: "desc" })}>
                         Balance (High-Low)
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setSortConfig({ key: "value", direction: "asc" })}>
                         Balance (Low-High)
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => setSortConfig({ key: "purchaseDate", direction: "desc" })}>
                         Purchase Date (Newest)
                       </DropdownMenuItem>
@@ -396,16 +411,6 @@ export default function GiftCertificatesPage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-bold tracking-tight">All Gift Certificates</h2>
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="active-only"
-                      checked={showActiveOnly}
-                      onCheckedChange={(checked) => setShowActiveOnly(checked as boolean)}
-                    />
-                    <label htmlFor="active-only" className="text-sm text-muted-foreground">
-                      Show only active certificates
-                    </label>
-                  </div>
                 </div>
 
                 <div className="rounded-md border">

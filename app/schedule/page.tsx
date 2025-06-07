@@ -987,34 +987,48 @@ function ScheduleContent() {
           {/* Bottom row - View Controls and Date Navigation */}
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
             {/* Left side - View Toggle - Hidden on mobile */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              {/* Left side - View Toggle - Hidden on mobile */}
+              <div className="hidden md:flex items-center gap-2">
+                <Button
+                  variant={selectedView === "month" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedView("month")}
+                  className="flex items-center gap-2"
+                >
+                  <Calendar className="h-4 w-4" />
+                  Month
+                </Button>
+                <Button
+                  variant={selectedView === "week" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedView("week")}
+                  className="flex items-center gap-2"
+                  style={{ backgroundColor: selectedView === "week" ? "#3b82f6" : undefined }}
+                >
+                  <Grid3X3 className="h-4 w-4" />
+                  Week
+                </Button>
+                <Button
+                  variant={selectedView === "list" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedView("list")}
+                  className="flex items-center gap-2"
+                >
+                  <List className="h-4 w-4" />
+                  List
+                </Button>
+              </div>
+
+              {/* Today Button */}
               <Button
-                variant={selectedView === "month" ? "default" : "outline"}
+                variant="outline"
                 size="sm"
-                onClick={() => setSelectedView("month")}
+                onClick={() => setCurrentWeekOffset(0)}
                 className="flex items-center gap-2"
               >
                 <Calendar className="h-4 w-4" />
-                Month
-              </Button>
-              <Button
-                variant={selectedView === "week" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedView("week")}
-                className="flex items-center gap-2"
-                style={{ backgroundColor: selectedView === "week" ? "#3b82f6" : undefined }}
-              >
-                <Grid3X3 className="h-4 w-4" />
-                Week
-              </Button>
-              <Button
-                variant={selectedView === "list" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedView("list")}
-                className="flex items-center gap-2"
-              >
-                <List className="h-4 w-4" />
-                List
+                Today
               </Button>
             </div>
 

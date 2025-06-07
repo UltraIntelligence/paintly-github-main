@@ -2,9 +2,8 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { MessageCircle, Edit, Star } from "lucide-react"
+import { Star } from "lucide-react"
 import { BriefcaseBusiness, Award } from "lucide-react"
 
 interface InstructorHeaderProps {
@@ -76,22 +75,6 @@ export function InstructorHeader({ instructor, isAdmin, isOwnProfile }: Instruct
                 <span className="text-sm text-muted-foreground">({instructor.rating})</span>
               </div>
             </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2">
-            {isAdmin && (
-              <>
-                <Button variant="outline" size="sm">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Message
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Button>
-              </>
-            )}
           </div>
         </div>
 
