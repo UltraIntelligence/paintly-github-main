@@ -26,7 +26,7 @@ export function NavDocuments({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton tooltip={item.name} asChild>
               <Link href={item.url}>
                 <item.icon />
                 <span>{item.name.toLowerCase().includes("certificate") ? "Gift Cards" : item.name}</span>
@@ -36,7 +36,7 @@ export function NavDocuments({
         ))}
         {items.length > 4 && (
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-sidebar-foreground/70">
+            <SidebarMenuButton tooltip="More" className="text-sidebar-foreground/70">
               <MoreHorizontalIcon className="text-sidebar-foreground/70" />
               <span>More</span>
             </SidebarMenuButton>
