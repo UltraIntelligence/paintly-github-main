@@ -27,6 +27,10 @@ interface Event {
   isPublished: boolean
 }
 
+interface EnhancedEventsSectionProps {
+  onEventClick?: (event: any) => void
+}
+
 // Extended sample data with more events
 const allEvents: Event[] = [
   {
@@ -169,76 +173,6 @@ const allEvents: Event[] = [
     actionText: "View Details",
     isPublished: true,
   },
-  {
-    id: 11,
-    title: "Acrylic Pour Painting",
-    titleJp: "アクリル流し絵",
-    subtitle: "Fluid art techniques",
-    participants: { current: 14, capacity: 16 },
-    date: "2025-06-09",
-    time: "11:00 AM-1:00 PM",
-    location: "Artbar Ginza",
-    instructor: "Yuki Tanaka",
-    status: "Scheduled",
-    actionText: "View Details",
-    isPublished: true,
-  },
-  {
-    id: 12,
-    title: "Portrait Drawing Workshop",
-    titleJp: "肖像画ワークショップ",
-    subtitle: "Charcoal and graphite techniques",
-    participants: { current: 6, capacity: 12 },
-    date: "2025-06-09",
-    time: "4:00-6:00 PM",
-    location: "Artbar Yokohama",
-    instructor: "Kenji Yamada",
-    status: "Scheduled",
-    actionText: "View Details",
-    isPublished: true,
-  },
-  {
-    id: 13,
-    title: "Mixed Media Collage",
-    titleJp: "ミックスメディアコラージュ",
-    subtitle: "Contemporary mixed media art",
-    participants: { current: 9, capacity: 14 },
-    date: "2025-06-10",
-    time: "10:00 AM-12:00 PM",
-    location: "Artbar Daikanyama",
-    instructor: "Akari Suzuki",
-    status: "Scheduled",
-    actionText: "View Details",
-    isPublished: true,
-  },
-  {
-    id: 14,
-    title: "Calligraphy & Ink Painting",
-    titleJp: "書道と水墨画",
-    subtitle: "Traditional Japanese ink techniques",
-    participants: { current: 4, capacity: 8 },
-    date: "2025-06-10",
-    time: "2:00-4:00 PM",
-    location: "Artbar Cat Street",
-    instructor: "Takashi Murakami",
-    status: "Scheduled",
-    actionText: "View Details",
-    isPublished: true,
-  },
-  {
-    id: 15,
-    title: "Sculpture Workshop",
-    titleJp: "彫刻ワークショップ",
-    subtitle: "Clay modeling and sculpting",
-    participants: { current: 7, capacity: 10 },
-    date: "2025-06-11",
-    time: "1:00-3:00 PM",
-    location: "Artbar Shibuya",
-    instructor: "Momo",
-    status: "Scheduled",
-    actionText: "View Details",
-    isPublished: true,
-  },
 ]
 
 const locations = [
@@ -263,7 +197,7 @@ const instructors = [
 
 const statuses = ["All Statuses", "Live", "Scheduled", "Completed"]
 
-export function EnhancedEventsSection() {
+export function EnhancedEventsSection({ onEventClick }: EnhancedEventsSectionProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedLocation, setSelectedLocation] = useState("All Locations")
   const [selectedInstructor, setSelectedInstructor] = useState("All Instructors")
@@ -324,31 +258,31 @@ export function EnhancedEventsSection() {
   }
 
   return (
-    <div className="px-4 lg:px-6">
-      <Card>
-        <CardHeader>
+    <div className="px-6 lg:px-8">
+      <Card className="neu-card border-0 bg-background/50 backdrop-blur-sm">
+        <CardHeader className="pb-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <CardTitle className="mb-1">Upcoming Events</CardTitle>
-              <CardDescription>
+              <CardTitle className="mb-2 text-xl font-semibold">Upcoming Events</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Manage your scheduled painting workshops ({filteredEvents.length} events found)
               </CardDescription>
             </div>
-            <Button variant="outline" onClick={clearFilters} className="h-9">
+            <Button variant="outline" onClick={clearFilters} className="neu-button h-10 px-4 text-sm font-medium">
               Clear Filters
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           {/* Filters Row */}
-          <div className="flex flex-wrap gap-3 mb-6 items-center">
+          <div className="flex flex-wrap gap-4 mb-8 items-center">
             {/* Search */}
             <div className="relative">
-              <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <SearchIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder="Search events..."
-                className="w-[200px] lg:w-[250px] pl-9 h-9"
+                className="neu-input w-[200px] lg:w-[250px] pl-10 h-12 text-sm"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value)
@@ -361,7 +295,7 @@ export function EnhancedEventsSection() {
             <Button
               variant="outline"
               size="sm"
-              className="h-9 px-3"
+              className="neu-button h-12 px-4 text-sm font-medium"
               onClick={() => {
                 const today = new Date()
                 setSelectedDate(today)
@@ -379,12 +313,12 @@ export function EnhancedEventsSection() {
                 handleFilterChange()
               }}
             >
-              <SelectTrigger className="w-[160px] h-9">
+              <SelectTrigger className="neu-input w-[160px] h-12 border-0">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="neu-card border-0">
                 {locations.map((location) => (
-                  <SelectItem key={location} value={location}>
+                  <SelectItem key={location} value={location} className="neu-hover rounded-lg">
                     {location}
                   </SelectItem>
                 ))}
@@ -399,12 +333,12 @@ export function EnhancedEventsSection() {
                 handleFilterChange()
               }}
             >
-              <SelectTrigger className="w-[160px] h-9">
+              <SelectTrigger className="neu-input w-[160px] h-12 border-0">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="neu-card border-0">
                 {instructors.map((instructor) => (
-                  <SelectItem key={instructor} value={instructor}>
+                  <SelectItem key={instructor} value={instructor} className="neu-hover rounded-lg">
                     {instructor}
                   </SelectItem>
                 ))}
@@ -419,12 +353,12 @@ export function EnhancedEventsSection() {
                 handleFilterChange()
               }}
             >
-              <SelectTrigger className="w-[140px] h-9">
+              <SelectTrigger className="neu-input w-[140px] h-12 border-0">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="neu-card border-0">
                 {statuses.map((status) => (
-                  <SelectItem key={status} value={status}>
+                  <SelectItem key={status} value={status} className="neu-hover rounded-lg">
                     {status}
                   </SelectItem>
                 ))}
@@ -437,7 +371,7 @@ export function EnhancedEventsSection() {
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-[200px] h-9 justify-start text-left font-normal",
+                    "neu-button w-[200px] h-12 justify-start text-left font-normal",
                     !selectedDate && "text-muted-foreground",
                   )}
                 >
@@ -445,7 +379,7 @@ export function EnhancedEventsSection() {
                   {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="neu-card w-auto p-0 border-0" align="start">
                 <Calendar
                   mode="single"
                   selected={selectedDate}
@@ -454,13 +388,14 @@ export function EnhancedEventsSection() {
                     handleFilterChange()
                   }}
                   initialFocus
+                  className="rounded-3xl"
                 />
               </PopoverContent>
             </Popover>
           </div>
 
           {/* Events List */}
-          <div className="space-y-4 mb-6">
+          <div className="space-y-6 mb-8">
             {currentEvents.length > 0 ? (
               currentEvents.map((event) => (
                 <PaintlyEventCard
@@ -475,23 +410,23 @@ export function EnhancedEventsSection() {
                   instructor={event.instructor}
                   status={event.status}
                   actionText={event.actionText}
-                  onAction={() => {
-                    console.log(`Action clicked for event ${event.id}`)
-                  }}
+                  onViewDetails={() => onEventClick?.(event)}
                 />
               ))
             ) : (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No events found matching your criteria.</p>
+              <div className="text-center py-12">
+                <div className="neu-inset rounded-3xl p-8 mx-auto max-w-md">
+                  <p className="text-muted-foreground text-lg">No events found matching your criteria.</p>
+                </div>
               </div>
             )}
           </div>
 
           {/* Pagination Controls */}
           {filteredEvents.length > 0 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Events per page:</span>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-border/50">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-muted-foreground font-medium">Events per page:</span>
                 <Select
                   value={eventsPerPage.toString()}
                   onValueChange={(value) => {
@@ -499,10 +434,10 @@ export function EnhancedEventsSection() {
                     setCurrentPage(1)
                   }}
                 >
-                  <SelectTrigger className="w-[70px] h-8">
+                  <SelectTrigger className="neu-input w-[80px] h-10 border-0">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="neu-card border-0">
                     <SelectItem value="5">5</SelectItem>
                     <SelectItem value="10">10</SelectItem>
                     <SelectItem value="20">20</SelectItem>
@@ -512,34 +447,41 @@ export function EnhancedEventsSection() {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-muted-foreground font-medium">
                   Showing {startIndex + 1}-{Math.min(endIndex, filteredEvents.length)} of {filteredEvents.length}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
+                  className="neu-button h-10 px-3"
                 >
                   <ChevronLeftIcon className="h-4 w-4" />
                   Previous
                 </Button>
 
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(page)}
-                      className="w-8 h-8"
-                    >
-                      {page}
-                    </Button>
-                  ))}
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                    const page = i + 1
+                    return (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className={cn(
+                          "w-10 h-10 text-sm font-medium",
+                          currentPage === page ? "neu-pressed bg-primary text-primary-foreground" : "neu-button",
+                        )}
+                      >
+                        {page}
+                      </Button>
+                    )
+                  })}
                 </div>
 
                 <Button
@@ -547,6 +489,7 @@ export function EnhancedEventsSection() {
                   size="sm"
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
+                  className="neu-button h-10 px-3"
                 >
                   Next
                   <ChevronRightIcon className="h-4 w-4" />
