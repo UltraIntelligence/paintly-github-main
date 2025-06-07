@@ -217,11 +217,16 @@ export default function PrivateEventsPage() {
                             ]}
                             rating={event.averageRating}
                             primaryButton={{
-                              text: "View Details",
+                              text: (
+                                <>
+                                  <span className="xl:hidden">View</span>
+                                  <span className="hidden xl:inline">View Details</span>
+                                </>
+                              ),
                               onClick: () => console.log("View details", event.id),
                             }}
                             secondaryButton={{
-                              text: "Schedule Event",
+                              text: "Schedule",
                               onClick: () => console.log("Schedule event", event.id),
                             }}
                             onFavorite={() => toggleFavorite(event.id)}
@@ -327,7 +332,7 @@ export default function PrivateEventsPage() {
                       </div>
 
                       {/* Event Cards Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
                         {filteredEvents.map((event) => (
                           <PaintlyCard
                             key={event.id}
@@ -347,11 +352,16 @@ export default function PrivateEventsPage() {
                             ]}
                             rating={event.averageRating}
                             primaryButton={{
-                              text: "View Details",
+                              text: (
+                                <>
+                                  <span className="xl:hidden">View</span>
+                                  <span className="hidden xl:inline">View Details</span>
+                                </>
+                              ),
                               onClick: () => console.log("View details", event.id),
                             }}
                             secondaryButton={{
-                              text: "Schedule Event",
+                              text: "Schedule",
                               onClick: () => console.log("Schedule event", event.id),
                             }}
                             onFavorite={() => toggleFavorite(event.id)}
