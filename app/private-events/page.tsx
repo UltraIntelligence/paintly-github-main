@@ -71,7 +71,7 @@ const eventsData = [
     duration: "3 hours",
     capacity: "35 participants",
     status: "Active",
-    tags: ["Technology", "Creative", "Innovation"],
+    tags: ["Tech", "Creative", "Innovation"],
     location: "Sony Creative Lounge, Shibuya",
     price: "¥9,800",
     instructor: "Kenji",
@@ -131,7 +131,7 @@ const eventsData = [
     duration: "3 hours",
     capacity: "30 participants",
     status: "Confirmed",
-    tags: ["Automotive", "Innovation", "Future"],
+    tags: ["Auto", "Innovation", "Future"],
     location: "Toyota City Showcase",
     price: "¥10,500",
     instructor: "Takeshi",
@@ -332,7 +332,7 @@ export default function PrivateEventsPage() {
                       </div>
 
                       {/* Event Cards Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         {filteredEvents.map((event) => (
                           <PaintlyCard
                             key={event.id}

@@ -1,12 +1,20 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, Filter } from "lucide-react"
+import { Calendar, Filter, Search, X, ChevronDown } from "lucide-react"
 import { CustomerEventCard } from "@/components/customer-event-card"
 import { FeaturedCarousel } from "@/components/featured-carousel"
+import { CalendarIcon } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { format } from "date-fns"
+import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 
 // Sample events data with beautiful painting images
 const sampleEvents = [
@@ -792,6 +800,12 @@ const sampleEvents = [
   },
 ]
 
+// Extract unique values for filters
+const allLocations = Array.from(new Set(sampleEvents.map((event) => event.location)))
+const allCategories = Array.from(new Set(sampleEvents.map((event) => event.category)))
+const allInstructors = Array.from(new Set(sampleEvents.map((event) => event.instructor)))
+const allDifficulties = Array.from(new Set(sampleEvents.map((event) => event.difficulty)))
+
 const categories = [
   "All Classes",
   "Paint Pouring",
@@ -805,15 +819,36 @@ const categories = [
 ]
 
 export default function DiscoverPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All Classes")
   const [searchQuery, setSearchQuery] = useState("")
   const [showFilters, setShowFilters] = useState(false)
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
-  const [selectedLocation, setSelectedLocation] = useState("all")
-  const [selectedDifficulty, setSelectedDifficulty] = useState("all")
+  const [selectedDate, setSelectedDate] = useState<Date>()
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false)
+
+  // Multi-select filter states
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedInstructors, setSelectedInstructors] = useState<string[]>([])
+  const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([])
   const [availableOnly, setAvailableOnly] = useState(true)
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000])
+
+  // Active filter count
+  const [activeFilterCount, setActiveFilterCount] = useState(0)
 
   const categoryScrollRef = useRef<HTMLDivElement>(null)
+
+  // Update active filter count
+  useEffect(() => {
+    let count = 0
+    if (selectedLocations.length > 0) count++
+    if (selectedCategories.length > 0) count++
+    if (selectedInstructors.length > 0) count++
+    if (selectedDifficulties.length > 0) count++
+    if (selectedDate) count++
+    if (availableOnly) count++
+    setActiveFilterCount(count)
+  }, [selectedLocations, selectedCategories, selectedInstructors, selectedDifficulties, selectedDate, availableOnly])
 
   const scrollCategories = (direction: "left" | "right") => {
     if (categoryScrollRef.current) {
@@ -846,20 +881,83 @@ export default function DiscoverPage() {
     return `${month} ${day}`
   }
 
+  const clearAllFilters = () => {
+    setSelectedLocations([])
+    setSelectedCategories([])
+    setSelectedInstructors([])
+    setSelectedDifficulties([])
+    setSelectedDate(undefined)
+    setAvailableOnly(false)
+    setPriceRange([0, 10000])
+    setSearchQuery("")
+  }
+
+  const toggleLocationFilter = (location: string) => {
+    setSelectedLocations((prev) =>
+      prev.includes(location) ? prev.filter((loc) => loc !== location) : [...prev, location],
+    )
+  }
+
+  const toggleCategoryFilter = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category) ? prev.filter((cat) => cat !== category) : [...prev, category],
+    )
+  }
+
+  const toggleInstructorFilter = (instructor: string) => {
+    setSelectedInstructors((prev) =>
+      prev.includes(instructor) ? prev.filter((inst) => inst !== instructor) : [...prev, instructor],
+    )
+  }
+
+  const toggleDifficultyFilter = (difficulty: string) => {
+    setSelectedDifficulties((prev) =>
+      prev.includes(difficulty) ? prev.filter((diff) => diff !== difficulty) : [...prev, difficulty],
+    )
+  }
+
   const filteredEvents = sampleEvents.filter((event) => {
-    const matchesCategory = selectedCategory === "All Classes" || event.category === selectedCategory
+    // Search query filter
     const matchesSearch =
       searchQuery === "" ||
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.titleEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.instructor.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesLocation = selectedLocation === "all" || event.location.includes(selectedLocation)
-    const matchesDifficulty = selectedDifficulty === "all" || event.difficulty === selectedDifficulty
+
+    // Location filter
+    const matchesLocation = selectedLocations.length === 0 || selectedLocations.includes(event.location)
+
+    // Category filter
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(event.category)
+
+    // Instructor filter
+    const matchesInstructor = selectedInstructors.length === 0 || selectedInstructors.includes(event.instructor)
+
+    // Difficulty filter
+    const matchesDifficulty = selectedDifficulties.length === 0 || selectedDifficulties.includes(event.difficulty)
+
+    // Availability filter
     const matchesAvailability = !availableOnly || event.status !== "sold-out"
+
+    // Price range filter
+    const matchesPrice = event.price >= priceRange[0] && event.price <= priceRange[1]
+
+    // Date filter
+    const matchesDate = !selectedDate || event.date === format(selectedDate, "yyyy-MM-dd")
+
+    // Month filter (June events)
     const isJuneEvent = event.date.startsWith("2025-06")
 
     return (
-      matchesCategory && matchesSearch && matchesLocation && matchesDifficulty && matchesAvailability && isJuneEvent
+      matchesSearch &&
+      matchesLocation &&
+      matchesCategory &&
+      matchesInstructor &&
+      matchesDifficulty &&
+      matchesAvailability &&
+      matchesPrice &&
+      matchesDate &&
+      isJuneEvent
     )
   })
 
@@ -996,33 +1094,16 @@ export default function DiscoverPage() {
     <div className="min-h-screen bg-white pt-8">
       {/* Search Section */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Search Section */}
-        <div className="py-8 mb-8">
-          <div className="max-w-2xl mx-auto relative">
-            <Input
-              type="text"
-              placeholder="Search by painting, instructor, or style..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 md:h-16 pl-4 md:pl-6 pr-12 md:pr-16 text-base md:text-lg border-2 border-gray-200 rounded-full focus:border-gray-400 focus:ring-0 shadow-sm"
-            />
-            <div className="absolute right-3 md:right-6 top-1/2 transform -translate-y-1/2">
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-900 rounded-full flex items-center justify-center">
-                <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Developer-only navigation link */}
-        <div className="absolute top-2 left-2 z-10">
+        {/* Developer-only navigation links */}
+        <div className="absolute top-2 left-2 z-10 flex gap-2">
+          <Button
+            onClick={() => (window.location.href = "/dashboard")}
+            variant="outline"
+            size="sm"
+            className="opacity-30 hover:opacity-100 text-xs border-dashed border-gray-300 bg-transparent"
+          >
+            Dev: Dashboard
+          </Button>
           <Button
             onClick={() => (window.location.href = "/events/sample")}
             variant="outline"
@@ -1033,40 +1114,271 @@ export default function DiscoverPage() {
           </Button>
         </div>
 
-        {/* Paint Style Categories */}
-        <div className="mb-16">
-          <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 lg:grid-cols-9 gap-3 w-full">
-            {categories.map((category) => (
-              <div
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`cursor-pointer transition-all duration-200 ${
-                  selectedCategory === category ? "opacity-100" : "opacity-70 hover:opacity-90"
-                }`}
-              >
-                <div className="w-full aspect-square rounded-lg overflow-hidden mb-2 shadow-sm">
-                  <img
-                    src={`/placeholder.svg?height=64&width=64&text=${encodeURIComponent(category)}`}
-                    alt={category}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <p className="text-xs font-medium text-gray-900 text-left leading-tight">{category}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Featured Section - Dynamic Carousel */}
         <div className="mb-16">
           <FeaturedCarousel />
         </div>
 
+        {/* New Search and Filter Section */}
+        <div className="mb-16">
+          <div className="relative">
+            {/* Main search bar and filter button */}
+            <div className="flex items-center gap-3">
+              <div className="relative flex-grow">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Input
+                  placeholder="Search classes, instructors, or locations..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-12 pr-4 py-6 text-base rounded-full border-gray-200 focus:border-gray-300 focus:ring-gray-300 shadow-sm"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+
+              <Popover open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 px-6 py-6 rounded-full border-gray-200 hover:bg-gray-50"
+                  >
+                    <Filter className="w-5 h-5" />
+                    <span className="font-medium">Filters</span>
+                    {activeFilterCount > 0 && (
+                      <Badge className="ml-1 bg-gray-900 hover:bg-gray-800">{activeFilterCount}</Badge>
+                    )}
+                    <ChevronDown className="w-4 h-4 ml-1" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[380px] p-0" align="end">
+                  <div className="p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-lg">Filters</h3>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={clearAllFilters}
+                        className="text-gray-500 hover:text-gray-700 text-sm"
+                      >
+                        Clear all
+                      </Button>
+                    </div>
+
+                    {/* Date filter */}
+                    <div className="mb-5">
+                      <h4 className="font-medium mb-3">Date</h4>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !selectedDate && "text-muted-foreground",
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {selectedDate ? format(selectedDate, "PPP") : "Select a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={setSelectedDate}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    {/* Location filter */}
+                    <div className="mb-5">
+                      <h4 className="font-medium mb-3">Location</h4>
+                      <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                        {allLocations.map((location) => (
+                          <div key={location} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`location-${location}`}
+                              checked={selectedLocations.includes(location)}
+                              onCheckedChange={() => toggleLocationFilter(location)}
+                            />
+                            <Label htmlFor={`location-${location}`} className="text-sm cursor-pointer">
+                              {location}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    {/* Category filter */}
+                    <div className="mb-5">
+                      <h4 className="font-medium mb-3">Category</h4>
+                      <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                        {allCategories.map((category) => (
+                          <div key={category} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`category-${category}`}
+                              checked={selectedCategories.includes(category)}
+                              onCheckedChange={() => toggleCategoryFilter(category)}
+                            />
+                            <Label htmlFor={`category-${category}`} className="text-sm cursor-pointer">
+                              {category}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    {/* Instructor filter */}
+                    <div className="mb-5">
+                      <h4 className="font-medium mb-3">Instructor</h4>
+                      <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                        {allInstructors.map((instructor) => (
+                          <div key={instructor} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`instructor-${instructor}`}
+                              checked={selectedInstructors.includes(instructor)}
+                              onCheckedChange={() => toggleInstructorFilter(instructor)}
+                            />
+                            <Label htmlFor={`instructor-${instructor}`} className="text-sm cursor-pointer">
+                              {instructor}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    {/* Difficulty filter */}
+                    <div className="mb-5">
+                      <h4 className="font-medium mb-3">Difficulty</h4>
+                      <div className="space-y-2">
+                        {allDifficulties.map((difficulty) => (
+                          <div key={difficulty} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`difficulty-${difficulty}`}
+                              checked={selectedDifficulties.includes(difficulty)}
+                              onCheckedChange={() => toggleDifficultyFilter(difficulty)}
+                            />
+                            <Label htmlFor={`difficulty-${difficulty}`} className="text-sm cursor-pointer">
+                              {difficulty}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    {/* Availability filter */}
+                    <div className="mb-5">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="available-only"
+                          checked={availableOnly}
+                          onCheckedChange={(checked) => setAvailableOnly(checked === true)}
+                        />
+                        <Label htmlFor="available-only" className="text-sm cursor-pointer">
+                          Show available classes only
+                        </Label>
+                      </div>
+                    </div>
+
+                    {/* Apply filters button */}
+                    <Button className="w-full mt-2" onClick={() => setFilterMenuOpen(false)}>
+                      Apply Filters
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Active filters display */}
+            {activeFilterCount > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {selectedDate && (
+                  <Badge variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
+                    {format(selectedDate, "MMM d, yyyy")}
+                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => setSelectedDate(undefined)} />
+                  </Badge>
+                )}
+
+                {selectedLocations.map((location) => (
+                  <Badge key={location} variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
+                    {location}
+                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleLocationFilter(location)} />
+                  </Badge>
+                ))}
+
+                {selectedCategories.map((category) => (
+                  <Badge key={category} variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
+                    {category}
+                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleCategoryFilter(category)} />
+                  </Badge>
+                ))}
+
+                {selectedInstructors.map((instructor) => (
+                  <Badge
+                    key={instructor}
+                    variant="secondary"
+                    className="px-3 py-1 rounded-full flex items-center gap-1"
+                  >
+                    {instructor}
+                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleInstructorFilter(instructor)} />
+                  </Badge>
+                ))}
+
+                {selectedDifficulties.map((difficulty) => (
+                  <Badge
+                    key={difficulty}
+                    variant="secondary"
+                    className="px-3 py-1 rounded-full flex items-center gap-1"
+                  >
+                    {difficulty}
+                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleDifficultyFilter(difficulty)} />
+                  </Badge>
+                ))}
+
+                {availableOnly && (
+                  <Badge variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
+                    Available Only
+                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => setAvailableOnly(false)} />
+                  </Badge>
+                )}
+
+                {activeFilterCount > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearAllFilters}
+                    className="text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    Clear all
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Starting Soon Section */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Starting Soon</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-            {startingSoonEvents.map((event) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3">
+            {startingSoonEvents.slice(0, 5).map((event) => (
               <CustomerEventCard
                 key={event.id}
                 event={event}
@@ -1082,69 +1394,13 @@ export default function DiscoverPage() {
         <div>
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-gray-900">June Classes</h2>
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-6 py-3"
-            >
-              <Filter className="w-4 h-4" />
-              Filters
-            </Button>
+            <div className="text-gray-500">
+              {filteredEvents.length} {filteredEvents.length === 1 ? "class" : "classes"} found
+            </div>
           </div>
 
-          {/* Collapsible Filters */}
-          {showFilters && (
-            <div className="bg-gray-50 rounded-2xl p-8 mb-12 transition-all duration-300">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Location</label>
-                  <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                    <SelectTrigger className="h-12">
-                      <SelectValue placeholder="All locations" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All locations</SelectItem>
-                      <SelectItem value="Cat Street">Cat Street</SelectItem>
-                      <SelectItem value="Ginza">Ginza</SelectItem>
-                      <SelectItem value="Daikanyama">Daikanyama</SelectItem>
-                      <SelectItem value="Yokohama">Yokohama</SelectItem>
-                      <SelectItem value="Osaka">Osaka</SelectItem>
-                      <SelectItem value="Fukuoka">Fukuoka</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Difficulty</label>
-                  <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-                    <SelectTrigger className="h-12">
-                      <SelectValue placeholder="All levels" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All levels</SelectItem>
-                      <SelectItem value="Beginner">Beginner</SelectItem>
-                      <SelectItem value="Intermediate">Intermediate</SelectItem>
-                      <SelectItem value="Advanced">Advanced</SelectItem>
-                      <SelectItem value="Kids">Kids</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex items-end">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={availableOnly}
-                      onChange={(e) => setAvailableOnly(e.target.checked)}
-                      className="w-5 h-5 rounded border-gray-300"
-                    />
-                    <span className="text-base text-gray-700">Available only</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Events Grid - Responsive */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3">
             {filteredEvents.map((event) => (
               <CustomerEventCard
                 key={event.id}
@@ -1166,6 +1422,7 @@ export default function DiscoverPage() {
             </div>
           )}
         </div>
+
         {/* July Classes Section */}
         <div className="mt-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">July Classes</h2>

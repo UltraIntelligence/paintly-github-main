@@ -1,230 +1,256 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Badge } from "@/components/ui/badge"
+import { ChevronLeft, ChevronRight, Heart, Star, Clock, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Calendar, ChevronLeft, ChevronRight } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
-interface FeaturedContent {
-  id: string
-  type: string
-  title: string
-  subtitle: string
-  description: string
-  instructor: string
-  date: string
-  location: string
-  price: string
-  originalPrice?: string
-  discount: string
-  cta: string
-  image: string
-  badge: string
-}
-
-const featuredContent: FeaturedContent[] = [
+const featuredEvents = [
   {
-    id: "event-spotlight",
-    type: "Event Spotlight",
-    title: "マスタークラス：ゴッホの星月夜",
-    subtitle: "Master Class: Van Gogh's Starry Night",
-    description:
-      "Join our most celebrated instructor for an exclusive masterpiece recreation with premium materials and wine pairing.",
-    instructor: "Master YUKI",
-    date: "June 15 • 6:00 PM",
-    location: "Artbar Ginza",
-    price: "¥6,800",
-    originalPrice: "¥8,500",
-    discount: "20% OFF",
-    cta: "Book Now",
-    image: "/placeholder.svg?height=600&width=1200&text=Van Gogh Starry Night Masterclass",
-    badge: "FEATURED",
+    id: "featured-1",
+    title: "ゴッホの星月夜マスタークラス",
+    titleEn: "Van Gogh Starry Night Masterclass",
+    instructor: "YUKI",
+    image: "/placeholder.svg?height=400&width=600&text=Van+Gogh+Starry+Night+Class",
+    price: 4800,
+    duration: "3 hours",
+    difficulty: "Intermediate",
+    rating: 4.9,
+    participants: 156,
+    description: "Learn the iconic swirling techniques of Van Gogh's most famous masterpiece",
+    descriptionJa: "ゴッホの最も有名な傑作の象徴的な渦巻き技法を学ぼう",
+    featured: true,
+    category: "Master Artists",
   },
   {
-    id: "team-building",
-    type: "Team Building",
-    title: "チームビルディング体験",
-    subtitle: "Corporate Team Building Experience",
-    description:
-      "Strengthen team bonds through collaborative art creation. Perfect for corporate events, team retreats, and building workplace connections.",
-    instructor: "Professional Facilitators",
-    date: "Available Daily",
-    location: "All Locations",
-    price: "¥4,500",
-    originalPrice: undefined,
-    discount: "per person",
-    cta: "Plan Your Event",
-    image: "/placeholder.svg?height=600&width=1200&text=Team Building Art Experience",
-    badge: "CORPORATE",
+    id: "featured-2",
+    title: "アルコールインク・ギャラクシー",
+    titleEn: "Alcohol Ink Galaxy Creation",
+    instructor: "DARIA",
+    image: "/placeholder.svg?height=400&width=600&text=Alcohol+Ink+Galaxy+Workshop",
+    price: 3600,
+    duration: "2 hours",
+    difficulty: "Beginner",
+    rating: 4.8,
+    participants: 89,
+    description: "Create stunning cosmic artworks with flowing alcohol ink techniques",
+    descriptionJa: "流れるアルコールインク技法で見事な宇宙アートワークを作成",
+    featured: true,
+    category: "Alcohol Ink",
   },
   {
-    id: "birthday-parties",
-    type: "Birthday Celebration",
-    title: "誕生日パーティー",
-    subtitle: "Birthday Party Art Experience",
-    description:
-      "Make birthdays unforgettable with personalized art parties. Includes decorations, art supplies, and a special birthday canvas.",
-    instructor: "Party Specialists",
-    date: "Weekends Available",
-    location: "Private Rooms",
-    price: "¥3,200",
-    originalPrice: undefined,
-    discount: "per guest",
-    cta: "Celebrate Here",
-    image: "/placeholder.svg?height=600&width=1200&text=Birthday Party Art Celebration",
-    badge: "PARTY",
-  },
-  {
-    id: "seasonal",
-    type: "Seasonal Collection",
-    title: "夏の特別コレクション",
-    subtitle: "Summer Special Collection",
-    description:
-      "Discover our curated summer art collection featuring vibrant beach scenes, tropical florals, and refreshing watercolor techniques.",
-    instructor: "Various Artists",
-    date: "June - August",
-    location: "All Locations",
-    price: "¥3,800",
-    originalPrice: undefined,
-    discount: "starting from",
-    cta: "Explore Collection",
-    image: "/placeholder.svg?height=600&width=1200&text=Summer Art Collection",
-    badge: "SEASONAL",
+    id: "featured-3",
+    title: "キッズ・レインボーアドベンチャー",
+    titleEn: "Kids Rainbow Adventure",
+    instructor: "MICHI",
+    image: "/placeholder.svg?height=400&width=600&text=Kids+Rainbow+Art+Class",
+    price: 2800,
+    duration: "1.5 hours",
+    difficulty: "Kids",
+    rating: 4.7,
+    participants: 234,
+    description: "A colorful journey perfect for young artists to explore creativity",
+    descriptionJa: "若いアーティストが創造性を探求するのに最適なカラフルな旅",
+    featured: true,
+    category: "Kids & Family",
   },
 ]
 
 export function FeaturedCarousel() {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
   useEffect(() => {
-    if (!isHovered) {
-      const interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % featuredContent.length)
-      }, 10000)
-      return () => clearInterval(interval)
-    }
-  }, [isHovered])
+    if (!isAutoPlaying) return
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % featuredEvents.length)
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [isAutoPlaying])
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % featuredContent.length)
+    setCurrentIndex((prev) => (prev + 1) % featuredEvents.length)
+    setIsAutoPlaying(false)
   }
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + featuredContent.length) % featuredContent.length)
+    setCurrentIndex((prev) => (prev - 1 + featuredEvents.length) % featuredEvents.length)
+    setIsAutoPlaying(false)
   }
 
-  const currentContent = featuredContent[currentSlide]
+  const currentEvent = featuredEvents[currentIndex]
 
   return (
-    <div
-      className="relative bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden h-[400px] lg:h-[500px]"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className={`absolute left-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${
-          isHovered ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <ChevronLeft className="w-6 h-6 text-gray-700" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className={`absolute right-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${
-          isHovered ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <ChevronRight className="w-6 h-6 text-gray-700" />
-      </button>
+    <div className="relative">
+      {/* Main Featured Card - Fully Responsive */}
+      <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+        {/* Mobile Layout - Stacked Vertically */}
+        <div className="block lg:hidden">
+          {/* Mobile Image */}
+          <div className="relative h-64 sm:h-72">
+            <img
+              src={currentEvent.image || "/placeholder.svg"}
+              alt={currentEvent.titleEn}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-3 left-3">
+              <Badge className="bg-orange-500 text-white text-xs px-2 py-1">Featured</Badge>
+            </div>
+            <div className="absolute top-3 right-3">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 bg-white/80 hover:bg-white">
+                <Heart className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
 
-      <div className="flex flex-col lg:flex-row h-full">
-        {/* Left side - Featured Image */}
-        <div className="w-full lg:w-1/2 relative h-1/2 lg:h-full">
-          <img
-            src={currentContent.image || "/placeholder.svg"}
-            alt={currentContent.subtitle}
-            className="w-full h-full object-cover transition-all duration-700"
+          {/* Mobile Content */}
+          <div className="p-4 sm:p-6">
+            <div className="flex items-center gap-2 mb-2">
+              <Badge variant="outline" className="text-xs">
+                {currentEvent.category}
+              </Badge>
+              <Badge variant="outline" className="text-xs">
+                {currentEvent.difficulty}
+              </Badge>
+            </div>
+
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 line-clamp-2">{currentEvent.title}</h3>
+            <p className="text-sm text-gray-600 mb-3 line-clamp-2">{currentEvent.descriptionJa}</p>
+
+            {/* Mobile Stats */}
+            <div className="flex items-center gap-4 mb-4 text-xs sm:text-sm text-gray-600">
+              <div className="flex items-center gap-1">
+                <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
+                <span>{currentEvent.rating}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span>{currentEvent.duration}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span>{currentEvent.participants}</span>
+              </div>
+            </div>
+
+            {/* Mobile Price and CTA */}
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">
+                  ¥{currentEvent.price.toLocaleString()}
+                </span>
+                <span className="text-sm text-gray-600 ml-1">per person</span>
+              </div>
+              <Button className="px-4 py-2 text-sm">Book Now</Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout - Side by Side */}
+        <div className="hidden lg:flex">
+          {/* Desktop Image - Responsive */}
+          <div className="relative w-3/5">
+            <img
+              src={currentEvent.image || "/placeholder.svg"}
+              alt={currentEvent.titleEn}
+              className="w-full h-full object-cover min-h-[350px] max-h-[450px]"
+            />
+            <div className="absolute top-4 left-4">
+              <Badge className="bg-orange-500 text-white">Featured</Badge>
+            </div>
+            <div className="absolute top-4 right-4">
+              <Button variant="ghost" size="sm" className="h-10 w-10 p-0 bg-white/80 hover:bg-white">
+                <Heart className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Desktop Content */}
+          <div className="w-2/5 p-6 lg:p-8 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="outline">{currentEvent.category}</Badge>
+                <Badge variant="outline">{currentEvent.difficulty}</Badge>
+              </div>
+
+              <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{currentEvent.title}</h3>
+              <p className="text-lg text-gray-600 mb-2">{currentEvent.titleEn}</p>
+              <p className="text-gray-700 mb-6 leading-relaxed">{currentEvent.description}</p>
+
+              {/* Desktop Stats */}
+              <div className="flex items-center gap-6 mb-6 text-gray-600">
+                <div className="flex items-center gap-2">
+                  <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  <span className="font-medium">{currentEvent.rating}</span>
+                  <span className="text-sm">({currentEvent.participants} reviews)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5" />
+                  <span>{currentEvent.duration}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Price and CTA */}
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-3xl font-bold text-gray-900">¥{currentEvent.price.toLocaleString()}</span>
+                <span className="text-gray-600 ml-2">per person</span>
+              </div>
+              <Button size="lg" className="px-8">
+                Book Now
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Arrows - Hidden on Mobile */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={prevSlide}
+          className="hidden lg:flex absolute left-4 top-1/2 transform -translate-y-1/2 h-10 w-10 p-0 bg-white/80 hover:bg-white shadow-md z-10"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={nextSlide}
+          className="hidden lg:flex absolute right-4 top-1/2 transform -translate-y-1/2 h-10 w-10 p-0 bg-white/80 hover:bg-white shadow-md z-10"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+      </div>
+
+      {/* Dots Indicator - Responsive */}
+      <div className="flex justify-center mt-4 gap-2">
+        {featuredEvents.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              setCurrentIndex(index)
+              setIsAutoPlaying(false)
+            }}
+            className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
+              index === currentIndex ? "bg-gray-900 scale-110" : "bg-gray-300 hover:bg-gray-400"
+            }`}
           />
+        ))}
+      </div>
 
-          {/* Badge positioned in top-left of image */}
-          <div className="absolute top-6 left-6">
-            <Badge className="bg-gray-900/90 backdrop-blur-sm text-white font-semibold px-4 py-2 text-sm shadow-lg">
-              {currentContent.badge}
-            </Badge>
-          </div>
-
-          {/* Navigation Dots positioned in bottom-right of image */}
-          <div className="absolute bottom-6 right-6 flex gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-2">
-            {featuredContent.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  index === currentSlide ? "bg-white scale-125 shadow-sm" : "bg-white/60 hover:bg-white/80"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Right side - Content */}
-        <div className="w-full lg:w-1/2 h-1/2 lg:h-full p-4 lg:p-8 flex flex-col justify-center">
-          <div className="mb-3 lg:mb-4">
-            <div className="text-xs lg:text-sm font-medium text-gray-500 mb-1 lg:mb-2 uppercase tracking-wide">
-              {currentContent.type}
-            </div>
-            <h2 className="text-xl lg:text-3xl font-bold text-gray-900 mb-1 lg:mb-2 leading-tight">
-              {currentContent.title}
-            </h2>
-            <h3 className="text-base lg:text-lg text-gray-600 font-medium mb-2 lg:mb-3">{currentContent.subtitle}</h3>
-          </div>
-
-          <p className="text-gray-600 text-sm lg:text-base mb-3 lg:mb-4 leading-relaxed line-clamp-3 lg:line-clamp-none">
-            {currentContent.description}
-          </p>
-
-          <div className="space-y-1 lg:space-y-2 mb-4 lg:mb-6 text-xs lg:text-sm">
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-gray-700">with {currentContent.instructor}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="w-3 h-3 lg:w-4 lg:h-4 text-gray-600" />
-              <span className="text-gray-600">{currentContent.date}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-gray-600">{currentContent.location}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 lg:gap-3 mb-4 lg:mb-6">
-            <div className="flex items-center gap-2">
-              <span className="text-xl lg:text-2xl font-bold text-gray-900">{currentContent.price}</span>
-              {currentContent.originalPrice && (
-                <span className="text-sm lg:text-base text-gray-400 line-through">{currentContent.originalPrice}</span>
-              )}
-              <Badge className="bg-red-100 text-red-700 font-semibold text-xs">{currentContent.discount}</Badge>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-2 lg:gap-3">
-            <Button
-              size="lg"
-              className="bg-gray-900 hover:bg-gray-800 text-white font-semibold px-4 lg:px-6 py-2 lg:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-xs lg:text-sm"
-            >
-              {currentContent.cta}
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold px-4 lg:px-6 py-2 lg:py-3 rounded-full text-xs lg:text-sm"
-            >
-              Learn More
-            </Button>
-          </div>
-        </div>
+      {/* Mobile Navigation Buttons */}
+      <div className="flex md:hidden justify-center mt-4 gap-4">
+        <Button variant="outline" size="sm" onClick={prevSlide} className="flex items-center gap-2">
+          <ChevronLeft className="h-4 w-4" />
+          Previous
+        </Button>
+        <Button variant="outline" size="sm" onClick={nextSlide} className="flex items-center gap-2">
+          Next
+          <ChevronRight className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   )
