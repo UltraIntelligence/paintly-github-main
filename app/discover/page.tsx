@@ -925,7 +925,12 @@ export default function DiscoverPage() {
       searchQuery === "" ||
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.titleEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.instructor.toLowerCase().includes(searchQuery.toLowerCase())
+      event.instructor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.difficulty.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.popularity.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.canvasSize.toLowerCase().includes(searchQuery.toLowerCase())
 
     // Location filter
     const matchesLocation = selectedLocations.length === 0 || selectedLocations.includes(event.location)

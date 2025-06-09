@@ -81,7 +81,6 @@ export function CustomerEventCard({ event, isFavorite, onFavoriteToggle, onEvent
               {formatDate(event.date).toUpperCase()}
             </Badge>
           </div>
-          <div className="absolute top-2 left-2">{getStatusBadge(event.status, event.booked, event.capacity)}</div>
         </div>
         <div className="p-3">
           <h3 className="text-sm font-bold text-gray-900 leading-tight mb-1 truncate">{event.title}</h3>
