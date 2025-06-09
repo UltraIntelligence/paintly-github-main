@@ -516,7 +516,7 @@ function LocationsContent() {
 
 export default function LocationsPage() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
       <SidebarProvider defaultOpen={false}>
         <AppSidebar variant="inset" />
         <SidebarInset>

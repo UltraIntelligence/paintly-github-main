@@ -15,6 +15,9 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { ThemeProvider } from "@/components/theme-provider"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 
 // Sample events data with beautiful painting images
 const sampleEvents = [
@@ -1091,356 +1094,369 @@ export default function DiscoverPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white pt-8">
-      {/* Search Section */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Developer-only navigation links */}
-        <div className="absolute top-2 left-2 z-10 flex gap-2">
-          <Button
-            onClick={() => (window.location.href = "/dashboard")}
-            variant="outline"
-            size="sm"
-            className="opacity-30 hover:opacity-100 text-xs border-dashed border-gray-300 bg-transparent"
-          >
-            Dev: Dashboard
-          </Button>
-          <Button
-            onClick={() => (window.location.href = "/events/sample")}
-            variant="outline"
-            size="sm"
-            className="opacity-30 hover:opacity-100 text-xs border-dashed border-gray-300 bg-transparent"
-          >
-            Dev: Event Page
-          </Button>
-        </div>
-
-        {/* Featured Section - Dynamic Carousel */}
-        <div className="mb-16">
-          <FeaturedCarousel />
-        </div>
-
-        {/* New Search and Filter Section */}
-        <div className="mb-16">
-          <div className="relative">
-            {/* Main search bar and filter button */}
-            <div className="flex items-center gap-3">
-              <div className="relative flex-grow">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  placeholder="Search classes, instructors, or locations..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 pr-4 py-6 text-base rounded-full border-gray-200 focus:border-gray-300 focus:ring-gray-300 shadow-sm"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                )}
+    <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
+      <SidebarProvider defaultOpen={false}>
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <div className="min-h-screen bg-white pt-8">
+            {/* All existing content stays the same */}
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+              {/* Developer-only navigation links */}
+              <div className="absolute top-2 left-2 z-10 flex gap-2">
+                <Button
+                  onClick={() => (window.location.href = "/events/sample")}
+                  variant="outline"
+                  size="sm"
+                  className="opacity-30 hover:opacity-100 text-xs border-dashed border-gray-300 bg-transparent"
+                >
+                  Dev: Event Page
+                </Button>
               </div>
 
-              <Popover open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2 px-6 py-6 rounded-full border-gray-200 hover:bg-gray-50"
-                  >
-                    <Filter className="w-5 h-5" />
-                    <span className="font-medium">Filters</span>
-                    {activeFilterCount > 0 && (
-                      <Badge className="ml-1 bg-gray-900 hover:bg-gray-800">{activeFilterCount}</Badge>
-                    )}
-                    <ChevronDown className="w-4 h-4 ml-1" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[380px] p-0" align="end">
-                  <div className="p-5">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-lg">Filters</h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={clearAllFilters}
-                        className="text-gray-500 hover:text-gray-700 text-sm"
-                      >
-                        Clear all
-                      </Button>
+              {/* Featured Section - Dynamic Carousel */}
+              <div className="mb-16">
+                <FeaturedCarousel />
+              </div>
+
+              {/* New Search and Filter Section */}
+              <div className="mb-16">
+                <div className="relative">
+                  {/* Main search bar and filter button */}
+                  <div className="flex items-center gap-3">
+                    <div className="relative flex-grow">
+                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <Input
+                        placeholder="Search classes, instructors, or locations..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-12 pr-4 py-6 text-base rounded-full border-gray-200 focus:border-gray-300 focus:ring-gray-300 shadow-sm"
+                      />
+                      {searchQuery && (
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      )}
                     </div>
 
-                    {/* Date filter */}
-                    <div className="mb-5">
-                      <h4 className="font-medium mb-3">Date</h4>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full justify-start text-left font-normal",
-                              !selectedDate && "text-muted-foreground",
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {selectedDate ? format(selectedDate, "PPP") : "Select a date"}
+                    <Popover open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="flex items-center gap-2 px-6 py-6 rounded-full border-gray-200 hover:bg-gray-50"
+                        >
+                          <Filter className="w-5 h-5" />
+                          <span className="font-medium">Filters</span>
+                          {activeFilterCount > 0 && (
+                            <Badge className="ml-1 bg-gray-900 hover:bg-gray-800">{activeFilterCount}</Badge>
+                          )}
+                          <ChevronDown className="w-4 h-4 ml-1" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[380px] p-0" align="end">
+                        <div className="p-5">
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="font-semibold text-lg">Filters</h3>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={clearAllFilters}
+                              className="text-gray-500 hover:text-gray-700 text-sm"
+                            >
+                              Clear all
+                            </Button>
+                          </div>
+
+                          {/* Date filter */}
+                          <div className="mb-5">
+                            <h4 className="font-medium mb-3">Date</h4>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  className={cn(
+                                    "w-full justify-start text-left font-normal",
+                                    !selectedDate && "text-muted-foreground",
+                                  )}
+                                >
+                                  <CalendarIcon className="mr-2 h-4 w-4" />
+                                  {selectedDate ? format(selectedDate, "PPP") : "Select a date"}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <CalendarComponent
+                                  mode="single"
+                                  selected={selectedDate}
+                                  onSelect={setSelectedDate}
+                                  initialFocus
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+
+                          <Separator className="my-4" />
+
+                          {/* Location filter */}
+                          <div className="mb-5">
+                            <h4 className="font-medium mb-3">Location</h4>
+                            <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                              {allLocations.map((location) => (
+                                <div key={location} className="flex items-center space-x-2">
+                                  <Checkbox
+                                    id={`location-${location}`}
+                                    checked={selectedLocations.includes(location)}
+                                    onCheckedChange={() => toggleLocationFilter(location)}
+                                  />
+                                  <Label htmlFor={`location-${location}`} className="text-sm cursor-pointer">
+                                    {location}
+                                  </Label>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <Separator className="my-4" />
+
+                          {/* Category filter */}
+                          <div className="mb-5">
+                            <h4 className="font-medium mb-3">Category</h4>
+                            <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                              {allCategories.map((category) => (
+                                <div key={category} className="flex items-center space-x-2">
+                                  <Checkbox
+                                    id={`category-${category}`}
+                                    checked={selectedCategories.includes(category)}
+                                    onCheckedChange={() => toggleCategoryFilter(category)}
+                                  />
+                                  <Label htmlFor={`category-${category}`} className="text-sm cursor-pointer">
+                                    {category}
+                                  </Label>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <Separator className="my-4" />
+
+                          {/* Instructor filter */}
+                          <div className="mb-5">
+                            <h4 className="font-medium mb-3">Instructor</h4>
+                            <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                              {allInstructors.map((instructor) => (
+                                <div key={instructor} className="flex items-center space-x-2">
+                                  <Checkbox
+                                    id={`instructor-${instructor}`}
+                                    checked={selectedInstructors.includes(instructor)}
+                                    onCheckedChange={() => toggleInstructorFilter(instructor)}
+                                  />
+                                  <Label htmlFor={`instructor-${instructor}`} className="text-sm cursor-pointer">
+                                    {instructor}
+                                  </Label>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <Separator className="my-4" />
+
+                          {/* Difficulty filter */}
+                          <div className="mb-5">
+                            <h4 className="font-medium mb-3">Difficulty</h4>
+                            <div className="space-y-2">
+                              {allDifficulties.map((difficulty) => (
+                                <div key={difficulty} className="flex items-center space-x-2">
+                                  <Checkbox
+                                    id={`difficulty-${difficulty}`}
+                                    checked={selectedDifficulties.includes(difficulty)}
+                                    onCheckedChange={() => toggleDifficultyFilter(difficulty)}
+                                  />
+                                  <Label htmlFor={`difficulty-${difficulty}`} className="text-sm cursor-pointer">
+                                    {difficulty}
+                                  </Label>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <Separator className="my-4" />
+
+                          {/* Availability filter */}
+                          <div className="mb-5">
+                            <div className="flex items-center space-x-2">
+                              <Checkbox
+                                id="available-only"
+                                checked={availableOnly}
+                                onCheckedChange={(checked) => setAvailableOnly(checked === true)}
+                              />
+                              <Label htmlFor="available-only" className="text-sm cursor-pointer">
+                                Show available classes only
+                              </Label>
+                            </div>
+                          </div>
+
+                          {/* Apply filters button */}
+                          <Button className="w-full mt-2" onClick={() => setFilterMenuOpen(false)}>
+                            Apply Filters
                           </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <CalendarComponent
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={setSelectedDate}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    {/* Location filter */}
-                    <div className="mb-5">
-                      <h4 className="font-medium mb-3">Location</h4>
-                      <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
-                        {allLocations.map((location) => (
-                          <div key={location} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`location-${location}`}
-                              checked={selectedLocations.includes(location)}
-                              onCheckedChange={() => toggleLocationFilter(location)}
-                            />
-                            <Label htmlFor={`location-${location}`} className="text-sm cursor-pointer">
-                              {location}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    {/* Category filter */}
-                    <div className="mb-5">
-                      <h4 className="font-medium mb-3">Category</h4>
-                      <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
-                        {allCategories.map((category) => (
-                          <div key={category} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`category-${category}`}
-                              checked={selectedCategories.includes(category)}
-                              onCheckedChange={() => toggleCategoryFilter(category)}
-                            />
-                            <Label htmlFor={`category-${category}`} className="text-sm cursor-pointer">
-                              {category}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    {/* Instructor filter */}
-                    <div className="mb-5">
-                      <h4 className="font-medium mb-3">Instructor</h4>
-                      <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
-                        {allInstructors.map((instructor) => (
-                          <div key={instructor} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`instructor-${instructor}`}
-                              checked={selectedInstructors.includes(instructor)}
-                              onCheckedChange={() => toggleInstructorFilter(instructor)}
-                            />
-                            <Label htmlFor={`instructor-${instructor}`} className="text-sm cursor-pointer">
-                              {instructor}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    {/* Difficulty filter */}
-                    <div className="mb-5">
-                      <h4 className="font-medium mb-3">Difficulty</h4>
-                      <div className="space-y-2">
-                        {allDifficulties.map((difficulty) => (
-                          <div key={difficulty} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`difficulty-${difficulty}`}
-                              checked={selectedDifficulties.includes(difficulty)}
-                              onCheckedChange={() => toggleDifficultyFilter(difficulty)}
-                            />
-                            <Label htmlFor={`difficulty-${difficulty}`} className="text-sm cursor-pointer">
-                              {difficulty}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    {/* Availability filter */}
-                    <div className="mb-5">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="available-only"
-                          checked={availableOnly}
-                          onCheckedChange={(checked) => setAvailableOnly(checked === true)}
-                        />
-                        <Label htmlFor="available-only" className="text-sm cursor-pointer">
-                          Show available classes only
-                        </Label>
-                      </div>
-                    </div>
-
-                    {/* Apply filters button */}
-                    <Button className="w-full mt-2" onClick={() => setFilterMenuOpen(false)}>
-                      Apply Filters
-                    </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </div>
-                </PopoverContent>
-              </Popover>
-            </div>
 
-            {/* Active filters display */}
-            {activeFilterCount > 0 && (
-              <div className="flex flex-wrap gap-2 mt-4">
-                {selectedDate && (
-                  <Badge variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
-                    {format(selectedDate, "MMM d, yyyy")}
-                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => setSelectedDate(undefined)} />
-                  </Badge>
-                )}
+                  {/* Active filters display */}
+                  {activeFilterCount > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {selectedDate && (
+                        <Badge variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
+                          {format(selectedDate, "MMM d, yyyy")}
+                          <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => setSelectedDate(undefined)} />
+                        </Badge>
+                      )}
 
-                {selectedLocations.map((location) => (
-                  <Badge key={location} variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
-                    {location}
-                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleLocationFilter(location)} />
-                  </Badge>
-                ))}
+                      {selectedLocations.map((location) => (
+                        <Badge
+                          key={location}
+                          variant="secondary"
+                          className="px-3 py-1 rounded-full flex items-center gap-1"
+                        >
+                          {location}
+                          <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleLocationFilter(location)} />
+                        </Badge>
+                      ))}
 
-                {selectedCategories.map((category) => (
-                  <Badge key={category} variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
-                    {category}
-                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleCategoryFilter(category)} />
-                  </Badge>
-                ))}
+                      {selectedCategories.map((category) => (
+                        <Badge
+                          key={category}
+                          variant="secondary"
+                          className="px-3 py-1 rounded-full flex items-center gap-1"
+                        >
+                          {category}
+                          <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleCategoryFilter(category)} />
+                        </Badge>
+                      ))}
 
-                {selectedInstructors.map((instructor) => (
-                  <Badge
-                    key={instructor}
-                    variant="secondary"
-                    className="px-3 py-1 rounded-full flex items-center gap-1"
-                  >
-                    {instructor}
-                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleInstructorFilter(instructor)} />
-                  </Badge>
-                ))}
+                      {selectedInstructors.map((instructor) => (
+                        <Badge
+                          key={instructor}
+                          variant="secondary"
+                          className="px-3 py-1 rounded-full flex items-center gap-1"
+                        >
+                          {instructor}
+                          <X
+                            className="w-3 h-3 ml-1 cursor-pointer"
+                            onClick={() => toggleInstructorFilter(instructor)}
+                          />
+                        </Badge>
+                      ))}
 
-                {selectedDifficulties.map((difficulty) => (
-                  <Badge
-                    key={difficulty}
-                    variant="secondary"
-                    className="px-3 py-1 rounded-full flex items-center gap-1"
-                  >
-                    {difficulty}
-                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => toggleDifficultyFilter(difficulty)} />
-                  </Badge>
-                ))}
+                      {selectedDifficulties.map((difficulty) => (
+                        <Badge
+                          key={difficulty}
+                          variant="secondary"
+                          className="px-3 py-1 rounded-full flex items-center gap-1"
+                        >
+                          {difficulty}
+                          <X
+                            className="w-3 h-3 ml-1 cursor-pointer"
+                            onClick={() => toggleDifficultyFilter(difficulty)}
+                          />
+                        </Badge>
+                      ))}
 
-                {availableOnly && (
-                  <Badge variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
-                    Available Only
-                    <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => setAvailableOnly(false)} />
-                  </Badge>
-                )}
+                      {availableOnly && (
+                        <Badge variant="secondary" className="px-3 py-1 rounded-full flex items-center gap-1">
+                          Available Only
+                          <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => setAvailableOnly(false)} />
+                        </Badge>
+                      )}
 
-                {activeFilterCount > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearAllFilters}
-                    className="text-xs text-gray-500 hover:text-gray-700"
-                  >
-                    Clear all
-                  </Button>
+                      {activeFilterCount > 0 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={clearAllFilters}
+                          className="text-xs text-gray-500 hover:text-gray-700"
+                        >
+                          Clear all
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Starting Soon Section */}
+              <div className="mb-16">
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">Starting Soon</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3">
+                  {startingSoonEvents.slice(0, 5).map((event) => (
+                    <CustomerEventCard
+                      key={event.id}
+                      event={event}
+                      isFavorite={favorites.has(event.id)}
+                      onFavoriteToggle={toggleFavorite}
+                      onEventClick={handleEventClick}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Main Discovery Section */}
+              <div>
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-3xl font-bold text-gray-900">June Classes</h2>
+                  <div className="text-gray-500">
+                    {filteredEvents.length} {filteredEvents.length === 1 ? "class" : "classes"} found
+                  </div>
+                </div>
+
+                {/* Events Grid - Responsive */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3">
+                  {filteredEvents.map((event) => (
+                    <CustomerEventCard
+                      key={event.id}
+                      event={event}
+                      isFavorite={favorites.has(event.id)}
+                      onFavoriteToggle={toggleFavorite}
+                      onEventClick={handleEventClick}
+                    />
+                  ))}
+                </div>
+
+                {filteredEvents.length === 0 && (
+                  <div className="text-center py-16">
+                    <div className="text-gray-400 mb-6">
+                      <Calendar className="w-20 h-20 mx-auto" />
+                    </div>
+                    <h3 className="text-2xl font-semibold text-gray-900 mb-3">No classes found</h3>
+                    <p className="text-lg text-gray-600">Try adjusting your filters or search terms</p>
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Starting Soon Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Starting Soon</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3">
-            {startingSoonEvents.slice(0, 5).map((event) => (
-              <CustomerEventCard
-                key={event.id}
-                event={event}
-                isFavorite={favorites.has(event.id)}
-                onFavoriteToggle={toggleFavorite}
-                onEventClick={handleEventClick}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Main Discovery Section */}
-        <div>
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">June Classes</h2>
-            <div className="text-gray-500">
-              {filteredEvents.length} {filteredEvents.length === 1 ? "class" : "classes"} found
-            </div>
-          </div>
-
-          {/* Events Grid - Responsive */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3">
-            {filteredEvents.map((event) => (
-              <CustomerEventCard
-                key={event.id}
-                event={event}
-                isFavorite={favorites.has(event.id)}
-                onFavoriteToggle={toggleFavorite}
-                onEventClick={handleEventClick}
-              />
-            ))}
-          </div>
-
-          {filteredEvents.length === 0 && (
-            <div className="text-center py-16">
-              <div className="text-gray-400 mb-6">
-                <Calendar className="w-20 h-20 mx-auto" />
+              {/* July Classes Section */}
+              <div className="mt-16">
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">July Classes</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+                  {sampleEvents
+                    .filter((event) => event.date.startsWith("2025-07"))
+                    .map((event) => (
+                      <CustomerEventCard
+                        key={event.id}
+                        event={event}
+                        isFavorite={favorites.has(event.id)}
+                        onFavoriteToggle={toggleFavorite}
+                        onEventClick={handleEventClick}
+                      />
+                    ))}
+                </div>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-3">No classes found</h3>
-              <p className="text-lg text-gray-600">Try adjusting your filters or search terms</p>
             </div>
-          )}
-        </div>
-
-        {/* July Classes Section */}
-        <div className="mt-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">July Classes</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-            {sampleEvents
-              .filter((event) => event.date.startsWith("2025-07"))
-              .map((event) => (
-                <CustomerEventCard
-                  key={event.id}
-                  event={event}
-                  isFavorite={favorites.has(event.id)}
-                  onFavoriteToggle={toggleFavorite}
-                  onEventClick={handleEventClick}
-                />
-              ))}
           </div>
-        </div>
-      </div>
-    </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </ThemeProvider>
   )
 }

@@ -1697,9 +1697,9 @@ function ScheduleContent() {
 
 export default function SchedulePage() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-      <SidebarProvider>
-        <AppSidebar />
+    <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
+      <SidebarProvider defaultOpen={false}>
+        <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader />
           <motion.main {...pageTransition} className="flex-1 overflow-auto">
