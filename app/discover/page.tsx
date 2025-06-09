@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, Heart, Filter } from "lucide-react"
+import { Calendar, Filter } from "lucide-react"
+import { CustomerEventCard } from "@/components/customer-event-card"
+import { FeaturedCarousel } from "@/components/featured-carousel"
 
 // Sample events data with beautiful painting images
 const sampleEvents = [
@@ -835,15 +835,8 @@ export default function DiscoverPage() {
     setFavorites(newFavorites)
   }
 
-  const getStatusBadge = (status: string, booked: number, capacity: number) => {
-    switch (status) {
-      case "sold-out":
-        return <Badge className="bg-red-500 text-white text-xs px-1 py-0.5 text-xs">SOLD OUT</Badge>
-      case "few-spots":
-        return <Badge className="bg-orange-500 text-white text-xs px-1 py-0.5 text-xs">FEW SPOTS</Badge>
-      default:
-        return null
-    }
+  const handleEventClick = (event: any) => {
+    console.log("Event clicked:", event)
   }
 
   const formatDate = (dateString: string) => {
@@ -932,136 +925,23 @@ export default function DiscoverPage() {
           </div>
         </div>
 
-        {/* Featured Section */}
+        {/* Featured Section - Dynamic Carousel */}
         <div className="mb-16">
-          <div className="relative bg-gray-50 rounded-3xl p-6 md:p-8 shadow-lg border border-gray-200 overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gray-100 rounded-full opacity-30 transform translate-x-16 -translate-y-16"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gray-100 rounded-full opacity-30 transform -translate-x-12 translate-y-12"></div>
-
-            <div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
-              {/* Left side - Featured Image */}
-              <div className="w-full lg:w-2/5 flex-shrink-0">
-                <div className="relative aspect-[4/3] lg:aspect-square rounded-2xl overflow-hidden shadow-xl">
-                  <img
-                    src="/placeholder.svg?height=400&width=400&text=Van Gogh Starry Night Masterclass"
-                    alt="Featured Class"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <Badge className="bg-gray-800 text-white font-semibold px-3 py-1">FEATURED</Badge>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right side - Content */}
-              <div className="w-full lg:w-3/5 text-center lg:text-left">
-                <div className="mb-4">
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 leading-tight">
-                    マスタークラス：ゴッホの星月夜
-                  </h2>
-                  <h3 className="text-lg md:text-xl text-gray-700 font-medium">
-                    Master Class: Van Gogh's Starry Night
-                  </h3>
-                </div>
-
-                <p className="text-gray-600 text-base md:text-lg mb-4 leading-relaxed">
-                  Join our most celebrated instructor for an exclusive masterpiece recreation with premium materials and
-                  wine pairing.
-                </p>
-
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6 text-sm md:text-base">
-                  <div className="flex items-center justify-center lg:justify-start gap-2">
-                    <span className="font-medium text-gray-700">with Master YUKI</span>
-                  </div>
-                  <div className="hidden sm:block text-gray-400">•</div>
-                  <div className="flex items-center justify-center lg:justify-start gap-2">
-                    <Calendar className="w-4 h-4 text-gray-600" />
-                    <span className="text-gray-600">June 15 • 6:00 PM</span>
-                  </div>
-                  <div className="hidden sm:block text-gray-400">•</div>
-                  <div className="flex items-center justify-center lg:justify-start gap-2">
-                    <span className="text-gray-600">Artbar Ginza</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-6">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl md:text-3xl font-bold text-gray-900">¥6,800</span>
-                    <span className="text-lg text-gray-400 line-through">¥8,500</span>
-                    <Badge className="bg-red-100 text-red-700 font-semibold">20% OFF</Badge>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                  <Button
-                    size="lg"
-                    className="bg-gray-900 hover:bg-gray-800 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    Book Now
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold px-8 py-3 rounded-full"
-                  >
-                    Learn More
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <FeaturedCarousel />
         </div>
 
         {/* Starting Soon Section */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Starting Soon</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {startingSoonEvents.map((event) => (
-              <Card
+              <CustomerEventCard
                 key={event.id}
-                className="group cursor-pointer border-0 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white rounded-2xl overflow-hidden"
-                onClick={() => console.log("Event clicked:", event)}
-              >
-                <CardContent className="p-0">
-                  <div className="relative aspect-square">
-                    <img
-                      src={event.image || "/placeholder.svg"}
-                      alt={event.titleEn}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        toggleFavorite(event.id)
-                      }}
-                      className="absolute top-2 right-2 w-6 h-6 p-0 bg-white/90 hover:bg-white rounded-full shadow-sm"
-                    >
-                      <Heart
-                        className={`w-3 h-3 ${favorites.has(event.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`}
-                      />
-                    </Button>
-                    <div className="absolute bottom-2 left-2">
-                      <Badge className="bg-black/70 text-white text-xs font-medium px-2 py-1">
-                        {formatDate(event.date).toUpperCase()}
-                      </Badge>
-                    </div>
-                    <div className="absolute top-2 left-2">
-                      {getStatusBadge(event.status, event.booked, event.capacity)}
-                    </div>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="text-sm font-bold text-gray-900 leading-tight mb-1 truncate">{event.title}</h3>
-                    <p className="text-xs text-gray-500 mb-2">with {event.instructor}</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-600">{event.startTime}</span>
-                      <span className="font-bold text-gray-900">¥{event.price.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                event={event}
+                isFavorite={favorites.has(event.id)}
+                onFavoriteToggle={toggleFavorite}
+                onEventClick={handleEventClick}
+              />
             ))}
           </div>
         </div>
@@ -1131,53 +1011,16 @@ export default function DiscoverPage() {
             </div>
           )}
 
-          {/* Events Grid - Airbnb Style */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-3">
+          {/* Events Grid - Responsive */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {filteredEvents.map((event) => (
-              <Card
+              <CustomerEventCard
                 key={event.id}
-                className="group cursor-pointer border-0 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white rounded-2xl overflow-hidden"
-                onClick={() => console.log("Event clicked:", event)}
-              >
-                <CardContent className="p-0">
-                  <div className="relative aspect-square">
-                    <img
-                      src={event.image || "/placeholder.svg"}
-                      alt={event.titleEn}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        toggleFavorite(event.id)
-                      }}
-                      className="absolute top-2 right-2 w-6 h-6 p-0 bg-white/90 hover:bg-white rounded-full shadow-sm"
-                    >
-                      <Heart
-                        className={`w-3 h-3 ${favorites.has(event.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`}
-                      />
-                    </Button>
-                    <div className="absolute bottom-2 left-2">
-                      <Badge className="bg-black/70 text-white text-xs font-medium px-2 py-1">
-                        {formatDate(event.date).toUpperCase()}
-                      </Badge>
-                    </div>
-                    <div className="absolute top-2 left-2">
-                      {getStatusBadge(event.status, event.booked, event.capacity)}
-                    </div>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="text-sm font-bold text-gray-900 leading-tight mb-1 truncate">{event.title}</h3>
-                    <p className="text-xs text-gray-500 mb-2">with {event.instructor}</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-600">{event.startTime}</span>
-                      <span className="font-bold text-gray-900">¥{event.price.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                event={event}
+                isFavorite={favorites.has(event.id)}
+                onFavoriteToggle={toggleFavorite}
+                onEventClick={handleEventClick}
+              />
             ))}
           </div>
 
@@ -1194,54 +1037,17 @@ export default function DiscoverPage() {
         {/* July Classes Section */}
         <div className="mt-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">July Classes</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {sampleEvents
               .filter((event) => event.date.startsWith("2025-07"))
               .map((event) => (
-                <Card
+                <CustomerEventCard
                   key={event.id}
-                  className="group cursor-pointer border-0 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white rounded-2xl overflow-hidden"
-                  onClick={() => console.log("Event clicked:", event)}
-                >
-                  <CardContent className="p-0">
-                    <div className="relative aspect-square">
-                      <img
-                        src={event.image || "/placeholder.svg"}
-                        alt={event.titleEn}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          toggleFavorite(event.id)
-                        }}
-                        className="absolute top-2 right-2 w-6 h-6 p-0 bg-white/90 hover:bg-white rounded-full shadow-sm"
-                      >
-                        <Heart
-                          className={`w-3 h-3 ${favorites.has(event.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`}
-                        />
-                      </Button>
-                      <div className="absolute bottom-2 left-2">
-                        <Badge className="bg-black/70 text-white text-xs font-medium px-2 py-1">
-                          {formatDate(event.date).toUpperCase()}
-                        </Badge>
-                      </div>
-                      <div className="absolute top-2 left-2">
-                        {getStatusBadge(event.status, event.booked, event.capacity)}
-                      </div>
-                    </div>
-                    <div className="p-3">
-                      <h3 className="text-sm font-bold text-gray-900 leading-tight mb-1 truncate">{event.title}</h3>
-                      <p className="text-xs text-gray-500 mb-2">with {event.instructor}</p>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-gray-600">{event.startTime}</span>
-                        <span className="font-bold text-gray-900">¥{event.price.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                  event={event}
+                  isFavorite={favorites.has(event.id)}
+                  onFavoriteToggle={toggleFavorite}
+                  onEventClick={handleEventClick}
+                />
               ))}
           </div>
         </div>
