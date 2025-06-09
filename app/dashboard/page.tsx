@@ -45,36 +45,30 @@ export default function Page() {
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
-      <div className="min-h-screen bg-gradient-to-br from-slate-100 via-gray-100 to-slate-200 dark:from-slate-900 dark:via-gray-900 dark:to-slate-800">
-        <SidebarProvider defaultOpen={false}>
-          <AppSidebar variant="inset" />
-          <SidebarInset className="bg-transparent">
-            <SiteHeader />
-            <AnimatePresence mode="wait">
-              <motion.div key="today" className="flex flex-1 flex-col" {...pageTransition}>
-                <div className="@container/main flex flex-1 flex-col gap-2">
-                  <div className="flex flex-col gap-6 py-6 md:gap-8 md:py-8">
-                    <div className="px-6 lg:px-8">
-                      <SectionCards />
-                    </div>
-                    <div className="px-6 lg:px-8">
-                      <div className="neu-card p-6">
-                        <ChartAreaInteractive />
-                      </div>
-                    </div>
-                    <EnhancedEventsSection onEventClick={handleEventClick} />
+      <SidebarProvider defaultOpen={false}>
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <AnimatePresence mode="wait">
+            <motion.div key="today" className="flex flex-1 flex-col" {...pageTransition}>
+              <div className="@container/main flex flex-1 flex-col gap-2">
+                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                  <SectionCards />
+                  <div className="px-4 lg:px-6">
+                    <ChartAreaInteractive />
                   </div>
+                  <EnhancedEventsSection onEventClick={handleEventClick} />
                 </div>
-              </motion.div>
-            </AnimatePresence>
-          </SidebarInset>
-          <EventDetailsModal
-            isOpen={isEventDetailModalOpen}
-            onOpenChange={setIsEventDetailModalOpen}
-            event={selectedEventDetail}
-          />
-        </SidebarProvider>
-      </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </SidebarInset>
+        <EventDetailsModal
+          isOpen={isEventDetailModalOpen}
+          onOpenChange={setIsEventDetailModalOpen}
+          event={selectedEventDetail}
+        />
+      </SidebarProvider>
     </ThemeProvider>
   )
 }

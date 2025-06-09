@@ -1,9 +1,11 @@
 "use client"
+
 import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { CheckIcon, Calendar, Clock, Users, MapPin } from "lucide-react"
+import { format } from "date-fns"
+import { CalendarIcon, ClockIcon } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -12,592 +14,398 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils"
+import { Card, CardContent } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import type { UnifiedTemplate, UnifiedInstructor, UnifiedLocation } from "@/lib/unified-types"
 
-const formSchema = z.object({
-  templateId: z.string({ required_error: "Please select a template." }),
-  date: z.string({ required_error: "Please select a date." }),
-  time: z.string({ required_error: "Please select a time." }),
-  instructorId: z.string({ required_error: "Please select an instructor." }),
-  locationId: z.string({ required_error: "Please select a location." }),
-  maxParticipants: z.number().min(1).max(50),
-  specialNotes: z.string().optional(),
-})
-
-interface ScheduledEventWizardProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
-
-// Sample templates data
+// Mock data for templates
 const templates = [
   {
-    id: "monet",
-    japaneseTitle: "モネ 睡蓮",
-    englishTitle: "Monet Water Lilies",
+    id: "1",
+    title: "Picasso Self-Portrait",
+    titleJp: "ピカソ自画像",
+    description: "Cubist portrait techniques",
     duration: 2,
-    canvas: "F6",
-    difficulty: "Beginner",
-    category: "Master Artists",
-    specialization: ["master", "general"],
-    image: "/placeholder.svg?height=80&width=80&text=Monet",
-    price: 2800,
+    materials: ['Canvas (16" x 20")', "Acrylic Paint Set", "Brushes & Palette", "Apron & Easel"],
+    image: "/placeholder.svg?height=64&width=64",
   },
   {
-    id: "vangogh",
-    japaneseTitle: "ゴッホ 星月夜",
-    englishTitle: "Van Gogh Starry Night",
+    id: "2",
+    title: "Monet Water Lilies",
+    titleJp: "モネの睡蓮",
+    description: "Impressionist watercolor techniques",
     duration: 2.5,
-    canvas: "F10",
-    difficulty: "Advanced",
-    category: "Master Artists",
-    specialization: ["master"],
-    image: "/placeholder.svg?height=80&width=80&text=VanGogh",
-    price: 3200,
+    materials: ["Watercolor Paper", "Watercolor Paint Set", "Brushes", "Palette"],
+    image: "/placeholder.svg?height=64&width=64",
   },
   {
-    id: "pouring",
-    japaneseTitle: "F6 たらし込みポーリングアート",
-    englishTitle: "Paint Pouring",
-    duration: 2,
-    canvas: "30cm Round",
-    difficulty: "Beginner",
-    category: "Paint Pouring",
-    specialization: ["pouring"],
-    image: "/placeholder.svg?height=80&width=80&text=Pouring",
-    price: 2200,
-  },
-  {
-    id: "kids-chameleon",
-    japaneseTitle: "キッズ カメレオン",
-    englishTitle: "Kids Chameleon",
-    duration: 1.5,
-    canvas: "25cm Round",
-    difficulty: "Kids",
-    category: "Kids Only",
-    specialization: ["kids"],
-    image: "/placeholder.svg?height=80&width=80&text=Kids",
-    price: 1800,
+    id: "3",
+    title: "Van Gogh Starry Night",
+    titleJp: "ゴッホの星月夜",
+    description: "Post-impressionist oil painting",
+    duration: 3,
+    materials: ['Canvas (18" x 24")', "Oil Paint Set", "Brushes & Palette", "Apron & Easel"],
+    image: "/placeholder.svg?height=64&width=64",
   },
 ]
 
-// Sample instructors data
+// Mock data for instructors
 const instructors = [
-  {
-    id: "yuki",
-    name: "Yuki Tanaka",
-    initials: "YT",
-    specialty: "kids",
-    specialtyColor: "#3b82f6",
-    avatar: "/placeholder.svg?height=32&width=32&text=YT",
-  },
   {
     id: "naomi",
     name: "Naomi",
-    initials: "N",
-    specialty: "master",
-    specialtyColor: "#8b5cf6",
-    avatar: "/placeholder.svg?height=32&width=32&text=N",
+    avatar: "/images/cathy-avatar.png",
+    specialty: "Watercolor & Impressionism",
+    experience: "5 years",
+    availability: ["morning", "afternoon"],
   },
   {
-    id: "luci",
-    name: "Luci",
-    initials: "L",
-    specialty: "pouring",
-    specialtyColor: "#10b981",
-    avatar: "/placeholder.svg?height=32&width=32&text=L",
+    id: "momo",
+    name: "Momo",
+    avatar: "/images/cathy-avatar.png",
+    specialty: "Abstract & Contemporary",
+    experience: "7 years",
+    availability: ["afternoon", "evening"],
   },
   {
-    id: "daria",
-    name: "Daria",
-    initials: "D",
-    specialty: "evening",
-    specialtyColor: "#f59e0b",
-    avatar: "/placeholder.svg?height=32&width=32&text=D",
+    id: "yuki",
+    name: "Yuki Tanaka",
+    avatar: "/images/cathy-avatar.png",
+    specialty: "Traditional Japanese & Watercolor",
+    experience: "10 years",
+    availability: ["morning", "evening"],
   },
 ]
 
-// Sample locations data
+// Mock data for locations
 const locations = [
-  { id: "daikanyama", name: "Daikanyama", address: "Shibuya City, Tokyo" },
-  { id: "ginza", name: "Ginza", address: "Chuo City, Tokyo" },
-  { id: "catstreet", name: "Cat Street", address: "Shibuya City, Tokyo" },
-  { id: "yokohama", name: "Yokohama", address: "Yokohama, Kanagawa" },
-  { id: "osaka", name: "Osaka", address: "Osaka City, Osaka" },
-  { id: "okinawa", name: "Okinawa", address: "Naha, Okinawa" },
-  { id: "fukuoka", name: "Fukuoka", address: "Fukuoka City, Fukuoka" },
+  {
+    id: "daikanyama",
+    name: "Daikanyama",
+    address: "1-2-3 Daikanyama, Shibuya-ku, Tokyo",
+    capacity: 16,
+    availableSlots: 12,
+  },
+  {
+    id: "catstreet",
+    name: "Cat Street",
+    address: "4-5-6 Cat Street, Shibuya-ku, Tokyo",
+    capacity: 12,
+    availableSlots: 8,
+  },
+  {
+    id: "ginza",
+    name: "Ginza",
+    address: "7-8-9 Ginza, Chuo-ku, Tokyo",
+    capacity: 20,
+    availableSlots: 15,
+  },
 ]
 
-export function ScheduledEventWizard({ open, onOpenChange }: ScheduledEventWizardProps) {
-  const [step, setStep] = useState(1)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+// Helper function to format time
+const formatTime = (hour: number) => {
+  const ampm = hour >= 12 ? "PM" : "AM"
+  const formattedHour = hour % 12 || 12
+  return `${formattedHour}:00 ${ampm}`
+}
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      templateId: "",
-      date: "",
-      time: "",
-      instructorId: "",
-      locationId: "",
-      maxParticipants: 20,
-      specialNotes: "",
-    },
-  })
+type WizardMode = "instructor-first" | "template-first" | "blank"
 
-  const steps = [
-    { number: 1, title: "Choose Template", completed: step > 1 },
-    { number: 2, title: "Date & Time", completed: step > 2 },
-    { number: 3, title: "Assign Instructor", completed: step > 3 },
-    { number: 4, title: "Publish", completed: false },
-  ]
+interface PrefilledData {
+  instructor?: UnifiedInstructor
+  template?: UnifiedTemplate
+  timeSlot?: number
+  location?: UnifiedLocation
+}
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true)
-    console.log("Scheduling event:", values)
+interface ScheduledEventWizardProps {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  mode?: WizardMode
+  prefilled?: PrefilledData
+  selectedDate?: Date
+  selectedTime?: number
+  availableTemplates?: UnifiedTemplate[]
+  availableInstructors?: UnifiedInstructor[]
+  availableLocations?: UnifiedLocation[]
+  onSchedule?: (eventData: any) => void
+}
 
-    setTimeout(() => {
-      setIsSubmitting(false)
-      onOpenChange(false)
-      setStep(1)
-      form.reset()
-    }, 1500)
+export function ScheduledEventWizard({
+  isOpen,
+  onOpenChange,
+  mode = "blank",
+  prefilled,
+  selectedDate = new Date(),
+  selectedTime = 10,
+  availableTemplates = templates,
+  availableInstructors = instructors,
+  availableLocations = locations,
+  onSchedule,
+}: ScheduledEventWizardProps) {
+  // Initialize state based on prefilled data
+  const [selectedTemplate, setSelectedTemplate] = useState<string>(
+    prefilled?.template?.id || availableTemplates[0]?.id || "",
+  )
+  const [selectedInstructor, setSelectedInstructor] = useState<string>(
+    prefilled?.instructor?.id || availableInstructors[0]?.id || "",
+  )
+  const [selectedLocation, setSelectedLocation] = useState<string>(
+    prefilled?.location?.id || availableLocations[0]?.id || "",
+  )
+
+  // Get the selected template, instructor and location objects
+  const template = templates.find((t) => t.id === selectedTemplate) || templates[0]
+  const instructor = instructors.find((i) => i.id === selectedInstructor) || instructors[0]
+  const location = locations.find((l) => l.id === selectedLocation) || locations[0]
+
+  // Calculate end time based on template duration
+  const endTime = selectedTime + (template?.duration || 2)
+
+  // Get display components based on mode
+  const getWizardLayout = () => {
+    switch (mode) {
+      case "instructor-first":
+        return {
+          showInstructorCard: true,
+          showTemplateSelection: true,
+          showLocationSelection: true,
+          focusStep: "template",
+        }
+      case "template-first":
+        return {
+          showTemplateCard: true,
+          showInstructorSelection: true,
+          showLocationSelection: true,
+          focusStep: "instructor",
+        }
+      default: // 'blank'
+        return {
+          showTemplateSelection: true,
+          showInstructorSelection: true,
+          showLocationSelection: true,
+          focusStep: "template",
+        }
+    }
   }
 
-  const nextStep = () => {
-    const fieldsToValidate = {
-      1: ["templateId"],
-      2: ["date", "time", "locationId", "maxParticipants"],
-      3: ["instructorId"],
-    }[step]
+  const layout = getWizardLayout()
 
-    form.trigger(fieldsToValidate as any).then((isValid) => {
-      if (isValid) setStep((prev) => Math.min(prev + 1, 4))
-    })
-  }
-
-  const prevStep = () => {
-    setStep((prev) => Math.max(prev - 1, 1))
-  }
-
-  const handleCancel = () => {
-    setStep(1)
-    form.reset()
+  const handleSchedule = () => {
+    if (onSchedule) {
+      onSchedule({
+        template,
+        instructor,
+        location,
+        date: selectedDate,
+        startTime: selectedTime,
+        endTime,
+      })
+    }
     onOpenChange(false)
   }
 
-  const selectedTemplate = templates.find((t) => t.id === form.watch("templateId"))
-  const selectedInstructor = instructors.find((i) => i.id === form.watch("instructorId"))
-  const selectedLocation = locations.find((l) => l.id === form.watch("locationId"))
-
-  // Filter instructors based on selected template specialization
-  const getAvailableInstructors = () => {
-    if (!selectedTemplate) return instructors
-    return instructors.filter(
-      (instructor) =>
-        selectedTemplate.specialization.includes(instructor.specialty) ||
-        selectedTemplate.specialization.includes("general"),
-    )
-  }
-
-  // Generate time slots
-  const timeSlots = [
-    "10:00 AM",
-    "11:00 AM",
-    "12:00 PM",
-    "1:00 PM",
-    "2:00 PM",
-    "3:00 PM",
-    "4:00 PM",
-    "5:00 PM",
-    "6:00 PM",
-    "7:00 PM",
-    "8:00 PM",
-    "9:00 PM",
-  ]
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px]">
-        <DialogHeader>
-          <DialogTitle>Schedule Event</DialogTitle>
-          <DialogDescription>
-            Add an existing template to your event calendar with specific date, time, and instructor assignment.
-          </DialogDescription>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[700px] font-sans p-0 overflow-hidden">
+        <DialogHeader className="px-6 pt-6 pb-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <DialogTitle className="text-2xl font-bold">
+                {mode === "instructor-first" && "Schedule with Instructor"}
+                {mode === "template-first" && "Schedule Template"}
+                {mode === "blank" && "Schedule Event"}
+              </DialogTitle>
+              <DialogDescription className="text-base mt-1">
+                {mode === "instructor-first" && `Create a workshop with ${prefilled?.instructor?.name}`}
+                {mode === "template-first" && `Schedule "${prefilled?.template?.title}" workshop`}
+                {mode === "blank" && "Create a new painting workshop"}
+              </DialogDescription>
+            </div>
+          </div>
+
+          <div className="flex items-center mt-4 text-sm text-muted-foreground">
+            <CalendarIcon className="w-4 h-4 mr-2" />
+            <span className="font-medium">{format(selectedDate, "EEEE, MMMM d, yyyy")}</span>
+            <span className="mx-2">•</span>
+            <ClockIcon className="w-4 h-4 mr-2" />
+            <span>
+              {formatTime(prefilled?.timeSlot || selectedTime)} - {formatTime(endTime)}
+            </span>
+            <span className="mx-2">•</span>
+            <span>{template?.duration} hours</span>
+          </div>
         </DialogHeader>
 
-        <div className="flex items-center justify-center mb-6">
-          <div className="flex items-center">
-            {steps.map((stepItem, index) => (
-              <div key={stepItem.number} className="flex items-center">
-                <div
-                  className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
-                    step >= stepItem.number ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
-                  )}
-                >
-                  {step > stepItem.number ? <CheckIcon className="h-4 w-4" /> : stepItem.number}
+        {/* Prefilled Data Cards */}
+        {(layout.showInstructorCard || layout.showTemplateCard) && (
+          <div className="px-6 py-4 bg-blue-50 border-b">
+            {layout.showInstructorCard && prefilled?.instructor && (
+              <Card className="border-blue-200 bg-white">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage
+                        src={prefilled.instructor.avatar || "/placeholder.svg"}
+                        alt={prefilled.instructor.name}
+                      />
+                      <AvatarFallback>{prefilled.instructor.initials}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-semibold text-blue-900">{prefilled.instructor.name}</p>
+                      <p className="text-sm text-blue-700">{prefilled.instructor.specialty}</p>
+                    </div>
+                    <Badge variant="outline" className="ml-auto">
+                      Selected Instructor
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {layout.showTemplateCard && prefilled?.template && (
+              <Card className="border-blue-200 bg-white">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-md bg-blue-100 flex items-center justify-center">
+                      <img
+                        src={prefilled.template.image || "/placeholder.svg"}
+                        alt={prefilled.template.title}
+                        className="w-full h-full object-cover rounded-md"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-blue-900">{prefilled.template.title}</h3>
+                      <p className="text-sm text-blue-700">{prefilled.template.titleJp}</p>
+                      <div className="flex items-center mt-1 text-xs text-blue-600">
+                        <ClockIcon className="w-3 h-3 mr-1" />
+                        <span>{prefilled.template.duration} hours</span>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="ml-auto">
+                      Selected Template
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
+        <div className="px-6 py-4 grid gap-6">
+          {/* Template Selection */}
+          <div>
+            <h3 className="text-sm font-medium mb-3">Select Template</h3>
+            <RadioGroup value={selectedTemplate} onValueChange={setSelectedTemplate} className="grid gap-3">
+              {templates.map((tmpl) => (
+                <div key={tmpl.id} className="flex items-start space-x-3">
+                  <RadioGroupItem value={tmpl.id} id={`template-${tmpl.id}`} className="mt-1" />
+                  <Label htmlFor={`template-${tmpl.id}`} className="flex-1 cursor-pointer">
+                    <Card className={`border ${selectedTemplate === tmpl.id ? "border-blue-500 bg-blue-50" : ""}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-md bg-blue-100 flex items-center justify-center">
+                            <img
+                              src={tmpl.image || "/placeholder.svg"}
+                              alt={tmpl.title}
+                              className="w-full h-full object-cover rounded-md"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-medium">{tmpl.title}</h3>
+                            <p className="text-sm text-muted-foreground">{tmpl.titleJp}</p>
+                            <div className="flex items-center mt-1 text-xs text-muted-foreground">
+                              <ClockIcon className="w-3 h-3 mr-1" />
+                              <span>{tmpl.duration} hours</span>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Label>
                 </div>
-                {index < steps.length - 1 && (
-                  <div className={cn("h-1 w-10", step > stepItem.number ? "bg-primary" : "bg-muted")} />
-                )}
-              </div>
-            ))}
+              ))}
+            </RadioGroup>
+          </div>
+
+          {/* Instructor Selection */}
+          <div>
+            <h3 className="text-sm font-medium mb-3">Select Instructor</h3>
+            <RadioGroup value={selectedInstructor} onValueChange={setSelectedInstructor} className="grid gap-3">
+              {instructors.map((inst) => (
+                <div key={inst.id} className="flex items-start space-x-3">
+                  <RadioGroupItem value={inst.id} id={`instructor-${inst.id}`} className="mt-1" />
+                  <Label htmlFor={`instructor-${inst.id}`} className="flex-1 cursor-pointer">
+                    <Card className={`border ${selectedInstructor === inst.id ? "border-blue-500 bg-blue-50" : ""}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage src={inst.avatar || "/placeholder.svg"} alt={inst.name} />
+                            <AvatarFallback>{inst.name[0]}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium">{inst.name}</p>
+                            <p className="text-sm text-muted-foreground">{inst.specialty}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
+
+          {/* Location Selection */}
+          <div>
+            <h3 className="text-sm font-medium mb-3">Select Location</h3>
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a location" />
+              </SelectTrigger>
+              <SelectContent>
+                {locations.map((loc) => (
+                  <SelectItem key={loc.id} value={loc.id}>
+                    <div className="flex items-center justify-between w-full">
+                      <span>{loc.name}</span>
+                      <Badge variant="outline" className="ml-2">
+                        {loc.availableSlots}/{loc.capacity} slots
+                      </Badge>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Location Details */}
+            {location && (
+              <Card className="mt-3">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">{location.name}</p>
+                      <p className="text-sm text-muted-foreground">{location.address}</p>
+                    </div>
+                    <Badge variant="outline">
+                      {location.availableSlots}/{location.capacity} slots
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <Card className="border-2 border-gray-200 bg-white min-h-[500px] h-[500px]">
-              <CardContent className="p-6 h-full overflow-y-auto">
-                {step === 1 && (
-                  <div className="space-y-4">
-                    <div className="text-center mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Choose from Templates</h3>
-                      <p className="text-sm text-gray-600">Select an existing template to schedule</p>
-                    </div>
-
-                    <FormField
-                      control={form.control}
-                      name="templateId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <div className="grid grid-cols-1 gap-4 max-h-[350px] overflow-y-auto">
-                            {templates.map((template) => (
-                              <div
-                                key={template.id}
-                                className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
-                                  field.value === template.id
-                                    ? "border-blue-500 bg-blue-50"
-                                    : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                                }`}
-                                onClick={() => field.onChange(template.id)}
-                              >
-                                <div className="flex items-center gap-4">
-                                  <img
-                                    src={template.image || "/placeholder.svg"}
-                                    alt={template.englishTitle}
-                                    className="w-16 h-16 rounded-lg object-cover"
-                                  />
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      <h4 className="font-medium text-gray-900">{template.japaneseTitle}</h4>
-                                      <Badge variant="outline" className="text-xs">
-                                        {template.category}
-                                      </Badge>
-                                    </div>
-                                    <p className="text-sm text-gray-600 mb-2">{template.englishTitle}</p>
-                                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                                      <span>{template.duration}h</span>
-                                      <span>{template.canvas}</span>
-                                      <span>{template.difficulty}</span>
-                                      <span className="font-medium text-green-600">
-                                        ¥{template.price.toLocaleString()}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
-
-                {step === 2 && (
-                  <div className="space-y-6">
-                    <div className="text-center mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Set Date and Time</h3>
-                      <p className="text-sm text-gray-600">Choose when to schedule this event</p>
-                    </div>
-
-                    {/* Selected Template Preview */}
-                    {selectedTemplate && (
-                      <div className="border rounded-lg p-4 bg-gray-50 mb-6">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={selectedTemplate.image || "/placeholder.svg"}
-                            alt={selectedTemplate.englishTitle}
-                            className="w-12 h-12 rounded-lg object-cover"
-                          />
-                          <div>
-                            <h4 className="font-medium text-gray-900">{selectedTemplate.japaneseTitle}</h4>
-                            <p className="text-sm text-gray-600">{selectedTemplate.englishTitle}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="date"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Event Date</FormLabel>
-                            <FormControl>
-                              <Input type="date" {...field} min={new Date().toISOString().split("T")[0]} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="time"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Start Time</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select start time" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {timeSlots.map((time) => (
-                                  <SelectItem key={time} value={time}>
-                                    {time}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="locationId"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Location</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select location" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {locations.map((location) => (
-                                  <SelectItem key={location.id} value={location.id}>
-                                    <div className="flex flex-col">
-                                      <span className="font-medium">{location.name}</span>
-                                      <span className="text-xs text-gray-500">{location.address}</span>
-                                    </div>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="maxParticipants"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Max Participants</FormLabel>
-                            <div className="flex items-center gap-2">
-                              <FormControl>
-                                <Input
-                                  type="number"
-                                  min={1}
-                                  max={50}
-                                  {...field}
-                                  onChange={(e) => field.onChange(Number.parseInt(e.target.value))}
-                                />
-                              </FormControl>
-                              <Users className="h-4 w-4 text-muted-foreground" />
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {step === 3 && (
-                  <div className="space-y-6">
-                    <div className="text-center mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Assign Instructor</h3>
-                      <p className="text-sm text-gray-600">Choose an instructor for this event</p>
-                    </div>
-
-                    <FormField
-                      control={form.control}
-                      name="instructorId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <div className="grid grid-cols-1 gap-4 max-h-[350px] overflow-y-auto">
-                            {getAvailableInstructors().map((instructor) => (
-                              <div
-                                key={instructor.id}
-                                className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
-                                  field.value === instructor.id
-                                    ? "border-blue-500 bg-blue-50"
-                                    : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                                }`}
-                                onClick={() => field.onChange(instructor.id)}
-                              >
-                                <div className="flex items-center gap-4">
-                                  <Avatar className="h-12 w-12">
-                                    <AvatarImage src={instructor.avatar || "/placeholder.svg"} />
-                                    <AvatarFallback className="text-sm bg-blue-100 text-blue-700">
-                                      {instructor.initials}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      <h4 className="font-medium text-gray-900">{instructor.name}</h4>
-                                      <div
-                                        className="w-3 h-3 rounded-full"
-                                        style={{ backgroundColor: instructor.specialtyColor }}
-                                      />
-                                    </div>
-                                    <p className="text-sm text-gray-600 capitalize">
-                                      {instructor.specialty} specialist
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
-
-                {step === 4 && (
-                  <div className="space-y-6">
-                    <div className="text-center mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Publish and Go Live</h3>
-                      <p className="text-sm text-gray-600">Review your event details and publish</p>
-                    </div>
-
-                    {/* Event Summary */}
-                    <div className="border rounded-lg p-6 bg-gray-50 space-y-4">
-                      <h4 className="font-semibold text-gray-900 mb-4">Event Summary</h4>
-
-                      {selectedTemplate && (
-                        <div className="flex items-center gap-3 mb-4">
-                          <img
-                            src={selectedTemplate.image || "/placeholder.svg"}
-                            alt={selectedTemplate.englishTitle}
-                            className="w-16 h-16 rounded-lg object-cover"
-                          />
-                          <div>
-                            <h5 className="font-medium text-gray-900">{selectedTemplate.japaneseTitle}</h5>
-                            <p className="text-sm text-gray-600">{selectedTemplate.englishTitle}</p>
-                            <p className="text-sm text-green-600 font-medium">
-                              ¥{selectedTemplate.price.toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-gray-500" />
-                          <span>{form.watch("date") || "Not set"}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-gray-500" />
-                          <span>{form.watch("time") || "Not set"}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4 text-gray-500" />
-                          <span>{selectedLocation?.name || "Not set"}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-gray-500" />
-                          <span>Max {form.watch("maxParticipants")} participants</span>
-                        </div>
-                      </div>
-
-                      {selectedInstructor && (
-                        <div className="flex items-center gap-3 pt-4 border-t">
-                          <Avatar className="h-10 w-10">
-                            <AvatarImage src={selectedInstructor.avatar || "/placeholder.svg"} />
-                            <AvatarFallback className="text-sm bg-blue-100 text-blue-700">
-                              {selectedInstructor.initials}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium text-gray-900">{selectedInstructor.name}</p>
-                            <p className="text-sm text-gray-600 capitalize">
-                              {selectedInstructor.specialty} specialist
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <FormField
-                      control={form.control}
-                      name="specialNotes"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Special Notes (Optional)</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="Any special instructions or notes for this event..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className="text-center py-4">
-                      <div className="text-green-600 font-medium">Ready to publish!</div>
-                      <div className="text-sm text-gray-600 mt-1">
-                        Your event will be live and available for bookings immediately
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <DialogFooter className="flex justify-between">
-              {step > 1 ? (
-                <Button type="button" variant="outline" onClick={prevStep}>
-                  Back
-                </Button>
-              ) : (
-                <div></div>
-              )}
-              <Button variant="outline" onClick={handleCancel} className="px-6">
-                Cancel
-              </Button>
-              {step < 4 ? (
-                <Button type="button" onClick={nextStep}>
-                  Continue
-                </Button>
-              ) : (
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Publishing..." : "Publish Event"}
-                </Button>
-              )}
-            </DialogFooter>
-          </form>
-        </Form>
+        <DialogFooter className="px-6 py-4 border-t">
+          <div className="flex justify-between w-full">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSchedule}>Schedule Event</Button>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

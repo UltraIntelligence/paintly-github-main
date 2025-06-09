@@ -13,6 +13,7 @@ import {
   HelpCircleIcon,
   SearchIcon,
   SettingsIcon,
+  ListIcon,
 } from "lucide-react"
 
 import { NavMain } from "./nav-main"
@@ -50,6 +51,11 @@ const data = {
       title: "Templates",
       url: "/templates",
       icon: ImageIcon,
+    },
+    {
+      title: "Listings",
+      url: "/discover",
+      icon: ListIcon,
     },
     // Remove the Corporate Templates item
   ],

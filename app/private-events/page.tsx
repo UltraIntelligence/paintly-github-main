@@ -21,7 +21,7 @@ import { PaintlyCard } from "@/components/paintly-card"
 const eventsData = [
   {
     id: 1,
-    title: "FREUDE by BMW × Artbar【Anniversary Bouquet】",
+    title: "FREUDE by BMW × Artbar",
     company: "BMW Japan",
     duration: "2 hours",
     capacity: "25 participants",
@@ -36,7 +36,7 @@ const eventsData = [
   },
   {
     id: 2,
-    title: "Google Tokyo Team Building【Digital Landscapes】",
+    title: "Google Tokyo Team Building",
     company: "Google Japan",
     duration: "2.5 hours",
     capacity: "40 participants",
@@ -51,7 +51,7 @@ const eventsData = [
   },
   {
     id: 3,
-    title: "L'Oréal Beauty Workshop【Floral Elegance】",
+    title: "L'Oréal Beauty Workshop",
     company: "L'Oréal Japan",
     duration: "2 hours",
     capacity: "30 participants",
@@ -66,7 +66,7 @@ const eventsData = [
   },
   {
     id: 4,
-    title: "Sony Creative Showcase【Digital Art Fusion】",
+    title: "Sony Creative Showcase",
     company: "Sony Corporation",
     duration: "3 hours",
     capacity: "35 participants",
@@ -81,7 +81,7 @@ const eventsData = [
   },
   {
     id: 5,
-    title: "Uniqlo Design Workshop【Color Theory】",
+    title: "Uniqlo Design Workshop",
     company: "Uniqlo Co., Ltd",
     duration: "2 hours",
     capacity: "45 participants",
@@ -96,7 +96,7 @@ const eventsData = [
   },
   {
     id: 6,
-    title: "Nintendo Game Night【Creative Collaboration】",
+    title: "Nintendo Game Night",
     company: "Nintendo Co., Ltd",
     duration: "4 hours",
     capacity: "50 participants",
@@ -111,7 +111,7 @@ const eventsData = [
   },
   {
     id: 7,
-    title: "Shiseido Wellness Retreat【Mindful Art】",
+    title: "Shiseido Wellness Retreat",
     company: "Shiseido Co., Ltd",
     duration: "2.5 hours",
     capacity: "20 participants",
@@ -126,7 +126,7 @@ const eventsData = [
   },
   {
     id: 8,
-    title: "Toyota Innovation Lab【Future Mobility】",
+    title: "Toyota Innovation Lab",
     company: "Toyota Motor Corporation",
     duration: "3 hours",
     capacity: "30 participants",

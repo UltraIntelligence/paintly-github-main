@@ -1,26 +1,11 @@
 "use client"
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-
 import { AvatarFallback } from "@/components/ui/avatar"
-
 import { AvatarImage } from "@/components/ui/avatar"
-
 import { Avatar } from "@/components/ui/avatar"
-
 import { useState, useEffect } from "react"
-import {
-  ChevronLeft,
-  ChevronRight,
-  Calendar,
-  List,
-  Grid3X3,
-  Clock,
-  Users,
-  AlertTriangle,
-  Search,
-  Plus,
-} from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar, List, Grid3X3, Clock, Users, AlertTriangle, Search } from "lucide-react"
 import { TrendingUp, DollarSign, ClockIcon, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -1373,100 +1358,45 @@ function ScheduleContent() {
                                 ) && <div className="w-2 h-2 rounded-full bg-amber-400" title="Limited availability" />}
                                 {Object.values(availability[dayIndex] || {}).some(
                                   (slot: any) => slot.type === "scheduled",
-                                ) && <div className="w-2 h-2 rounded-full bg-blue-500" title="Scheduled events" />}
+                                ) &&
+                                  dayEvents.length > 0 && (
+                                    <div className="w-2 h-2 rounded-full bg-blue-500" title="Scheduled events" />
+                                  )}
                               </div>
                             )}
                           </div>
 
-                          {/* Events for this day - Location Color Bars */}
-                          {isCurrentMonth && dayEvents.length > 0 && (
+                          {/* Events for this day */}
+                          {isCurrentMonth && (
                             <div className="space-y-1">
-                              {dayEvents.slice(0, 3).map((event, index) => {
-                                const locationColor = locationColors[event.location] || "#6B7280"
+                              {dayEvents.slice(0, 3).map((event) => {
+                                const instructor = getInstructor(event.instructor)
                                 return (
                                   <div
                                     key={event.id}
-                                    className="h-2 rounded-sm transition-opacity duration-200 hover:opacity-80 cursor-pointer"
-                                    style={{
-                                      backgroundColor: locationColor,
-                                      opacity: dayEvents.length > 1 ? 0.8 : 1,
-                                    }}
+                                    className="text-xs p-1.5 rounded bg-blue-100 text-blue-800 truncate hover:bg-blue-200 transition-colors"
                                     onClick={(e) => {
                                       e.stopPropagation()
                                       handleEventClick(event)
-                                      e.stopPropagation()
-                                      handleEventClick(event)
                                     }}
-                                    title={`${event.title} - ${event.location} - ${timeSlots[event.startHour]}`}
-                                  />
+                                  >
+                                    <div className="font-medium truncate">{event.title}</div>
+                                    <div className="text-blue-600 truncate">
+                                      {timeSlots[event.startHour]} • {instructor?.name}
+                                    </div>
+                                  </div>
                                 )
                               })}
-
-                              {/* Show "more events" indicator */}
                               {dayEvents.length > 3 && (
-                                <div className="text-xs text-gray-500 text-center py-0.5">
+                                <div className="text-xs text-gray-500 text-center py-1">
                                   +{dayEvents.length - 3} more
                                 </div>
                               )}
                             </div>
                           )}
-
-                          {/* Empty state for available days */}
-                          {isCurrentMonth && dayEvents.length === 0 && hasAvailability && (
-                            <div
-                              className={`flex flex-col items-center justify-center ${
-                                suggestions.length === 0 || isSuggestionsCollapsed ? "h-32" : "h-20"
-                              } text-gray-400 transition-all duration-700`}
-                            >
-                              <div
-                                className={`${
-                                  suggestions.length === 0 || isSuggestionsCollapsed ? "w-8 h-8" : "w-6 h-6"
-                                } rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center mb-2`}
-                              >
-                                <Plus
-                                  className={`${suggestions.length === 0 || isSuggestionsCollapsed ? "w-4 h-4" : "w-3 h-3"}`}
-                                />
-                              </div>
-                              <span
-                                className={`${suggestions.length === 0 || isSuggestionsCollapsed ? "text-sm" : "text-xs"}`}
-                              >
-                                Available
-                              </span>
-                              {suggestions.length === 0 ||
-                                (isSuggestionsCollapsed && (
-                                  <span className="text-xs text-gray-400 mt-1">Click to schedule</span>
-                                ))}
-                            </div>
-                          )}
                         </div>
                       )
                     })}
-                  </div>
-
-                  {/* Month View Legend */}
-                  <div className="p-4 border-t bg-gray-50">
-                    <div className="flex flex-wrap gap-4 text-xs">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded bg-blue-50 border border-blue-200"></div>
-                        <span>Today</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                        <span>Available</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-amber-400"></div>
-                        <span>Limited</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                        <span>Scheduled</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                        <span>Live Event</span>
-                      </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1477,419 +1407,287 @@ function ScheduleContent() {
         {/* Calendar Grid - Week View - Hidden on mobile */}
         {selectedView === "week" && (
           <div className="hidden md:block">
-            <Card className="overflow-hidden mb-6 mt-2">
+            <Card className="overflow-hidden">
               <CardContent className="p-0">
-                {/* Header */}
-                <div className="grid grid-cols-8 border-b">
-                  <div className="p-4 bg-gray-50 border-r flex items-center justify-center">
-                    <Clock className="h-4 w-4 text-gray-500" />
+                {/* Week Header */}
+                <div className="grid grid-cols-8 border-b bg-gray-50">
+                  <div className="p-4 border-r">
+                    <span className="text-sm font-medium text-gray-500">Time</span>
                   </div>
-                  {days.map((day, index) => {
-                    const weekDates = getCurrentWeekDates()
-                    const dayDate = new Date(weekDates.start)
-                    dayDate.setDate(weekDates.start.getDate() + index)
-
-                    return (
-                      <div key={day} className="p-4 bg-gray-50 text-center border-r last:border-r-0">
-                        <div className="font-medium text-gray-900">{shortDays[index]}</div>
-                        <div className="text-sm text-gray-500">
-                          {dayDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                        </div>
+                  {days.map((day, index) => (
+                    <div key={day} className="p-4 border-r last:border-r-0 text-center">
+                      <div className="text-sm font-medium text-gray-900">{shortDays[index]}</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {new Date(Date.now() + (index + currentWeekOffset * 7) * 24 * 60 * 60 * 1000).getDate()}
                       </div>
-                    )
-                  })}
-                </div>
-
-                {/* Time slots with proper grid structure for spanning */}
-                <div className="grid grid-cols-8" style={{ gridTemplateRows: `repeat(${timeSlots.length}, 80px)` }}>
-                  {/* Render all time labels first */}
-                  {timeSlots.map((time, hourIndex) => (
-                    <div
-                      key={`time-${hourIndex}`}
-                      className="p-4 bg-gray-50 border-r border-b text-sm text-gray-600 flex items-center"
-                      style={{ gridColumn: 1, gridRow: hourIndex + 1 }}
-                    >
-                      {time}
                     </div>
                   ))}
+                </div>
 
-                  {/* Render all day slots with proper grid positioning */}
-                  {days.map((_, dayIndex) =>
-                    timeSlots.map((_, hourIndex) => {
-                      const slot = renderTimeSlot(dayIndex, hourIndex)
-                      return slot ? (
-                        <div
-                          key={`${dayIndex}-${hourIndex}`}
-                          style={{
-                            gridColumn: dayIndex + 2,
-                            gridRow: slot.props?.style?.gridRow || hourIndex + 1,
-                          }}
-                          className="border-b border-gray-200"
-                        >
-                          {slot}
-                        </div>
-                      ) : null
-                    }),
-                  )}
+                {/* Time Grid */}
+                <div className="grid grid-cols-8 divide-x">
+                  {/* Time Labels Column */}
+                  <div className="divide-y">
+                    {timeSlots.map((time, index) => (
+                      <div key={time} className="h-20 flex items-center justify-end pr-4 text-sm text-gray-500">
+                        {time}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Days Columns */}
+                  {days.map((day, dayIndex) => (
+                    <div key={day} className="divide-y">
+                      {timeSlots.map((time, hourIndex) => renderTimeSlot(dayIndex, hourIndex))}
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
           </div>
         )}
 
-        {/* List View */}
+        {/* List View - Always visible on mobile, optional on desktop */}
         {selectedView === "list" && (
-          <Card className="overflow-hidden mb-6 mt-2">
-            <CardContent className="p-0">
-              {Object.keys(eventsByDate).length > 0 ? (
-                <div className="divide-y divide-gray-200">
-                  {next7Days.map((dayIndex) => {
-                    const dayEvents = eventsByDate[dayIndex] || []
-                    const dateLabel = getDateLabel(dayIndex)
+          <div className="space-y-6">
+            {Object.keys(eventsByDate).length > 0 ? (
+              Object.entries(eventsByDate).map(([dayIndex, dayEvents]) => (
+                <div key={dayIndex}>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    {getDateLabel(Number.parseInt(dayIndex))}
+                  </h3>
+                  <div className="space-y-3">
+                    {(dayEvents as any[]).map((event) => {
+                      const instructor = getInstructor(event.instructor)
+                      const template = templates.find((t) => t.id === event.templateId)
 
-                    return (
-                      <div key={dayIndex}>
-                        {/* Date Header */}
-                        <div className="sticky top-0 bg-gray-50 px-6 py-3 border-b border-gray-200 z-10">
-                          <h3 className="text-sm font-medium text-gray-900">{dateLabel}</h3>
-                          <div className="text-xs text-gray-500">May {19 + dayIndex}, 2025</div>
-                        </div>
+                      return (
+                        <Card
+                          key={event.id}
+                          className="cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.01]"
+                          onClick={() => handleEventClick(event)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-start gap-4">
+                              {/* Event Image */}
+                              <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
+                                <img
+                                  src={template?.image || "/placeholder.svg?height=64&width=64"}
+                                  alt={event.titleEn}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
 
-                        {/* Events for this day */}
-                        {dayEvents.length > 0 ? (
-                          <div className="divide-y divide-gray-100">
-                            {dayEvents.map((event) => {
-                              const instructor = getInstructor(event.instructor)
-                              const startTime = timeSlots[event.startHour]
-                              const endTime =
-                                timeSlots[event.startHour + event.duration] ||
-                                `${Number.parseInt(timeSlots[event.startHour].split(":")[0]) + event.duration}:${timeSlots[event.startHour].split(":")[1]}`
+                              {/* Event Details */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between mb-2">
+                                  <div>
+                                    <h4 className="text-base font-semibold text-gray-900 mb-1">{event.title}</h4>
+                                    <p className="text-sm text-gray-600">{event.titleEn}</p>
+                                  </div>
+                                  {event.status === "Live" && (
+                                    <Badge className="bg-blue-500 text-white animate-pulse">Live</Badge>
+                                  )}
+                                </div>
 
-                              // Find matching template for image
-                              const matchingTemplate = templates.find(
-                                (template) =>
-                                  template.japaneseTitle === event.title ||
-                                  template.englishTitle === event.titleEn ||
-                                  template.id === event.templateId,
-                              )
-
-                              // Calculate progress percentage and color
-                              const progressPercentage = (event.participants.current / event.participants.max) * 100
-                              const getProgressColor = () => {
-                                if (progressPercentage >= 100) return "bg-red-500"
-                                if (progressPercentage >= 80) return "bg-amber-500"
-                                return "bg-green-500"
-                              }
-
-                              return (
-                                <div
-                                  key={event.id}
-                                  className="p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-200 border-b border-gray-100 last:border-b-0"
-                                  onClick={() => handleEventClick(event)}
-                                >
-                                  <div className="flex items-start gap-4">
-                                    {/* Event Image */}
-                                    <div className="flex-shrink-0">
-                                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-                                        <img
-                                          src={
-                                            matchingTemplate?.image ||
-                                            `/placeholder.svg?height=80&width=80&query=${encodeURIComponent(event.titleEn || event.title)}`
-                                          }
-                                          alt={event.titleEn || event.title}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      </div>
-                                    </div>
-
-                                    {/* Event Details */}
-                                    <div className="flex-1 min-w-0">
-                                      {/* Title and Status Row */}
-                                      <div className="flex items-start justify-between mb-2">
-                                        <div className="flex-1 min-w-0">
-                                          <div className="flex items-center gap-2 mb-1">
-                                            <h4 className="text-base font-semibold text-gray-900 truncate">
-                                              {event.title}
-                                            </h4>
-                                            {event.status === "Live" && (
-                                              <Badge className="text-xs px-2 py-1 bg-blue-500 text-white animate-pulse">
-                                                Live
-                                              </Badge>
-                                            )}
-                                          </div>
-                                          <div className="text-sm text-gray-600 truncate mb-2">{event.titleEn}</div>
-                                        </div>
-
-                                        {/* Instructor Avatar */}
-                                        <div className="flex-shrink-0 ml-4">
-                                          <TooltipProvider>
-                                            <Tooltip>
-                                              <TooltipTrigger asChild>
-                                                <Avatar className="h-10 w-10">
-                                                  <AvatarImage src={instructor?.avatar || "/placeholder.svg"} />
-                                                  <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
-                                                    {instructor?.initials}
-                                                  </AvatarFallback>
-                                                </Avatar>
-                                              </TooltipTrigger>
-                                              <TooltipContent>
-                                                <span className="text-sm">{instructor?.name}</span>
-                                              </TooltipContent>
-                                            </Tooltip>
-                                          </TooltipProvider>
-                                        </div>
-                                      </div>
-
-                                      {/* Progress Bar */}
-                                      <div className="mb-3">
-                                        <div className="flex items-center justify-between mb-1">
-                                          <span className="text-sm font-medium text-gray-700">
-                                            {event.participants.current}/{event.participants.max} participants
-                                          </span>
-                                          <span className="text-xs text-gray-500">
-                                            {Math.round(progressPercentage)}% full
-                                          </span>
-                                        </div>
-                                        <div className="w-full bg-gray-200 rounded-full h-2">
-                                          <div
-                                            className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
-                                            style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                                          />
-                                        </div>
-                                      </div>
-
-                                      {/* Time and Location Info */}
-                                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                                        <div className="flex items-center gap-1">
-                                          <Clock className="h-4 w-4" />
-                                          <span>
-                                            {startTime} - {endTime}
-                                          </span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                          <span>Artbar {event.location}</span>
-                                        </div>
-                                      </div>
-                                    </div>
+                                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                                  <div className="flex items-center gap-1">
+                                    <Clock className="h-4 w-4" />
+                                    <span>{timeSlots[event.startHour]}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Users className="h-4 w-4" />
+                                    <span>
+                                      {event.participants.current}/{event.participants.max}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <Avatar className="h-6 w-6">
+                                      <AvatarImage src={instructor?.avatar || "/placeholder.svg"} />
+                                      <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                                        {instructor?.initials}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <span>{instructor?.name}</span>
                                   </div>
                                 </div>
-                              )
-                            })}
-                          </div>
-                        ) : (
-                          <div className="p-8 text-center">
-                            <Calendar className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                            <div className="text-sm text-gray-500">No events scheduled</div>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )
+                    })}
+                  </div>
                 </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <div className="text-gray-600 mb-2">No events scheduled</div>
-                  <div className="text-sm text-gray-500 mb-4">Start by creating your first event</div>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">Schedule Event</Button>
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No events scheduled</h3>
+                <p className="text-gray-600 mb-6">Get started by scheduling your first event</p>
+                <div className="space-y-4">
+                  {next7Days.map((dayIndex) => (
+                    <div key={dayIndex} className="text-left">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">{getDateLabel(dayIndex)}</h4>
+                      <div className="text-sm text-gray-500 pl-4">No events scheduled</div>
+                    </div>
+                  ))}
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
       {/* Schedule Event Modal */}
       <Dialog open={isScheduleModalOpen} onOpenChange={setIsScheduleModalOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Schedule Event</DialogTitle>
-            <div className="text-sm text-gray-600">
-              {selectedSlot &&
-                `${days[selectedSlot.day]}, May ${19 + selectedSlot.day} at ${timeSlots[selectedSlot.hour]}`}
-            </div>
+            <DialogTitle>Schedule New Event</DialogTitle>
           </DialogHeader>
-
-          {selectedSlot && (
-            <div className="space-y-6">
-              {/* Template Selection */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium">Template Selection</label>
-                <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose template..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {getFilteredTemplates(
-                      selectedSlot.availableHours,
-                      getSlotData(selectedSlot.day, selectedSlot.hour).instructors || [],
-                    ).map((template) => (
-                      <SelectItem key={template.id} value={template.id}>
-                        {template.japaneseTitle} | {template.englishTitle}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Selected Template Preview */}
-              {selectedTemplate && (
-                <div className="border rounded-lg p-4 bg-gray-50">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={templates.find((t) => t.id === selectedTemplate)?.image || "/placeholder.svg"}
-                      alt="Template preview"
-                      className="w-16 h-16 rounded-lg object-cover"
-                    />
-                    <div>
-                      <h3 className="font-medium">
-                        {templates.find((t) => t.id === selectedTemplate)?.japaneseTitle} |{" "}
-                        {templates.find((t) => t.id === selectedTemplate)?.englishTitle}
-                      </h3>
-                      <div className="text-sm text-gray-600">
-                        Duration: {templates.find((t) => t.id === selectedTemplate)?.duration} hours | Canvas:{" "}
-                        {templates.find((t) => t.id === selectedTemplate)?.canvas} | Difficulty:{" "}
-                        {templates.find((t) => t.id === selectedTemplate)?.difficulty}
-                      </div>
-                    </div>
+          <div className="space-y-6 py-4">
+            {selectedSlot && (
+              <>
+                {/* Time Slot Info */}
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="text-sm font-medium text-blue-900 mb-1">Selected Time Slot</div>
+                  <div className="text-blue-700">
+                    {days[selectedSlot.day]} at {timeSlots[selectedSlot.hour]}
                   </div>
+                  <div className="text-xs text-blue-600 mt-1">Up to {selectedSlot.availableHours} hours available</div>
                 </div>
-              )}
 
-              {/* Instructor Assignment */}
-              {selectedTemplate && (
-                <div className="space-y-3">
-                  <label className="text-sm font-medium">Instructor Assignment</label>
-                  <Select value={selectedInstructorModal} onValueChange={setSelectedInstructorModal}>
+                {/* Template Selection */}
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">Select Template</label>
+                  <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose instructor..." />
+                      <SelectValue placeholder="Choose a template..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {getAvailableInstructorsForTemplate(
-                        templates.find((t) => t.id === selectedTemplate)!,
+                      {getFilteredTemplates(
+                        selectedSlot.availableHours,
                         getSlotData(selectedSlot.day, selectedSlot.hour).instructors || [],
-                      ).map((instructor) => (
-                        <SelectItem key={instructor.id} value={instructor.id}>
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-3 h-3 rounded-full"
-                              style={{ backgroundColor: instructor.specialtyColor }}
+                      ).map((template) => (
+                        <SelectItem key={template.id} value={template.id}>
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={template.image || "/placeholder.svg"}
+                              alt={template.englishTitle}
+                              className="w-8 h-8 rounded object-cover"
                             />
-                            {instructor.name} ({instructor.specialty} specialist)
+                            <div>
+                              <div className="font-medium">{template.japaneseTitle}</div>
+                              <div className="text-xs text-gray-500">
+                                {template.englishTitle} • {template.duration}h • {template.difficulty}
+                              </div>
+                            </div>
                           </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-              )}
 
-              {/* Location */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium">Location</label>
-                <div className="p-3 bg-gray-50 rounded-lg">
-                  <div className="text-sm">{locations.find((l) => l.id === selectedLocation)?.name} Studio</div>
-                </div>
-              </div>
-
-              {/* Time Duration */}
-              {selectedTemplate && (
-                <div className="space-y-3">
-                  <label className="text-sm font-medium">Time Duration</label>
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <div className="text-sm">
-                      {timeSlots[selectedSlot.hour]} -{" "}
-                      {timeSlots[selectedSlot.hour + Math.floor(Number.parseFloat(selectedDuration))] ||
-                        `${Number.parseInt(timeSlots[selectedSlot.hour].split(":")[0]) + Math.floor(Number.parseFloat(selectedDuration))}:${timeSlots[selectedSlot.hour].split(":")[1]}`}
-                    </div>
+                {/* Instructor Selection */}
+                {selectedTemplate && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">Select Instructor</label>
+                    <Select value={selectedInstructorModal} onValueChange={setSelectedInstructorModal}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose an instructor..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getAvailableInstructorsForTemplate(
+                          templates.find((t) => t.id === selectedTemplate)!,
+                          getSlotData(selectedSlot.day, selectedSlot.hour).instructors || [],
+                        ).map((instructor) => (
+                          <SelectItem key={instructor.id} value={instructor.id}>
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-8 w-8">
+                                <AvatarImage src={instructor.avatar || "/placeholder.svg"} />
+                                <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                                  {instructor.initials}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className="font-medium">{instructor.name}</div>
+                                <div className="text-xs text-gray-500 capitalize">
+                                  {instructor.specialty} specialist
+                                </div>
+                              </div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
-                <Button variant="outline" onClick={() => setIsScheduleModalOpen(false)} className="flex-1">
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleScheduleEvent}
-                  disabled={!selectedTemplate || !selectedInstructorModal}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  Schedule Event
-                </Button>
-              </div>
-            </div>
-          )}
+                {/* Duration Display */}
+                {selectedTemplate && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">Duration</label>
+                    <div className="p-3 bg-gray-50 rounded-lg text-sm text-gray-700">{selectedDuration} hours</div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-4">
+                  <Button variant="outline" onClick={() => setIsScheduleModalOpen(false)} className="flex-1">
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleScheduleEvent}
+                    disabled={!selectedTemplate || !selectedInstructorModal}
+                    className="flex-1"
+                  >
+                    Schedule Event
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Event Details Modal */}
       <EventDetailsModal
-        isOpen={isEventDetailModalOpen}
-        onOpenChange={setIsEventDetailModalOpen}
         event={selectedEventDetail}
+        isOpen={isEventDetailModalOpen}
+        onClose={() => setIsEventDetailModalOpen(false)}
       />
 
-      {/* Confirmation Dialog */}
+      {/* Confirmation Dialog for Accepting Suggestions */}
       <AlertDialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Schedule Sessions</AlertDialogTitle>
-            <AlertDialogDescription asChild>
+            <AlertDialogTitle>Schedule Suggested Sessions?</AlertDialogTitle>
+            <AlertDialogDescription>
               {pendingSuggestion && (
                 <div className="space-y-3">
-                  <div>
-                    Are you sure you want to schedule the following sessions for{" "}
-                    <span className="font-medium">{pendingSuggestion.suggestion.title}</span>?
-                  </div>
-
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="flex items-center gap-3 mb-2">
-                      <img
-                        src={pendingSuggestion.template.image || "/placeholder.svg"}
-                        alt={pendingSuggestion.template.englishTitle}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                      <div>
-                        <div className="font-medium text-sm">
-                          {pendingSuggestion.template.japaneseTitle} | {pendingSuggestion.template.englishTitle}
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          Instructor: {pendingSuggestion.suggestion.instructor}
-                        </div>
+                  <p>
+                    This will schedule <strong>{pendingSuggestion.suggestion.suggestedDates.length} sessions</strong> of{" "}
+                    <strong>{pendingSuggestion.suggestion.title}</strong>:
+                  </p>
+                  <div className="bg-gray-50 rounded p-3 text-sm">
+                    {pendingSuggestion.suggestion.suggestedDates.map((date, index) => (
+                      <div key={index} className="flex justify-between">
+                        <span>{date.date}</span>
+                        <span>{date.time}</span>
                       </div>
-                    </div>
-
-                    <div className="text-sm space-y-1">
-                      <div className="font-medium">Scheduled Dates:</div>
-                      {pendingSuggestion.suggestion.suggestedDates.map((date, index) => (
-                        <div key={index} className="text-gray-600">
-                          • {date.date} at {date.time}
-                        </div>
-                      ))}
-                    </div>
+                    ))}
                   </div>
-
-                  <div className="text-sm text-gray-600">
-                    This will create {pendingSuggestion.suggestion.suggestedDates.length} new events in your schedule.
-                  </div>
+                  <p className="text-sm text-gray-600">
+                    Instructor: <strong>{pendingSuggestion.suggestion.instructor}</strong>
+                  </p>
                 </div>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              onClick={() => {
-                setIsConfirmDialogOpen(false)
-                setPendingSuggestion(null)
-              }}
-            >
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={confirmAcceptSuggestion} className="bg-blue-600 hover:bg-blue-700 text-white">
-              Schedule {pendingSuggestion?.suggestion.suggestedDates.length || 0} Sessions
-            </AlertDialogAction>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmAcceptSuggestion}>Schedule Sessions</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -1899,18 +1697,14 @@ function ScheduleContent() {
 
 export default function SchedulePage() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="dashboard-theme">
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
       <SidebarProvider>
-        <AppSidebar variant="inset" />
+        <AppSidebar />
         <SidebarInset>
           <SiteHeader />
-          <AnimatePresence mode="wait">
-            <motion.div key="schedule" className="flex flex-1 flex-col" {...pageTransition}>
-              <div className="@container/main flex flex-1 flex-col gap-2">
-                <ScheduleContent />
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          <motion.main {...pageTransition} className="flex-1 overflow-auto">
+            <ScheduleContent />
+          </motion.main>
         </SidebarInset>
       </SidebarProvider>
     </ThemeProvider>
