@@ -863,14 +863,134 @@ export default function DiscoverPage() {
     )
   })
 
-  const startingSoonEvents = sampleEvents
-    .filter((event) => {
-      const eventDate = new Date(event.date)
-      const today = new Date()
-      const weekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
-      return eventDate >= today && eventDate <= weekFromNow
-    })
-    .slice(0, 5)
+  const startingSoonEvents = [
+    {
+      id: "early-morning-pour-jun7",
+      title: "モーニングポーリング",
+      titleEn: "Early Morning Paint Pour",
+      instructor: "MAYA",
+      date: "2025-06-07",
+      startTime: "08:00",
+      endTime: "10:00",
+      location: "Artbar Cat Street",
+      duration: "2 hours",
+      difficulty: "Beginner",
+      canvasSize: "F6",
+      price: 3800,
+      capacity: 12,
+      booked: 10,
+      rating: 4.8,
+      popularity: "Early bird special",
+      category: "Paint Pouring",
+      image: "/placeholder.svg?height=400&width=600",
+      status: "few-spots",
+    },
+    {
+      id: "sunrise-sumi-jun7",
+      title: "朝の墨絵",
+      titleEn: "Sunrise Sumi Ink",
+      instructor: "HIROSHI",
+      date: "2025-06-07",
+      startTime: "09:00",
+      endTime: "11:00",
+      location: "Artbar Ginza",
+      duration: "2 hours",
+      difficulty: "Intermediate",
+      canvasSize: "F6",
+      price: 4200,
+      capacity: 10,
+      booked: 8,
+      rating: 4.7,
+      popularity: "Zen morning",
+      category: "Japanese Art",
+      image: "/placeholder.svg?height=400&width=600",
+      status: "few-spots",
+    },
+    {
+      id: "weekend-alcohol-ink-jun8",
+      title: "週末アルコールインク",
+      titleEn: "Weekend Alcohol Ink",
+      instructor: "DARIA",
+      date: "2025-06-08",
+      startTime: "09:00",
+      endTime: "11:00",
+      location: "Artbar Daikanyama",
+      duration: "2 hours",
+      difficulty: "Beginner",
+      canvasSize: "F4",
+      price: 4000,
+      capacity: 12,
+      booked: 9,
+      rating: 4.6,
+      popularity: "Weekend starter",
+      category: "Alcohol Ink",
+      image: "/placeholder.svg?height=400&width=600",
+      status: "few-spots",
+    },
+    {
+      id: "early-van-gogh-jun8",
+      title: "朝のゴッホ",
+      titleEn: "Early Van Gogh Session",
+      instructor: "YUKI",
+      date: "2025-06-08",
+      startTime: "09:30",
+      endTime: "12:00",
+      location: "Artbar Yokohama",
+      duration: "2.5 hours",
+      difficulty: "Intermediate",
+      canvasSize: "F8",
+      price: 4500,
+      capacity: 15,
+      booked: 13,
+      rating: 4.9,
+      popularity: "Master class",
+      category: "Van Gogh",
+      image: "/placeholder.svg?height=400&width=600",
+      status: "few-spots",
+    },
+    {
+      id: "kids-early-fun-jun8",
+      title: "キッズ朝の楽しみ",
+      titleEn: "Kids Early Fun Session",
+      instructor: "MICHI",
+      date: "2025-06-08",
+      startTime: "10:00",
+      endTime: "11:30",
+      location: "Artbar Osaka",
+      duration: "1.5 hours",
+      difficulty: "Kids",
+      canvasSize: "F4",
+      price: 2800,
+      capacity: 8,
+      booked: 6,
+      rating: 4.8,
+      popularity: "Family favorite",
+      category: "Kids & Family",
+      image: "/placeholder.svg?height=400&width=600",
+      status: "available",
+    },
+    {
+      id: "morning-abstract-jun8",
+      title: "朝の抽象アート",
+      titleEn: "Morning Abstract Art",
+      instructor: "ALEX",
+      date: "2025-06-08",
+      startTime: "10:30",
+      endTime: "12:30",
+      location: "Artbar Fukuoka",
+      duration: "2 hours",
+      difficulty: "Advanced",
+      canvasSize: "F6",
+      price: 5000,
+      capacity: 8,
+      booked: 6,
+      rating: 4.7,
+      popularity: "Creative morning",
+      category: "Abstract",
+      image: "/placeholder.svg?height=400&width=600",
+      status: "few-spots",
+    },
+  ]
 
   return (
     <div className="min-h-screen bg-white pt-8">
@@ -899,6 +1019,18 @@ export default function DiscoverPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Developer-only navigation link */}
+        <div className="absolute top-2 left-2 z-10">
+          <Button
+            onClick={() => (window.location.href = "/events/sample")}
+            variant="outline"
+            size="sm"
+            className="opacity-30 hover:opacity-100 text-xs border-dashed border-gray-300 bg-transparent"
+          >
+            Dev: Event Page
+          </Button>
         </div>
 
         {/* Paint Style Categories */}
