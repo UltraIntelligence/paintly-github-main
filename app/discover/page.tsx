@@ -1118,6 +1118,11 @@ export default function DiscoverPage() {
                 </Button>
               </div>
 
+              {/* Featured Section - Dynamic Carousel */}
+              <div className="mb-16">
+                <FeaturedCarousel />
+              </div>
+
               {/* New Search and Filter Section */}
               <div className="mb-16">
                 <div className="relative">
@@ -1385,11 +1390,6 @@ export default function DiscoverPage() {
                     </div>
                   )}
                 </div>
-              </div>
-
-              {/* Featured Section - Dynamic Carousel */}
-              <div className="mb-16">
-                <FeaturedCarousel />
               </div>
 
               {/* Starting Soon Section */}
